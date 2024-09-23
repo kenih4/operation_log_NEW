@@ -88,7 +88,7 @@ print("lenght of maxsslit = ",maxsslit)
 #   sheet1.xml のA,B,C列をピックアップ
 xmls = glob.glob(args[2], recursive=True)
 
-columns = ['A', 'B', 'C']
+columns = ['A', 'B', 'C', 'DT'] # DTはA(日付)とB(時間)を日時にしたものを入れる
 df = pd.DataFrame(columns=columns) 
 df.style.set_properties(**{'text-align': 'left'})   # pip install Jinja2  左寄せ　うまくいかず、、、
 df.style.background_gradient(cmap='viridis', low=.5, high=0) # 連続値のグラデーション背景 Matplotlib colormapのviridisにして、0.0 - 5.0のレンジでグラデーション
@@ -124,7 +124,8 @@ for xml in xmls:
                                         VAL = float(child3.text)
 #                                        print("\t",CELL,"\t",VAL,end='')
 #                                        df_tmp.iloc[0, 1] = VAL*24 #時間に変換
-                                        df_tmp.iloc[0, 1] = (datetime(1899,12,30) + timedelta(VAL)).strftime('%H:%M')
+#                                        df_tmp.iloc[0, 1] = (datetime(1899,12,30) + timedelta(VAL)).strftime('%H:%M')
+                                        df_tmp.iloc[0, 1] = VAL
                                     if not child2.attrib["r"].find('C'):
 #                                        print("\t",CELL,"\t",VAL)
                                         try:
@@ -136,9 +137,16 @@ for xml in xmls:
                                             VAL = child3.text
                                         #print("\t",CELL,"\t",VAL,end='')
                                         df_tmp.iloc[0, 2] = VAL.ljust(500)  #左寄せ
+                            
+#                            print("TYPE =\t",type(df_tmp.iloc[0, 0]),"\t",type(df_tmp.iloc[0, 1]),end='\n')
+#                            print("VALUE =\t",df_tmp.iloc[0, 0],"\t",df_tmp.iloc[0, 1],end='\n')
+                            try:
+                                df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]+df_tmp.iloc[0, 1]) #　B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
+                            except:
+                                df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
 
                 df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
-                df_tmp.iloc[0, 2] = "-" # C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
+                df_tmp.iloc[0, 2] = "-" # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
 
 #!                if not df_tmp['C'].hasnans:     # C列(内容部分)に値があるときだけ
 #!                    df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
@@ -152,11 +160,14 @@ for xml in xmls:
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #    print(df)
+    print(df.loc[:,['DT', 'C']])
     print(f"type: {type(df)}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-for index, row in df.iterrows():
-    print(f"Index: {index}", f"A: {row['A']}, B: {row['B']}, C: {row['C']}")
+#for index, row in df.iterrows():
+#    print(f"Index: {index}", f"A: {row['A']}, B: {row['B']}, C: {row['C']}, DT: {row['DT']}")
+    
+    
 
     
 

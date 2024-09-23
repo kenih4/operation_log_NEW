@@ -56,11 +56,10 @@ SP8 ============================================================================
 
 =============================================
 TEST
-./excelgrep_by_XMLparse.sh '引渡|引き渡' SACLA/2024_07*.xlsm
-./excelgrep_by_XMLparse.sh '利用終了|運転終了' SACLA/2024_07*.xlsm
-./excelgrep_by_XMLparse.sh '引渡|引き渡|利用終了|運転終了' SACLA/2024_07*.xlsm
-
-./excelgrep_by_XMLparse.sh SACLA/2024_07*.xlsm '引渡|引き渡' '波長変更依頼' 'ユニット切替' '利用終了|運転終了'
+./excelgrep_by_XMLparse.sh '引渡|引き渡' SACLA/2024_03*.xlsm
+./excelgrep_by_XMLparse.sh '利用終了|運転終了' SACLA/2024_03*.xlsm
+./excelgrep_by_XMLparse.sh '引渡|引き渡|利用終了|運転終了' SACLA/2024_03*.xlsm
+./excelgrep_by_XMLparse.sh SACLA/2024_03*.xlsm '引渡|引き渡' '波長変更依頼' 'ユニット切替' '利用終了|運転終了'
 
 
 grep -a --color -n -A 0 -iE '引渡し' test.out
