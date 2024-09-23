@@ -1,0 +1,11 @@
+*.xlsm
+SACLA/
+SCSS/
+SP8/
+.BU/
+.vscode/
+tmp*
+test*
+sheet1.*
+sharedStrings.*
+*.out

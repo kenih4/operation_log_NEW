@@ -1,0 +1,111 @@
+
+
+
+=============================================================================================
+
+
+
+./excelgrep_by_XMLparse.sh 'シケイン' SACLA/*.xlsm | grep --ignore-case 結晶
+
+「シード」を検索
+./excelgrep_by_XMLparse.sh 'シード|seed' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh 'シード|seed' SACLA/*.xlsm
+
+「CB08-1」を検索
+./excelgrep_by_XMLparse.sh 'CB0{0,1}8.1' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh 'CB0{0,1}17.1' SACLA/*.xlsm
+
+「CB05」セクションを検索
+./excelgrep_by_XMLparse.sh 'CB0{0,1}5.[1-4]' SACLA/*.xlsm
+
+./excelgrep_by_XMLparse.sh 'rf.def' SACLA/*.xlsm
+
+./excelgrep_by_XMLparse.sh 'スイーパ|sweep' SACLA/*.xlsm
+
+./excelgrep_by_XMLparse.sh 'チョッパ|Chopper' SACLA/*.xlsm | grep 波高
+
+
+
+
+LB Ikに変動が見られる（LB　サイラトロン監視用オシロ：IP addr : 172.16.5.218）
+
+
+
+SCSS =============================================================================================
+
+./excelgrep_by_XMLparse.sh 'spec|スぺ' SCSS/*.xlsm
+
+SP8 =============================================================================================
+
+「BH1」を検索
+./excelgrep_by_XMLparse.sh 'BH.{0,1}1' SP8/*.xlsm
+
+./excelgrep_by_XMLparse.sh 'アボート|abort' SP8/*.xlsm
+
+「過電流 または、Over Current」を検索する場合
+./excelgrep_by_XMLparse.sh '過電流|over\scurrent' SP8/*.xlsm
+
+「Bから始まってstで終わる2桁以上の文字列」   2桁以上なんでいらないもの出てきちゃう
+./excelgrep_by_XMLparse.sh 'B.*st' SP8/*.xlsm
+
+「Bから始まってstで終わる3桁の文字列」
+./excelgrep_by_XMLparse.sh 'Bst|B.st' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh 'Bst|B.st' SP8/*.xlsm | grep --color -e アボート -e -i abort
+
+
+
+=============================================
+TEST
+./excelgrep_by_XMLparse.sh '引渡|引き渡' SACLA/2024_07*.xlsm
+./excelgrep_by_XMLparse.sh '利用終了|運転終了' SACLA/2024_07*.xlsm
+./excelgrep_by_XMLparse.sh '引渡|引き渡|利用終了|運転終了' SACLA/2024_07*.xlsm
+
+./excelgrep_by_XMLparse.sh SACLA/2024_07*.xlsm '引渡|引き渡' '波長変更依頼' 'ユニット切替' '利用終了|運転終了'
+
+grep -a --color -n -A 0 -iE '引渡し' test.out
+grep -a --color -ie '引渡し' -ie "利用終了" test.out
+
+
+
+=============================================
+コマンドプロンプトで使用される文字コード
+コマンドプロンプトの文字コードは関係なかった。
+$ chcp.com
+932	shift_jis	ANSI/OEM Japanese; Japanese (Shift-JIS)
+20127	us-ascii	US-ASCII (7-bit)
+51932	euc-jp	EUC Japanese
+65001	utf-8	Unicode (UTF-8)
+
+$ chcp.com 65001    # UTF-8に変更
+$ chcp.com 51932    # EUC Japanese
+
+
+=============================================
+Git bashのターミナルで
+・startとするとコマンドプロンプトが上がる
+・minttyとするとターミナルが上がる
+
+
+=============================================
+
+/tmp/tmp.XaXt8aTUVu/xl/media
+C:\Users\kenichi\AppData\Local\Temp\tmp.XaXt8aTUVu\xl\media
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
