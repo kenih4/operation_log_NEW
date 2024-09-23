@@ -160,7 +160,21 @@ for xml in xmls:
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #    print(df)
+
+#df.drop(df[(df['A'] <= 3) & (df['B'] == 'orange')].index, inplace=True)
+    df.drop(df[(df['C'] == "-") ].index, inplace=True)
+    df.drop(df[df['C'].str.contains('>本シフトの運転状況<',case=False,na=False)].index, inplace=True) 
+    df.drop(df[df['C'].str.contains('シフト交替',case=False,na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('シフトリーダー:',case=False,na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('オペレーター:',case=False,na=False)].index, inplace=True)
+#    df.drop(df[df['C'].str.contains('',case=False,na=False)].index, inplace=True)
+
+#大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
+
+
     print(df.loc[:,['DT', 'C']])
+    
+
     print(f"type: {type(df)}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
