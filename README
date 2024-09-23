@@ -62,6 +62,7 @@ TEST
 
 ./excelgrep_by_XMLparse.sh SACLA/2024_07*.xlsm '引渡|引き渡' '波長変更依頼' 'ユニット切替' '利用終了|運転終了'
 
+
 grep -a --color -n -A 0 -iE '引渡し' test.out
 grep -a --color -ie '引渡し' -ie "利用終了" test.out
 

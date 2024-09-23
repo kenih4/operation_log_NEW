@@ -118,11 +118,11 @@ for xml in xmls:
                                     #print("Hit child3.tag =   ",child3.text)
                                     if not child2.attrib["r"].find('A'):
                                         VAL = int(child3.text)
-                                        print("\t",CELL,"\t",VAL)
+#                                        print("\t",CELL,"\t",VAL)
                                         df_tmp.iloc[0, 0] = VAL
                                     if not child2.attrib["r"].find('B'):
                                         VAL = float(child3.text)
-                                        print("\t",CELL,"\t",VAL,end='')
+#                                        print("\t",CELL,"\t",VAL,end='')
 #                                        df_tmp.iloc[0, 1] = VAL*24 #時間に変換
                                         df_tmp.iloc[0, 1] = (datetime(1899,12,30) + timedelta(VAL)).strftime('%H:%M')
                                     if not child2.attrib["r"].find('C'):
@@ -151,8 +151,14 @@ for xml in xmls:
 
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print(df)
+#    print(df)
     print(f"type: {type(df)}")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+for index, row in df.iterrows():
+    print(f"Index: {index}", f"A: {row['A']}, B: {row['B']}, C: {row['C']}")
+
+    
 
 
 
