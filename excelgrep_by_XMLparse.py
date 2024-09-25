@@ -176,6 +176,16 @@ for xml in xmls:
     
 #    df.style.render()
 #    df.loc[:,['DT', 'C']].style.render()
+    styler = df.loc[:,['DT', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
+    styler = styler.map(lambda x: 'background-color: blue' if ('利用終了' or '運転終了') in str(x) else '')
+    styler = styler.map(lambda x: 'background-color: yellow' if ('波長変更依頼' or 'ユニット') in str(x) else '')
+#    styler = styler.map(lambda x: 'color: yellow' if ('BL2') in str(x) else '')
+    styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
+    styler.to_html('hoge.html')
+    import webbrowser
+    webbrowser.open_new_tab('hoge.html')
+#    display(styler)
+
 
     print(f"type: {type(df)}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
