@@ -11,8 +11,9 @@ from datetime import timedelta
 
 #
 # python excelgrep_by_XMLparse.py sharedStrings.xml sheet1.xml
+# TEST
+# python excelgrep_by_XMLparse.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
 #
-
 
 print("============ ここから excelgrep_by_XMLparse.py ============")
 
@@ -167,13 +168,14 @@ for xml in xmls:
     df.drop(df[df['C'].str.contains('シフト交替',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('シフトリーダー:',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('オペレーター:',case=False,na=False)].index, inplace=True)
-#    df.drop(df[df['C'].str.contains('',case=False,na=False)].index, inplace=True)
-
+    df.drop(df[df['C'].str.contains('プロファイル定時確認',case=False,na=False)].index, inplace=True)
 #大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
 
 
     print(df.loc[:,['DT', 'C']])
     
+#    df.style.render()
+#    df.loc[:,['DT', 'C']].style.render()
 
     print(f"type: {type(df)}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
