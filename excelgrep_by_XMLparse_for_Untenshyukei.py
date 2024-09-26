@@ -10,15 +10,145 @@ from datetime import datetime, time
 from datetime import timedelta
 
 #
-# python excelgrep_by_XMLparse.py sharedStrings.xml sheet1.xml
-# TEST
-# python excelgrep_by_XMLparse.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
-#
+# python excelgrep_by_XMLparse_for_Untenshyukei.py sharedStrings.xml sheet1.xml
+# TEST  2024/3
+# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
+# TEST  2024/9
+# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.QxsaB2LqXu/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.QxsaB2LqXu/xl/worksheets/sheet1.xml
 
 print("============ ここから excelgrep_by_XMLparse.py ============")
 
 #print("TEST",sDateTime)
 #sys.exit()
+
+#ical用　始め　=============================================================================================
+
+import requests
+
+from requests.exceptions import Timeout
+import re
+import pandas as pd
+import sys
+
+from icalendar import Calendar, Event
+
+
+#Japanese
+import locale
+dt = datetime(2018, 1, 1)
+print(locale.getlocale(locale.LC_TIME))
+print(dt.strftime('%A, %a, %B, %b'))
+locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
+print(locale.getlocale(locale.LC_TIME))
+#print(dt.strftime('%A, %a, %B, %b'))
+
+config_file_sig = "ical_TEST.xlsx"
+df_sig = pd.read_excel(config_file_sig, sheet_name="sig")
+# print(df_sig)
+
+def get_ical(url):
+    #print(url)
+    try:
+        res = requests.get(url, timeout=(30.0, 30.0))
+    except Exception as e:
+        #print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!@get_ical	' + url)
+        print(e.args)
+        return ''
+    else:
+        res.raise_for_status()
+        return res.text
+
+class SigInfo:
+    def __init__(self):
+        self.srv = ''
+        self.url = ''
+        self.sname = ''
+        self.sid = 0
+        self.sta = ''
+        self.sto = ''
+        self.time = ''
+        self.val = ''
+        self.sortedval = []
+        self.rave = []
+        self.rave_sigma = []
+        self.d = {}
+        self.t = {}
+        self.mu = 0
+        self.icaldata = ''
+        self.sigma = 0
+
+sig = [SigInfo() for _ in range(len(df_sig))]
+
+from datetime import datetime, timedelta, timezone
+JST = timezone(timedelta(hours=+9), 'JST')
+
+now = datetime.now()
+dt1 = now + timedelta(days=-1)
+dt2 = now + timedelta(days=23)
+
+list_dt = []
+list_dt.append(now)
+list_dt.append(dt1)
+list_dt.append(dt2)
+
+def get_schedule_from_ical(df_lognote):
+#    print(df_lognote)
+
+    for n, s in enumerate(sig, 0):
+        print("label: ",str(df_sig.loc[n]['label']))
+        s.icaldata = get_ical(str(df_sig.loc[n]['url']))
+        #print(s.icaldata)
+        cal = Calendar.from_ical(s.icaldata)
+
+        for index,item in df_lognote.iterrows():
+#            print("index : ", index, "  item['DT'] = ", item['DT'])
+            for ev in cal.walk():
+                try:
+                    start_dt_datetime = datetime.datetime.strptime(
+                        str(ev.decoded("dtstart")), '%Y-%m-%d %H:%M:%S+09:00')
+                except Exception as e:
+                    # print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
+                    continue
+    #            else:
+    #                if (start_dt_datetime - now).days < -60:
+    #                    continue
+    #		        else:
+    #			        print('(start_dt_datetime - now).days	' + str((start_dt_datetime - now).days))
+
+                if ev.name == 'VEVENT':
+                    start_dt = ev.decoded("dtstart")
+                    end_dt = ev.decoded("dtend")
+                    try:
+                        summary = ev['summary']
+                    except Exception as e:
+                        print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
+                    else:
+                        d = {}
+                        d["Task"] = str(df_sig.loc[n]['label'])
+                        d["Start"] = start_dt
+                        d["Finish"] = end_dt
+
+                        tmp_summary = str(summary).replace(' ', '')
+
+
+                        print('start_dt	' + str(start_dt))
+                        print('end_dt	' + str(end_dt))
+
+                        tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
+
+                        tmp_summary = tmp_summary.rstrip('<br>')
+                        tmp_summary = tmp_summary.replace("/30Hz", "")
+                        tmp_summary = tmp_summary.replace("/60Hz", "")
+                        tmp_summary = tmp_summary.replace("SEED", "<i>SEED</i>")
+
+                        if (now.astimezone(JST) - start_dt).total_seconds() > 0 and (now.astimezone(JST) - end_dt).total_seconds() < 0:
+                            print("item['DT']= ",now,"   :    ", tmp_summary)
+#                        if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
+#                            print("item['DT']= ",item['DT'],"   :    ", tmp_summary)
+"""
+"""
+#ical用　終わり=============================================================================================
+
 
 
 print("version",pd.__version__)
@@ -144,8 +274,11 @@ for xml in xmls:
                             try:
                                 df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]+df_tmp.iloc[0, 1]) #　B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
                             except:
-                                df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
-
+                                try:
+                                    df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
+                                except:
+                                    df_tmp.iloc[0, 3] = 0
+                                    
                 df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
                 df_tmp.iloc[0, 2] = "-" # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
 
@@ -185,10 +318,16 @@ for xml in xmls:
 
     styler.to_html('hoge.html')
     import webbrowser
-    webbrowser.open_new_tab('hoge.html')
+#    webbrowser.open_new_tab('hoge.html')
 #    display(styler)
 
 
+
+
+    get_schedule_from_ical(df)
+    
+    
+    
     print(f"type: {type(df)}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
