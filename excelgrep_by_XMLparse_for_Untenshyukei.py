@@ -96,20 +96,6 @@ def get_schedule_from_ical(df_lognote):
         for index,item in df_lognote.iterrows():
 #            print("index : ", index, "  item['DT'] = ", item['DT'])
             for ev in cal.walk():
-                """
-                try:
-                    print('ev:', ev.decoded("dtstart"))
-                    start_dt_datetime = datetime.datetime.strptime(str(ev.decoded("dtstart")), '%Y-%m-%d %H:%M:%S+09:00')
-                except Exception as e:
-                    print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
-                    continue
-                else:
-                    if (start_dt_datetime - now).days < -60:
-                        continue
-                    else:
-                        print('(start_dt_datetime - now).days	' + str((start_dt_datetime - now).days))
-                """
-                #print('ev.name: ',ev.name)
 
                 if ev.name == 'VEVENT':
                     start_dt = ev.decoded("dtstart")
@@ -119,22 +105,6 @@ def get_schedule_from_ical(df_lognote):
                     except Exception as e:
                         print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
                     else:
-#                        d = {}
-#                        d["Task"] = str(df_sig.loc[n]['label'])
-#                        d["Start"] = start_dt
-#                        d["Finish"] = end_dt
-
-#                        tmp_summary = str(summary).replace(' ', '')
-
-#                        print('start_dt	' + str(start_dt), 'end_dt	' + str(end_dt), tmp_summary)
-
-#                        tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
-#                        tmp_summary = tmp_summary.rstrip('<br>')
-#                        tmp_summary = tmp_summary.replace("/30Hz", "")
-#                        tmp_summary = tmp_summary.replace("/60Hz", "")
-
-                        #print('type[item[DT]] = ',type(item['DT']))
-#                        if(type(item['DT']) != int and type(item['DT']) != str):
                         try:
                             #print('type[item[DT]] = ',type(item['DT']))
                             if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
@@ -315,7 +285,6 @@ for xml in xmls:
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 #    print(df)
 
-#df.drop(df[(df['A'] <= 3) & (df['B'] == 'orange')].index, inplace=True)
     df.drop(df[(df['C'] == "-") ].index, inplace=True)
     df.drop(df[df['C'].str.contains('>本シフトの運転状況<',case=False,na=False)].index, inplace=True) 
     df.drop(df[df['C'].str.contains('シフト交替',case=False,na=False)].index, inplace=True)
@@ -335,12 +304,9 @@ for xml in xmls:
 
 #    print(df.loc[:,['DT','BL3ical', 'C']])
     
-#    df.style.render()
-#    df.loc[:,['DT', 'C']].style.render()
     styler = df.loc[:,['DT', 'BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
     styler = styler.map(lambda x: 'background-color: blue' if ('利用終了' or '運転終了') in str(x) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
-#    styler = styler.map(lambda x: 'color: yellow' if ('BL2') in str(x) else '')
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
 
 
@@ -358,10 +324,6 @@ for xml in xmls:
     print(f"type: {type(df)}")
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-#for index, row in df.iterrows():
-#    print(f"Index: {index}", f"A: {row['A']}, B: {row['B']}, C: {row['C']}, DT: {row['DT']}")
-    
-    
 
     
 
