@@ -145,6 +145,11 @@ def get_schedule_from_ical(df_lognote):
 print("version",pd.__version__)
 #pd.set_option('display.max_rows', 70)
 pd.set_option('display.max_rows', None)
+
+#pd.set_option("display.max_colwidth", 2000) # #カラム内の文字数
+pd.options.display.max_colwidth = 2000
+
+pd.set_option('display.width', 1000) # 少ないと改行されてしまうので増やす
 pd.options.display.colheader_justify = 'left' #列名表示の右寄せ
 
 print('sys.stdout.encoding:', sys.stdout.encoding)
@@ -292,10 +297,25 @@ for xml in xmls:
     df.drop(df[df['C'].str.contains('オペレーター:',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('プロファイル定時確認',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('定時プロファイル確認',case=False,na=False)].index, inplace=True)
-#大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
+    df.drop(df[df['C'].str.contains('BL2: ',case=False,na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('BL3: ',case=False,na=False)].index, inplace=True)
+    #大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
 
 
-
+    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処
+    bf_itemDT = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0)
+    for index,item in df.iterrows():
+#        print(item['DT'],"   ", bf_itemDT, "    ",type(item['DT']),"    ",type(bf_itemDT))
+        try:
+            delta = item['DT'] - bf_itemDT
+            if(delta.seconds > 0):
+                pass
+            else:
+                print("TIME DAME")
+                item['DT'] = item['DT'] + datetime.timedelta(days=1)
+            bf_itemDT = item['DT']
+        except:
+            pass
 
 
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
