@@ -149,9 +149,7 @@ def get_schedule_from_ical(df_lognote):
 #                        else:
 #                            print('type(item[DT]) = ', type(item['DT']), '   item[DT] = ' , item['DT'])
 
-                    
-"""
-"""
+
 #ical用　終わり=============================================================================================
 
 
