@@ -15,7 +15,9 @@ from datetime import timedelta
 # python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
 # TEST  2024/9
 # python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.QxsaB2LqXu/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.QxsaB2LqXu/xl/worksheets/sheet1.xml
-
+#
+# # Formatter     Shift+Alt+F
+#
 print("============ ここから excelgrep_by_XMLparse.py ============")
 
 #print("TEST",sDateTime)
@@ -103,17 +105,20 @@ def get_schedule_from_ical(df_lognote):
         for index,item in df_lognote.iterrows():
 #            print("index : ", index, "  item['DT'] = ", item['DT'])
             for ev in cal.walk():
+                """
                 try:
-                    start_dt_datetime = datetime.datetime.strptime(
-                        str(ev.decoded("dtstart")), '%Y-%m-%d %H:%M:%S+09:00')
+                    print('ev:', ev.decoded("dtstart"))
+                    start_dt_datetime = datetime.datetime.strptime(str(ev.decoded("dtstart")), '%Y-%m-%d %H:%M:%S+09:00')
                 except Exception as e:
-                    # print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
+                    print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
                     continue
-    #            else:
-    #                if (start_dt_datetime - now).days < -60:
-    #                    continue
-    #		        else:
-    #			        print('(start_dt_datetime - now).days	' + str((start_dt_datetime - now).days))
+                else:
+                    if (start_dt_datetime - now).days < -60:
+                        continue
+                    else:
+                        print('(start_dt_datetime - now).days	' + str((start_dt_datetime - now).days))
+                """
+                #print('ev.name: ',ev.name)
 
                 if ev.name == 'VEVENT':
                     start_dt = ev.decoded("dtstart")
@@ -130,21 +135,21 @@ def get_schedule_from_ical(df_lognote):
 
                         tmp_summary = str(summary).replace(' ', '')
 
-
-                        print('start_dt	' + str(start_dt))
-                        print('end_dt	' + str(end_dt))
+#                        print('start_dt	' + str(start_dt), 'end_dt	' + str(end_dt), tmp_summary)
 
                         tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
-
                         tmp_summary = tmp_summary.rstrip('<br>')
                         tmp_summary = tmp_summary.replace("/30Hz", "")
                         tmp_summary = tmp_summary.replace("/60Hz", "")
-                        tmp_summary = tmp_summary.replace("SEED", "<i>SEED</i>")
 
-                        if (now.astimezone(JST) - start_dt).total_seconds() > 0 and (now.astimezone(JST) - end_dt).total_seconds() < 0:
-                            print("item['DT']= ",now,"   :    ", tmp_summary)
-#                        if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
-#                            print("item['DT']= ",item['DT'],"   :    ", tmp_summary)
+                        
+                        if(type(item['DT']) != int):
+                            if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
+                                print("item['DT']= ",item['DT'],"   :    ", tmp_summary)
+#                        else:
+#                            print('type(item[DT]) = ', type(item['DT']), '   item[DT] = ' , item['DT'])
+
+                    
 """
 """
 #ical用　終わり=============================================================================================
@@ -182,12 +187,11 @@ for xml in xmls:
     root = tree.getroot()
     for ssl in root:
         for child in ssl.iter():
-                   
             if child.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}si':   # 特定要素(si)の抽出
 #                print("child.tag = ", child.tag)
                 
                 for child2 in child.iter():
-                     if child2.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t':
+                    if child2.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t':
                         #print("Hit child2.text= ",child2.text)
                         sslist.append(child2.text)
                         break
@@ -323,7 +327,7 @@ for xml in xmls:
 
 
 
-
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     get_schedule_from_ical(df)
     
     

@@ -99,17 +99,21 @@ while True:
 
             for ev in cal.walk():
 
+#                print('ev.decoded("dtstart")):  ',  str(ev.decoded("dtstart")))
+                """
                 try:
+                    print('ev:', ev.decoded("dtstart"))
                     start_dt_datetime = datetime.datetime.strptime(
                         str(ev.decoded("dtstart")), '%Y-%m-%d %H:%M:%S+09:00')
                 except Exception as e:
-                    # print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
+                    print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
                     continue
                 else:
                     if (start_dt_datetime - now).days < -60:
                         continue
     #		        else:
     #			        print('(start_dt_datetime - now).days	' + str((start_dt_datetime - now).days))
+                """
 
                 if ev.name == 'VEVENT':
                     start_dt = ev.decoded("dtstart")
