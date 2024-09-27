@@ -44,7 +44,7 @@ locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
 print(locale.getlocale(locale.LC_TIME))
 #print(dt.strftime('%A, %a, %B, %b'))
 
-config_file_sig = "ical_TEST.xlsx"
+config_file_sig = "ical_SACLA.xlsx"
 df_sig = pd.read_excel(config_file_sig, sheet_name="sig")
 # print(df_sig)
 
@@ -83,15 +83,6 @@ sig = [SigInfo() for _ in range(len(df_sig))]
 
 from datetime import datetime, timedelta, timezone
 JST = timezone(timedelta(hours=+9), 'JST')
-
-now = datetime.now()
-dt1 = now + timedelta(days=-1)
-dt2 = now + timedelta(days=23)
-
-list_dt = []
-list_dt.append(now)
-list_dt.append(dt1)
-list_dt.append(dt2)
 
 def get_schedule_from_ical(df_lognote):
 #    print(df_lognote)
@@ -133,20 +124,38 @@ def get_schedule_from_ical(df_lognote):
 #                        d["Start"] = start_dt
 #                        d["Finish"] = end_dt
 
-                        tmp_summary = str(summary).replace(' ', '')
+#                        tmp_summary = str(summary).replace(' ', '')
 
 #                        print('start_dt	' + str(start_dt), 'end_dt	' + str(end_dt), tmp_summary)
 
-                        tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
+#                        tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
 #                        tmp_summary = tmp_summary.rstrip('<br>')
 #                        tmp_summary = tmp_summary.replace("/30Hz", "")
 #                        tmp_summary = tmp_summary.replace("/60Hz", "")
 
-                        if(type(item['DT']) != int):
+                        #print('type[item[DT]] = ',type(item['DT']))
+#                        if(type(item['DT']) != int and type(item['DT']) != str):
+                        try:
+                            #print('type[item[DT]] = ',type(item['DT']))
                             if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
-                                df_lognote.loc[index, 'BL3ical'] = tmp_summary
-                                print("index = ", index, "  item['DT']= ",item['DT'],"   :    ", tmp_summary, ' item[BL3ical] = ',item['BL3ical'])                                
+                                
+                                
+                                tmp_summary = str(summary).replace(' ', '')
+                                tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
+                                tmp_summary = tmp_summary.rstrip('<br>')
+                                tmp_summary = tmp_summary.replace("/30Hz", "")
+                                tmp_summary = tmp_summary.replace("/60Hz", "")
+                                
+                                
+                                
+                                if(df_sig.loc[n]['label']=="BL2"):
+                                    df_lognote.loc[index, 'BL2ical'] = tmp_summary
+                                elif(df_sig.loc[n]['label']=="BL3"):
+                                    df_lognote.loc[index, 'BL3ical'] = tmp_summary
+                                #print("index = ", index, "  item['DT']= ",item['DT'],"   :    ", tmp_summary)                                
                                 continue
+                        except:
+                            pass    #print('Exception!!!!!!!!!!!!!!')
                         
 #    print(df_lognote.loc[:,['DT','BL3ical', 'C']])
                         
@@ -155,6 +164,11 @@ def get_schedule_from_ical(df_lognote):
 
 
 #ical用　終わり=============================================================================================
+
+
+
+
+
 
 
 
@@ -308,6 +322,7 @@ for xml in xmls:
     df.drop(df[df['C'].str.contains('シフトリーダー:',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('オペレーター:',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('プロファイル定時確認',case=False,na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('定時プロファイル確認',case=False,na=False)].index, inplace=True)
 #大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
 
 
@@ -322,11 +337,12 @@ for xml in xmls:
     
 #    df.style.render()
 #    df.loc[:,['DT', 'C']].style.render()
-    styler = df.loc[:,['DT', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
+    styler = df.loc[:,['DT', 'BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
     styler = styler.map(lambda x: 'background-color: blue' if ('利用終了' or '運転終了') in str(x) else '')
-    styler = styler.map(lambda x: 'color: yellow' if ('波長変更依頼' or 'ユニット') in str(x) else '')
+    styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
 #    styler = styler.map(lambda x: 'color: yellow' if ('BL2') in str(x) else '')
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
+
 
     styler.to_html('hoge.html')
     import webbrowser
