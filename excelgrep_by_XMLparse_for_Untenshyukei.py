@@ -109,14 +109,11 @@ def get_schedule_from_ical(df_lognote):
                             #print('type[item[DT]] = ',type(item['DT']))
                             if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
                                 
-                                
                                 tmp_summary = str(summary).replace(' ', '')
                                 tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
                                 tmp_summary = tmp_summary.rstrip('<br>')
                                 tmp_summary = tmp_summary.replace("/30Hz", "")
                                 tmp_summary = tmp_summary.replace("/60Hz", "")
-                                
-                                
                                 
                                 if(df_sig.loc[n]['label']=="BL2"):
                                     df_lognote.loc[index, 'BL2ical'] = tmp_summary
@@ -305,16 +302,25 @@ for xml in xmls:
     #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処
     bf_itemDT = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0)
     for index,item in df.iterrows():
-#        print(item['DT'],"   ", bf_itemDT, "    ",type(item['DT']),"    ",type(bf_itemDT))
+        if(type(item['DT']) is not datetime):
+            print('DEBUG ~~~~~~~  type item[DT]=', type(item['DT']))
+            continue
+        
         try:
-            delta = item['DT'] - bf_itemDT
-            if(delta.seconds > 0):
+            if((item['DT'] - bf_itemDT).total_seconds() >= 0):
+#                print('TIME OK:     ',  item['DT'],"    - ", bf_itemDT, "   =   ", (item['DT'] - bf_itemDT).total_seconds())
                 pass
             else:
-                print("TIME DAME")
-                item['DT'] = item['DT'] + datetime.timedelta(days=1)
-            bf_itemDT = item['DT']
-        except:
+#                print('TIME INVERT:     ',  item['DT'],"    - ", bf_itemDT, "   =   ", (item['DT'] - bf_itemDT).total_seconds())
+#                print('DEBUG A  type item[DT]=', type(item['DT']))
+#                print('DEBUG B   ', (item['DT'] + timedelta(days = 1)))
+                df.loc[index, 'DT'] = item['DT'] + timedelta(days = 1)
+                print(index,' TIME INVERT: ',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
+                
+            bf_itemDT = df.loc[index, 'DT']
+        except Exception as e:
+            print(dir(e))
+            print("message:{0}".format(e.message))
             pass
 
 
