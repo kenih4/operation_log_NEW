@@ -9,3 +9,6 @@ test*
 sheet1.*
 sharedStrings.*
 *.out
+output1.xlsx
+~$output1.xlsx
+hoge.html

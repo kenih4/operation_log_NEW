@@ -144,8 +144,11 @@ for xml in xmls:
                             try:
                                 df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]+df_tmp.iloc[0, 1]) #　B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
                             except:
-                                df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
-
+                                try:
+                                    df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
+                                except:
+                                    df_tmp.iloc[0, 3] = 0
+                
                 df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
                 df_tmp.iloc[0, 2] = "-" # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
 
@@ -160,7 +163,7 @@ for xml in xmls:
 
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-#    print(df)
+    print(df)
 
 #df.drop(df[(df['A'] <= 3) & (df['B'] == 'orange')].index, inplace=True)
     df.drop(df[(df['C'] == "-") ].index, inplace=True)
@@ -183,9 +186,9 @@ for xml in xmls:
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
 
 
-    styler.to_html('hoge.html')
-    import webbrowser
-    webbrowser.open_new_tab('hoge.html')
+#    styler.to_html('hoge.html')
+#    import webbrowser
+#    webbrowser.open_new_tab('hoge.html')
 #    display(styler)
 
 

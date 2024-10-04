@@ -331,15 +331,19 @@ for xml in xmls:
 #    print(df.loc[:,['DT','BL3ical', 'C']])
     
     styler = df.loc[:,['DT', 'BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
-    styler = styler.map(lambda x: 'background-color: blue' if ('利用終了' or '運転終了') in str(x) else '')
+    styler = styler.map(lambda x: 'background-color: skyblue' if ('利用終了' or '運転終了') in str(x) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
 
 
-    styler.to_html('hoge.html')
+    styler.to_excel('output1.xlsx',index=False)
+
+    styler.to_html('hoge.html',index=False)
     import webbrowser
     webbrowser.open_new_tab('hoge.html')
 #    display(styler)
+    
+    
 
     
     
