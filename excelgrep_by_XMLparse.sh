@@ -74,14 +74,29 @@ for arg in ${@}; do
 
   # エクセルファイルを一時ディレクトリに解凍する
   # 標準出力とエラー出力は鬱陶しいので捨てる
-  unzip ${arg} -d ${tmpdir} 1> /dev/null 2>&1
+  echo arg=${arg}
+  unzip -t "${arg}" 2> error.log
+  if [ $? -ne 0 ]; then
+      echo "ZIPファイルは異常です。"
+      cat error.log
+      # 特定のエラーメッセージに基づく処理
+      if grep -q "End-of-central-directory signature not found" error.log; then
+          echo "指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
+      fi
+      exit
+  else
+      echo "ZIPファイルは正常です。"
+  fi
+  unzip ${arg} -d ${tmpdir} 1> /dev/null 2>&1 # -d ディレクトリ	指定したディレクトリに展開する
+
+
 
 ret=${tmpdir/\/tmp\//C:\\Users\\kenichi\\AppData\\Local\\Temp\\}
 echo start \"$ret\\xl\\media\"
 if [ -e $ret\\xl\\media ]; then
   echo "OK Directory exists."
 else
-  echo "Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  echo "Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! May be unzip fail..."
   exit
 fi
 
