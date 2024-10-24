@@ -186,7 +186,11 @@ for xml in xmls:
 
 
 maxsslit = len(sslist)
-print("lenght of maxsslit = ",maxsslit)
+if maxsslit == 0:
+    print("sharedStrings.xml のsiタグの数がlenght of maxsslit = ",maxsslit,"  です。終了します")
+    sys.exit()
+
+    
 #!for index, item in enumerate(sslist):
 #!    print("Index:",str(index)," value:",item)
 #!    print("Index:",str(index)," value:",item.encode('cp932', 'replace').decode("cp932", errors="replace"))    #   s-jisにバイト型にエンコードして、s-jisでstr型にデコードにしてprint    CP932に存在しない文字は、'?'に置き換わるとともにエラーを回避できます。
@@ -336,9 +340,9 @@ for xml in xmls:
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
 
 
-    styler.to_excel('output1.xlsx',index=False)
+    styler.to_excel('output1.xlsx')
 
-    styler.to_html('hoge.html',index=False)
+    styler.to_html('hoge.html')
     import webbrowser
     webbrowser.open_new_tab('hoge.html')
 #    display(styler)

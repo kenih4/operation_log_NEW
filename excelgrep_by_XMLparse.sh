@@ -76,19 +76,27 @@ for arg in ${@}; do
   # 標準出力とエラー出力は鬱陶しいので捨てる
   unzip ${arg} -d ${tmpdir} 1> /dev/null 2>&1
 
+ret=${tmpdir/\/tmp\//C:\\Users\\kenichi\\AppData\\Local\\Temp\\}
+echo start \"$ret\\xl\\media\"
+if [ -e $ret\\xl\\media ]; then
+  echo "OK Directory exists."
+else
+  echo "Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  exit
+fi
 
 #   /tmp/tmp.KBjrD6k7Uq/xl/worksheets/sheet1.xml
 #   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml 
 
 #python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
-python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
+#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
 #python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml > ${tmp_out}
 
 
 #集計用テスト
-#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | grep -v -E '引渡し前|引渡し時|引渡し希望|引渡し後|引渡しが|引渡す|引渡て|引渡した事|引渡した旨|引渡しに|終了後|終了）|切替以降' | GREP_COLOR='1;4;33;41' grep -a --color -iE ${targetstr}
-#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
-#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targets[0]}'|'${targets[1]} 
+#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | grep -v -E '引渡し前|引渡し時|引渡し希望|引渡し後|引渡しが|引渡す|引渡て|引渡した事|引渡した旨|引渡しに|終了後）|切替以降' | GREP_COLOR='1;4;33;41' grep -a --color -iE ${targetstr}
+#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
+python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targets[0]}'|'${targets[1]} 
 
 
 
@@ -99,8 +107,6 @@ python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/work
 #/tmp/tmp.XaXt8aTUVu/xl/media
 #C:\Users\kenichi\AppData\Local\Temp\tmp.XaXt8aTUVu\xl\media
 
-ret=${tmpdir/\/tmp\//C:\\Users\\kenichi\\AppData\\Local\\Temp\\}
-echo start \"$ret\\xl\\media\"
 #画像フォルダを開くとき
 #start $ret\\xl\\media
 #画像内の文字も検索する時
@@ -109,7 +115,7 @@ echo start \"$ret\\xl\\media\"
 #read -p "Hit enter: "
 
   # 一時ディレクトリとファイルを削除
-  rm -r ${tmpdir}
+#  rm -r ${tmpdir}
 #  rm ${tmp_out}
 
 done
