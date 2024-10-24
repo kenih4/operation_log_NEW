@@ -74,8 +74,7 @@ for arg in ${@}; do
 
   # エクセルファイルを一時ディレクトリに解凍する
   # 標準出力とエラー出力は鬱陶しいので捨てる
-  echo arg=${arg}
-  unzip -t "${arg}" 2> error.log #  2: 標準エラー出力
+  unzip -t "${arg}" > error.log #  2> error.log標準エラー出力のみ
   if [ $? -ne 0 ]; then # $? は、直前に実行したコマンドの終了ステータス
       echo "ZIPファイルは異常です。"
       #cat error.log
@@ -84,22 +83,19 @@ for arg in ${@}; do
           echo "指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
       fi
       exit
-  else
-      echo "ZIPファイルは正常です。"
+#  else
+#      echo "ZIPファイルは正常です。"
   fi
   unzip ${arg} -d ${tmpdir} 1> /dev/null 2>&1 # -d ディレクトリ	指定したディレクトリに展開する
 
 
 
 ret=${tmpdir/\/tmp\//C:\\Users\\kenichi\\AppData\\Local\\Temp\\}
-echo start \"$ret\\xl\\media\"
-if [ -e $ret\\xl\\media ]; then
-  echo "OK Directory exists."
-else
+#echo start \"$ret\\xl\\media\"
+if [ ! -e $ret\\xl\\media ]; then
   echo "Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! May be unzip fail..."
   exit
 fi
-
 #   /tmp/tmp.KBjrD6k7Uq/xl/worksheets/sheet1.xml
 #   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml 
 

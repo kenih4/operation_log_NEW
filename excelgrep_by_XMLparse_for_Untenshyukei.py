@@ -318,9 +318,11 @@ for xml in xmls:
 #                print('TIME INVERT:     ',  item['DT'],"    - ", bf_itemDT, "   =   ", (item['DT'] - bf_itemDT).total_seconds())
 #                print('DEBUG A  type item[DT]=', type(item['DT']))
 #                print('DEBUG B   ', (item['DT'] + timedelta(days = 1)))
-                df.loc[index, 'DT'] = item['DT'] + timedelta(days = 1)
-                print(index,' TIME INVERT: ',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
-                
+                if(abs(item['DT'] - bf_itemDT).total_seconds() > 28800): # 2直17:00には絶対時刻があるので、28,800sec=8時間以上開いてる時だけ0時を堺に日付を+1日する                    
+                    df.loc[index, 'DT'] = item['DT'] + timedelta(days = 1)
+#                    print(index,' TIME INVERT: ',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
+                else:
+                    print(index,' TIME INVERT: ログノートの時刻記載が間違ってる可能性があります。',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
             bf_itemDT = df.loc[index, 'DT']
         except Exception as e:
             print(dir(e))
