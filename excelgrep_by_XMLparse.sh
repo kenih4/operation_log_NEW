@@ -75,10 +75,10 @@ for arg in ${@}; do
   # エクセルファイルを一時ディレクトリに解凍する
   # 標準出力とエラー出力は鬱陶しいので捨てる
   echo arg=${arg}
-  unzip -t "${arg}" 2> error.log
-  if [ $? -ne 0 ]; then
+  unzip -t "${arg}" 2> error.log #  2: 標準エラー出力
+  if [ $? -ne 0 ]; then # $? は、直前に実行したコマンドの終了ステータス
       echo "ZIPファイルは異常です。"
-      cat error.log
+      #cat error.log
       # 特定のエラーメッセージに基づく処理
       if grep -q "End-of-central-directory signature not found" error.log; then
           echo "指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
