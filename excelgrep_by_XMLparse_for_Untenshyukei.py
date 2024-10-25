@@ -22,18 +22,23 @@ print("============ ここから excelgrep_by_XMLparse.py ============")
 #print("TEST",sDateTime)
 #sys.exit()
 
+
+
+
+# 列全体に色を付ける関数
+def highlight_column_BL2(val):
+    return 'background-color: gold'
+def highlight_column_BL3(val):
+    return 'background-color: dodgerblue'
+
+
 #ical用　始め　=============================================================================================
-
 import requests
-
 from requests.exceptions import Timeout
 import re
 import pandas as pd
 import sys
-
 from icalendar import Calendar, Event
-
-
 #Japanese
 import locale
 dt = datetime(2018, 1, 1)
@@ -42,18 +47,9 @@ print(dt.strftime('%A, %a, %B, %b'))
 locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
 print(locale.getlocale(locale.LC_TIME))
 #print(dt.strftime('%A, %a, %B, %b'))
-
 config_file_sig = "ical_SACLA.xlsx"
 df_sig = pd.read_excel(config_file_sig, sheet_name="sig")
 # print(df_sig)
-
-
-
-# 名前列全体に色を付ける関数
-def highlight_column_BL2(val):
-    return 'background-color: gold'
-def highlight_column_BL3(val):
-    return 'background-color: dodgerblue'
 
 def get_ical(url):
     #print(url)
@@ -93,7 +89,6 @@ JST = timezone(timedelta(hours=+9), 'JST')
 
 def get_schedule_from_ical(df_lognote):
 #    print(df_lognote)
-
     for n, s in enumerate(sig, 0):
         print("label: ",str(df_sig.loc[n]['label']))
         s.icaldata = get_ical(str(df_sig.loc[n]['url']))
@@ -130,13 +125,9 @@ def get_schedule_from_ical(df_lognote):
                                 continue
                         except:
                             pass    #print('Exception!!!!!!!!!!!!!!')
-                        
 #    print(df_lognote.loc[:,['DT','BL3ical', 'C']])
-                        
 #                        else:
 #                            print('type(item[DT]) = ', type(item['DT']), '   item[DT] = ' , item['DT'])
-
-
 #ical用　終わり=============================================================================================
 
 
@@ -298,7 +289,7 @@ for xml in xmls:
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 
-    df['C'] = df['C'].replace({'終了時': '終了 時', '終了後': '終了 後'},regex=True)
+    df['C'] = df['C'].replace({'終了時': '終了 時', '終了後': '終了 後'},regex=True) # とりあえずテスト的。今のところ意味ない
 
     df.drop(df[(df['C'] == "-") ].index, inplace=True)
     df.drop(df[df['C'].str.contains('>本シフトの運転状況<',case=False,na=False)].index, inplace=True) 
@@ -306,7 +297,7 @@ for xml in xmls:
     df.drop(df[df['C'].str.contains('シフトリーダー:',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('オペレーター:',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('プロファイル定時確認',case=False,na=False)].index, inplace=True)
-    df.drop(df[df['C'].str.contains('定時プロファイル確認',case=False,na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('プロファイル確認',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('BL2: ',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('BL3: ',case=False,na=False)].index, inplace=True)
     #大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
@@ -314,13 +305,12 @@ for xml in xmls:
 
 
 
-    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処   時間が掛かる
+    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処   この処理には時間が掛かる
     bf_itemDT = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0)
     for index,item in df.iterrows():
         if(type(item['DT']) is not datetime):
             print('DEBUG ~~~~~~~  type item[DT]=', type(item['DT']))
             continue
-        
         try:
             if((item['DT'] - bf_itemDT).total_seconds() >= 0):
 #                print('TIME OK:     ',  item['DT'],"    - ", bf_itemDT, "   =   ", (item['DT'] - bf_itemDT).total_seconds())
@@ -358,14 +348,10 @@ for xml in xmls:
 #惜しい 終了時 にだけ色が付く    styler = styler.map(lambda x: '' if ('終了') and not ('終了時') in str(x) else 'background-color: skyblue')
 # 終了にも終了時にも色付がつく    styler = styler.map(lambda x: '' if ('終了時') and not ('終了') in str(x) else 'background-color: skyblue')
 # 終了にも終了時にも色付かない    styler = styler.map(lambda x: '' if ('終了') or not ('終了時') in str(x) else 'background-color: skyblue')
-    styler = styler.map(lambda x: '' if ('終了') and not ('終了時') in str(x) else 'background-color: skyblue')
-    
-    
-#    styler = styler.map(lambda x: 'background-color: skyblue' if ('利用終了' or '運転終了') in str(x) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
 
-    # 色付けテスト
+    # BL2/BL3 ical列に色付け
     styler = styler.applymap(highlight_column_BL2, subset=['BL2ical'])
     styler = styler.applymap(highlight_column_BL3, subset=['BL3ical'])
     
