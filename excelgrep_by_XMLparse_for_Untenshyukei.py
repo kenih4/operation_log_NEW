@@ -11,10 +11,9 @@ from datetime import timedelta
 
 #
 # python excelgrep_by_XMLparse_for_Untenshyukei.py sharedStrings.xml sheet1.xml
-# TEST  2024/3
-# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
-# TEST  2024/9
-# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.QxsaB2LqXu/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.QxsaB2LqXu/xl/worksheets/sheet1.xml
+#
+# TEST  2024/10
+# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/worksheets/sheet1.xml
 #
 # # Formatter     Shift+Alt+F
 #
@@ -47,6 +46,14 @@ print(locale.getlocale(locale.LC_TIME))
 config_file_sig = "ical_SACLA.xlsx"
 df_sig = pd.read_excel(config_file_sig, sheet_name="sig")
 # print(df_sig)
+
+
+
+# 名前列全体に色を付ける関数
+def highlight_column_BL2(val):
+    return 'background-color: gold'
+def highlight_column_BL3(val):
+    return 'background-color: dodgerblue'
 
 def get_ical(url):
     #print(url)
@@ -289,7 +296,9 @@ for xml in xmls:
 
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-#    print(df)
+
+
+    df['C'] = df['C'].replace({'終了時': '終了 時', '終了後': '終了 後'},regex=True)
 
     df.drop(df[(df['C'] == "-") ].index, inplace=True)
     df.drop(df[df['C'].str.contains('>本シフトの運転状況<',case=False,na=False)].index, inplace=True) 
@@ -301,9 +310,11 @@ for xml in xmls:
     df.drop(df[df['C'].str.contains('BL2: ',case=False,na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('BL3: ',case=False,na=False)].index, inplace=True)
     #大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
+    
 
 
-    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処
+
+    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処   時間が掛かる
     bf_itemDT = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0)
     for index,item in df.iterrows():
         if(type(item['DT']) is not datetime):
@@ -336,11 +347,29 @@ for xml in xmls:
 
 #    print(df.loc[:,['DT','BL3ical', 'C']])
     
-    styler = df.loc[:,['DT', 'BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
-    styler = styler.map(lambda x: 'background-color: skyblue' if ('利用終了' or '運転終了') in str(x) else '')
+    styler = df.loc[:,['DT', 'BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し' or '引き渡') in str(x) else '')
+    styler = styler.map(lambda x: 'background-color: skyblue' if ('終了') in str(x) else '') #MOTO
+#エラー    styler = styler.map(lambda x: 'background-color: skyblue' if (not '終了時' and '終了') in str(x) else '')
+# 終了 以外全て色付く    styler = styler.map(lambda x: 'background-color: skyblue' if not ('終了時' and '終了') in str(x) else '')
+# 終了にも終了時にも色付かない    styler = styler.map(lambda x: 'background-color: skyblue' if not ('終了時') and ('終了') in str(x) else '')
+#惜しい 終了時　以外全て色付く    styler = styler.map(lambda x: 'background-color: skyblue' if ('終了') and not ('終了時') in str(x) else '')
+# エラー   styler = styler.map(lambda x: 'background-color: skyblue' if not (('終了') and not ('終了時')) in str(x) else '')
+# エラー    styler = styler.map(lambda x: 'background-color: skyblue' if '' else ('終了') and not ('終了時') in str(x))
+#惜しい 終了時 にだけ色が付く    styler = styler.map(lambda x: '' if ('終了') and not ('終了時') in str(x) else 'background-color: skyblue')
+# 終了にも終了時にも色付がつく    styler = styler.map(lambda x: '' if ('終了時') and not ('終了') in str(x) else 'background-color: skyblue')
+# 終了にも終了時にも色付かない    styler = styler.map(lambda x: '' if ('終了') or not ('終了時') in str(x) else 'background-color: skyblue')
+    styler = styler.map(lambda x: '' if ('終了') and not ('終了時') in str(x) else 'background-color: skyblue')
+    
+    
+#    styler = styler.map(lambda x: 'background-color: skyblue' if ('利用終了' or '運転終了') in str(x) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
     styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
 
+    # 色付けテスト
+    styler = styler.applymap(highlight_column_BL2, subset=['BL2ical'])
+    styler = styler.applymap(highlight_column_BL3, subset=['BL3ical'])
+    
+    
 
     styler.to_excel('output1.xlsx')
 
@@ -362,7 +391,5 @@ for xml in xmls:
 
 
     
-
-
 
 
