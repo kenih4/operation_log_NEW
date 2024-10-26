@@ -23,7 +23,16 @@ print("============ ここから excelgrep_by_XMLparse.py ============")
 #sys.exit()
 
 
+# 行番号と色を引数にする関数
+def highlight_rows(x, rows_to_highlight, color="yellow"):
+    style = f'background-color: {color}'
+    return [style if x.name in rows_to_highlight else '' for _ in x]
 
+# 行インデックスが6の行に色を付ける関数を定義
+def highlight_row(x):
+    color = 'background-color: yellow'
+    # 行番号6にのみ適用
+    return [color if x.name == 6 else '' for _ in x]
 
 # 列全体に色を付ける関数
 def highlight_column_BL2(val):
@@ -31,6 +40,9 @@ def highlight_column_BL2(val):
 def highlight_column_BL3(val):
     return 'background-color: dodgerblue'
 
+# 特定の文字列が含まれる行に色を付ける関数
+def highlight_syuryo(row):
+    return ['background-color: red' if '終了' in str(row['C']) else '' for _ in row]
 
 #ical用　始め　=============================================================================================
 import requests
@@ -213,7 +225,7 @@ if maxsslit == 0:
 #   sheet1.xml のA,B,C列をピックアップ
 xmls = glob.glob(args[2], recursive=True)
 
-columns = ['A', 'B', 'C', 'DT', 'BL1ical', 'BL2ical', 'BL3ical'] # DTはA(日付)とB(時間)を日時にしたものを入れる
+columns = ['A', 'B', 'C', 'DT', 'formatted_DT','BL1ical', 'BL2ical', 'BL3ical'] # DTはA(日付)とB(時間)を日時にしたものを入れる
 df = pd.DataFrame(columns=columns) 
 df.style.set_properties(**{'text-align': 'left'})   # pip install Jinja2  左寄せ　うまくいかず、、、
 df.style.background_gradient(cmap='viridis', low=.5, high=0) # 連続値のグラデーション背景 Matplotlib colormapのviridisにして、0.0 - 5.0のレンジでグラデーション
@@ -289,7 +301,7 @@ for xml in xmls:
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 
-    df['C'] = df['C'].replace({'終了時': '終了 時', '終了後': '終了 後'},regex=True) # とりあえずテスト的。今のところ意味ない
+#消すな将来用    df['C'] = df['C'].replace({'終了時': '終了 時', '終了後': '終了 後'},regex=True) # とりあえずテスト的。今のところ意味ない
 
     df.drop(df[(df['C'] == "-") ].index, inplace=True)
     df.drop(df[df['C'].str.contains('>本シフトの運転状況<',case=False,na=False)].index, inplace=True) 
@@ -304,8 +316,7 @@ for xml in xmls:
     
 
 
-
-    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処   この処理には時間が掛かる
+    #ログノートA列の日付が00:00を過ぎても日付はそのままなので対処   
     bf_itemDT = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0)
     for index,item in df.iterrows():
         if(type(item['DT']) is not datetime):
@@ -316,52 +327,61 @@ for xml in xmls:
 #                print('TIME OK:     ',  item['DT'],"    - ", bf_itemDT, "   =   ", (item['DT'] - bf_itemDT).total_seconds())
                 pass
             else:
-#                print('TIME INVERT:     ',  item['DT'],"    - ", bf_itemDT, "   =   ", (item['DT'] - bf_itemDT).total_seconds())
-#                print('DEBUG A  type item[DT]=', type(item['DT']))
-#                print('DEBUG B   ', (item['DT'] + timedelta(days = 1)))
                 if(abs(item['DT'] - bf_itemDT).total_seconds() > 28800): # 2直17:00には絶対時刻があるので、28,800sec=8時間以上開いてる時だけ0時を堺に日付を+1日する                    
                     df.loc[index, 'DT'] = item['DT'] + timedelta(days = 1)
 #                    print(index,' TIME INVERT: ',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
                 else:
                     print(index,' TIME INVERT: ログノートの時刻記載が間違ってる可能性があります。',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
             bf_itemDT = df.loc[index, 'DT']
+            df.loc[index, 'formatted_DT'] = df.loc[index, 'DT'].strftime('%Y/%#m/%#d %#H:%#M')
         except Exception as e:
             print(dir(e))
             print("message:{0}".format(e.message))
             pass
 
-
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("この処理には時間が掛かる~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     get_schedule_from_ical(df)
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
+    
+#    print(df.loc[1:10,['DT','BL3ical', 'C']])
 #    print(df.loc[:,['DT','BL3ical', 'C']])
-    
-    styler = df.loc[:,['DT', 'BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し' or '引き渡') in str(x) else '')
-    styler = styler.map(lambda x: 'background-color: skyblue' if ('終了') in str(x) else '') #MOTO
-#エラー    styler = styler.map(lambda x: 'background-color: skyblue' if (not '終了時' and '終了') in str(x) else '')
-# 終了 以外全て色付く    styler = styler.map(lambda x: 'background-color: skyblue' if not ('終了時' and '終了') in str(x) else '')
-# 終了にも終了時にも色付かない    styler = styler.map(lambda x: 'background-color: skyblue' if not ('終了時') and ('終了') in str(x) else '')
-#惜しい 終了時　以外全て色付く    styler = styler.map(lambda x: 'background-color: skyblue' if ('終了') and not ('終了時') in str(x) else '')
-# エラー   styler = styler.map(lambda x: 'background-color: skyblue' if not (('終了') and not ('終了時')) in str(x) else '')
-# エラー    styler = styler.map(lambda x: 'background-color: skyblue' if '' else ('終了') and not ('終了時') in str(x))
-#惜しい 終了時 にだけ色が付く    styler = styler.map(lambda x: '' if ('終了') and not ('終了時') in str(x) else 'background-color: skyblue')
-# 終了にも終了時にも色付がつく    styler = styler.map(lambda x: '' if ('終了時') and not ('終了') in str(x) else 'background-color: skyblue')
-# 終了にも終了時にも色付かない    styler = styler.map(lambda x: '' if ('終了') or not ('終了時') in str(x) else 'background-color: skyblue')
+            
+    styler = df.loc[:,['formatted_DT','BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: skyblue' if ('引渡' or '引き渡') in str(x) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
-    styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
+    styler = styler.map(lambda x: 'color: pink' if ("加速器調整" in str(x) or "BL-study" in str(x) or "BL調整" in str(x)) else '') #　なぜか or　が効かない
+    styler = styler.map(lambda x: 'color: red' if ('終了') in str(x) else '')
+    styler = styler.applymap(highlight_column_BL2, subset=['BL2ical'])# BL2/BL3 ical列に色付け
+    styler = styler.applymap(highlight_column_BL3, subset=['BL3ical'])# BL2/BL3 ical列に色付け
+#    styler = styler.apply(highlight_syuryo, axis=1) #　終了のワードがある行に色付け
+    styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ    
 
-    # BL2/BL3 ical列に色付け
-    styler = styler.applymap(highlight_column_BL2, subset=['BL2ical'])
-    styler = styler.applymap(highlight_column_BL3, subset=['BL3ical'])
+    for index,item in df.iterrows():
+        try:
+            if not ("加速器調整" in str(item['BL2ical']) or "BL-study" in str(item['BL2ical']) or "BL調整" in str(item['BL2ical'])) and not ("加速器調整" in str(item['BL3ical']) or "BL-study" in str(item['BL3ical']) or "BL調整" in str(item['BL3ical'])): # ユーザー運転
+                if "終了" in str(item['C']):
+                    #print('両方ユーザー運転中に終了したぞ！  item[BL2ical]=', str(item['C']))
+                    styler = styler.apply(highlight_rows, rows_to_highlight=[index], color="lime", axis=1)
+        except Exception as e:
+            print(dir(e))
+            print("message:{0}".format(e.message))
+            pass
     
-    
-
-    styler.to_excel('output1.xlsx')
-
-    styler.to_html('hoge.html')
+#    styler.to_excel('output1.xlsx')
+#   セル内での改行をしたくないのでcssを噛ます    
+    css = '''
+    <style>
+    table {
+        white-space: nowrap;
+    }
+    </style>
+    '''
+#    styler.to_html('hoge.html',index=False)
+    html_output = css + styler.to_html(index=False)
+    with open('output.html', 'w', encoding='utf-8') as f:
+        f.write(html_output)
     import webbrowser
-    webbrowser.open_new_tab('hoge.html')
+#    webbrowser.open_new_tab('hoge.html')
+    webbrowser.open_new_tab('output.html')    
 #    display(styler)
     
     
@@ -372,8 +392,7 @@ for xml in xmls:
     
     
     
-    print(f"type: {type(df)}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("Finish~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 
     
