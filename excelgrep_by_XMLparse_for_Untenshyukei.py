@@ -28,21 +28,15 @@ def highlight_rows(x, rows_to_highlight, color="yellow"):
     style = f'background-color: {color}'
     return [style if x.name in rows_to_highlight else '' for _ in x]
 
-# 行インデックスが6の行に色を付ける関数を定義
-def highlight_row(x):
-    color = 'background-color: yellow'
-    # 行番号6にのみ適用
-    return [color if x.name == 6 else '' for _ in x]
-
 # 列全体に色を付ける関数
 def highlight_column_BL2(val):
     return 'background-color: gold'
 def highlight_column_BL3(val):
     return 'background-color: dodgerblue'
 
-# 特定の文字列が含まれる行に色を付ける関数
-def highlight_syuryo(row):
-    return ['background-color: red' if '終了' in str(row['C']) else '' for _ in row]
+# 特定の文字列が含まれる行に色を付ける関数 Not use
+#def highlight_syuryo(row):
+#    return ['background-color: red' if '終了' in str(row['C']) else '' for _ in row]
 
 #ical用　始め　=============================================================================================
 import requests
@@ -347,7 +341,8 @@ for xml in xmls:
 #    print(df.loc[:,['DT','BL3ical', 'C']])
             
     styler = df.loc[:,['formatted_DT','BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: skyblue' if ('引渡' or '引き渡') in str(x) else '')
-    styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット') in str(x) else '')
+#    styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット' or '切替') in str(x) else '')
+    styler = styler.map(lambda x: 'color: yellow' if ('切替') in str(x) else '')
     styler = styler.map(lambda x: 'color: pink' if ("加速器調整" in str(x) or "BL-study" in str(x) or "BL調整" in str(x)) else '') #　なぜか or　が効かない
     styler = styler.map(lambda x: 'color: red' if ('終了') in str(x) else '')
     styler = styler.applymap(highlight_column_BL2, subset=['BL2ical'])# BL2/BL3 ical列に色付け
@@ -367,6 +362,7 @@ for xml in xmls:
             pass
     
 #    styler.to_excel('output1.xlsx')
+#    styler.to_html('hoge.html',index=False)
 #   セル内での改行をしたくないのでcssを噛ます    
     css = '''
     <style>
@@ -375,7 +371,6 @@ for xml in xmls:
     }
     </style>
     '''
-#    styler.to_html('hoge.html',index=False)
     html_output = css + styler.to_html(index=False)
     with open('output.html', 'w', encoding='utf-8') as f:
         f.write(html_output)

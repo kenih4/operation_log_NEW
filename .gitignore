@@ -11,5 +11,5 @@ sharedStrings.*
 *.out
 output1.xlsx
 ~$output1.xlsx
-hoge.html
 *.log
+*.html

@@ -1,9 +1,8 @@
-Archive:  SACLA/2024_10.xlsm
+Archive:  SACLA/2025_02.xlsm
     testing: [Content_Types].xml      OK
     testing: _rels/.rels              OK
     testing: xl/workbook.xml          OK
     testing: xl/_rels/workbook.xml.rels   OK
-    testing: xl/worksheets/sheet3.xml   OK
     testing: xl/worksheets/sheet4.xml   OK
     testing: xl/worksheets/sheet5.xml   OK
     testing: xl/worksheets/sheet6.xml   OK
@@ -65,26 +64,10 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image48.png     OK
     testing: xl/media/image49.png     OK
     testing: xl/media/image50.png     OK
-    testing: xl/charts/chart1.xml     OK
-    testing: xl/charts/style1.xml     OK
-    testing: xl/charts/colors1.xml    OK
-    testing: xl/charts/chart2.xml     OK
-    testing: xl/charts/style2.xml     OK
-    testing: xl/charts/colors2.xml    OK
-    testing: xl/theme/themeOverride1.xml   OK
-    testing: xl/charts/chart3.xml     OK
-    testing: xl/charts/style3.xml     OK
-    testing: xl/charts/colors3.xml    OK
-    testing: xl/charts/chart4.xml     OK
-    testing: xl/charts/style4.xml     OK
-    testing: xl/charts/colors4.xml    OK
-    testing: xl/charts/chart5.xml     OK
-    testing: xl/charts/style5.xml     OK
-    testing: xl/charts/colors5.xml    OK
     testing: xl/media/image51.png     OK
     testing: xl/media/image52.png     OK
     testing: xl/media/image53.png     OK
-    testing: xl/media/image54.png     OK
+    testing: xl/media/image54.emf     OK
     testing: xl/media/image55.png     OK
     testing: xl/media/image56.png     OK
     testing: xl/media/image57.png     OK
@@ -99,13 +82,6 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image66.png     OK
     testing: xl/media/image67.png     OK
     testing: xl/media/image68.png     OK
-    testing: xl/charts/chart6.xml     OK
-    testing: xl/charts/chart7.xml     OK
-    testing: xl/charts/chart8.xml     OK
-    testing: xl/charts/chart9.xml     OK
-    testing: xl/charts/chart10.xml    OK
-    testing: xl/charts/chart11.xml    OK
-    testing: xl/charts/chart12.xml    OK
     testing: xl/media/image69.png     OK
     testing: xl/media/image70.png     OK
     testing: xl/media/image71.png     OK
@@ -139,13 +115,6 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image99.png     OK
     testing: xl/media/image100.png    OK
     testing: xl/media/image101.png    OK
-    testing: xl/charts/chart13.xml    OK
-    testing: xl/charts/chart14.xml    OK
-    testing: xl/charts/chart15.xml    OK
-    testing: xl/charts/chart16.xml    OK
-    testing: xl/charts/chart17.xml    OK
-    testing: xl/charts/chart18.xml    OK
-    testing: xl/charts/chart19.xml    OK
     testing: xl/media/image102.png    OK
     testing: xl/media/image103.png    OK
     testing: xl/media/image104.png    OK
@@ -169,25 +138,10 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image122.png    OK
     testing: xl/media/image123.png    OK
     testing: xl/media/image124.png    OK
-    testing: xl/media/image125.jpeg   OK
+    testing: xl/media/image125.png    OK
     testing: xl/media/image126.png    OK
-    testing: xl/media/image127.jpeg   OK
+    testing: xl/media/image127.png    OK
     testing: xl/media/image128.png    OK
-    testing: xl/charts/chart20.xml    OK
-    testing: xl/charts/style6.xml     OK
-    testing: xl/charts/colors6.xml    OK
-    testing: xl/charts/chart21.xml    OK
-    testing: xl/charts/style7.xml     OK
-    testing: xl/charts/colors7.xml    OK
-    testing: xl/charts/chart22.xml    OK
-    testing: xl/charts/style8.xml     OK
-    testing: xl/charts/colors8.xml    OK
-    testing: xl/charts/chart23.xml    OK
-    testing: xl/charts/style9.xml     OK
-    testing: xl/charts/colors9.xml    OK
-    testing: xl/charts/chart24.xml    OK
-    testing: xl/charts/style10.xml    OK
-    testing: xl/charts/colors10.xml   OK
     testing: xl/media/image129.png    OK
     testing: xl/media/image130.png    OK
     testing: xl/media/image131.png    OK
@@ -214,7 +168,7 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image152.png    OK
     testing: xl/media/image153.png    OK
     testing: xl/media/image154.png    OK
-    testing: xl/media/image155.jpeg   OK
+    testing: xl/media/image155.png    OK
     testing: xl/media/image156.png    OK
     testing: xl/media/image157.png    OK
     testing: xl/media/image158.png    OK
@@ -282,13 +236,13 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image220.png    OK
     testing: xl/media/image221.png    OK
     testing: xl/media/image222.png    OK
-    testing: xl/media/image223.svg    OK
+    testing: xl/media/image223.png    OK
     testing: xl/media/image224.png    OK
-    testing: xl/media/image225.svg    OK
+    testing: xl/media/image225.png    OK
     testing: xl/media/image226.png    OK
-    testing: xl/media/image227.svg    OK
+    testing: xl/media/image227.png    OK
     testing: xl/media/image228.png    OK
-    testing: xl/media/image229.svg    OK
+    testing: xl/media/image229.png    OK
     testing: xl/media/image230.png    OK
     testing: xl/media/image231.png    OK
     testing: xl/media/image232.png    OK
@@ -342,7 +296,7 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image280.png    OK
     testing: xl/media/image281.png    OK
     testing: xl/media/image282.png    OK
-    testing: xl/media/image283.png    OK
+    testing: xl/media/image283.emf    OK
     testing: xl/media/image284.png    OK
     testing: xl/media/image285.png    OK
     testing: xl/media/image286.png    OK
@@ -368,10 +322,10 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image306.png    OK
     testing: xl/media/image307.png    OK
     testing: xl/media/image308.png    OK
-    testing: xl/media/image309.emf    OK
+    testing: xl/media/image309.png    OK
     testing: xl/media/image310.png    OK
     testing: xl/media/image311.png    OK
-    testing: xl/media/image312.emf    OK
+    testing: xl/media/image312.png    OK
     testing: xl/media/image313.png    OK
     testing: xl/media/image314.png    OK
     testing: xl/media/image315.png    OK
@@ -473,11 +427,19 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image411.png    OK
     testing: xl/media/image412.png    OK
     testing: xl/media/image413.png    OK
+    testing: xl/charts/chart1.xml     OK
+    testing: xl/charts/chart2.xml     OK
+    testing: xl/charts/chart3.xml     OK
     testing: xl/media/image414.png    OK
     testing: xl/media/image415.png    OK
     testing: xl/media/image416.png    OK
     testing: xl/media/image417.png    OK
     testing: xl/media/image418.png    OK
+    testing: xl/charts/chart4.xml     OK
+    testing: xl/charts/chart5.xml     OK
+    testing: xl/charts/chart6.xml     OK
+    testing: xl/charts/chart7.xml     OK
+    testing: xl/charts/chart8.xml     OK
     testing: xl/media/image419.png    OK
     testing: xl/media/image420.png    OK
     testing: xl/media/image421.png    OK
@@ -494,15 +456,7 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image432.png    OK
     testing: xl/media/image433.png    OK
     testing: xl/media/image434.png    OK
-    testing: xl/charts/chart25.xml    OK
     testing: xl/media/image435.png    OK
-    testing: xl/charts/chart26.xml    OK
-    testing: xl/charts/chart27.xml    OK
-    testing: xl/charts/chart28.xml    OK
-    testing: xl/charts/chart29.xml    OK
-    testing: xl/charts/chart30.xml    OK
-    testing: xl/charts/chart31.xml    OK
-    testing: xl/charts/chart32.xml    OK
     testing: xl/media/image436.png    OK
     testing: xl/media/image437.png    OK
     testing: xl/media/image438.png    OK
@@ -511,6 +465,7 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image441.png    OK
     testing: xl/media/image442.png    OK
     testing: xl/media/image443.png    OK
+    testing: xl/charts/chart9.xml     OK
     testing: xl/media/image444.png    OK
     testing: xl/media/image445.png    OK
     testing: xl/media/image446.png    OK
@@ -540,7 +495,7 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image470.png    OK
     testing: xl/media/image471.png    OK
     testing: xl/media/image472.png    OK
-    testing: xl/media/image473.png    OK
+    testing: xl/media/image473.emf    OK
     testing: xl/media/image474.png    OK
     testing: xl/media/image475.png    OK
     testing: xl/media/image476.png    OK
@@ -554,13 +509,13 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image484.png    OK
     testing: xl/media/image485.png    OK
     testing: xl/media/image486.png    OK
-    testing: xl/media/image487.png    OK
+    testing: xl/media/image487.svg    OK
     testing: xl/media/image488.png    OK
-    testing: xl/media/image489.png    OK
+    testing: xl/media/image489.svg    OK
     testing: xl/media/image490.png    OK
-    testing: xl/media/image491.png    OK
+    testing: xl/media/image491.svg    OK
     testing: xl/media/image492.png    OK
-    testing: xl/media/image493.png    OK
+    testing: xl/media/image493.svg    OK
     testing: xl/media/image494.png    OK
     testing: xl/media/image495.png    OK
     testing: xl/media/image496.png    OK
@@ -602,10 +557,11 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image532.png    OK
     testing: xl/media/image533.png    OK
     testing: xl/media/image534.png    OK
+    testing: xl/media/image535.png    OK
     testing: xl/media/image536.png    OK
-    testing: xl/media/image537.png    OK
+    testing: xl/worksheets/sheet1.xml   OK
     testing: xl/media/image538.png    OK
-    testing: xl/media/image539.jpeg   OK
+    testing: xl/media/image539.png    OK
     testing: xl/media/image540.png    OK
     testing: xl/media/image541.png    OK
     testing: xl/media/image542.png    OK
@@ -624,9 +580,9 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image555.png    OK
     testing: xl/media/image556.png    OK
     testing: xl/media/image557.png    OK
-    testing: xl/media/image558.jpeg   OK
-    testing: xl/media/image559.jpeg   OK
-    testing: xl/media/image560.jpeg   OK
+    testing: xl/media/image558.png    OK
+    testing: xl/media/image559.png    OK
+    testing: xl/media/image560.png    OK
     testing: xl/media/image561.png    OK
     testing: xl/media/image562.png    OK
     testing: xl/media/image563.png    OK
@@ -641,12 +597,12 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image572.png    OK
     testing: xl/media/image573.png    OK
     testing: xl/media/image574.png    OK
-    testing: xl/media/image575.svg    OK
+    testing: xl/media/image575.png    OK
     testing: xl/media/image576.png    OK
     testing: xl/media/image577.png    OK
-    testing: xl/media/image578.svg    OK
+    testing: xl/media/image578.png    OK
     testing: xl/media/image579.png    OK
-    testing: xl/media/image580.svg    OK
+    testing: xl/media/image580.png    OK
     testing: xl/media/image581.png    OK
     testing: xl/media/image582.png    OK
     testing: xl/media/image583.png    OK
@@ -657,9 +613,9 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image588.png    OK
     testing: xl/media/image589.png    OK
     testing: xl/media/image590.png    OK
-    testing: xl/media/image591.jpeg   OK
-    testing: xl/media/image592.jpeg   OK
-    testing: xl/media/image593.jpg    OK
+    testing: xl/media/image591.png    OK
+    testing: xl/media/image592.png    OK
+    testing: xl/media/image593.png    OK
     testing: xl/media/image594.png    OK
     testing: xl/media/image595.png    OK
     testing: xl/media/image596.png    OK
@@ -671,12 +627,12 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image602.png    OK
     testing: xl/media/image603.png    OK
     testing: xl/media/image604.png    OK
-    testing: xl/media/image605.emf    OK
+    testing: xl/media/image605.png    OK
     testing: xl/media/image606.png    OK
-    testing: xl/media/image607.emf    OK
+    testing: xl/media/image607.png    OK
     testing: xl/media/image608.png    OK
     testing: xl/media/image609.png    OK
-    testing: xl/media/image610.emf    OK
+    testing: xl/media/image610.png    OK
     testing: xl/media/image611.png    OK
     testing: xl/media/image612.png    OK
     testing: xl/media/image613.png    OK
@@ -696,12 +652,12 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image627.png    OK
     testing: xl/media/image628.png    OK
     testing: xl/media/image629.png    OK
-    testing: xl/media/image630.png    OK
+    testing: xl/media/image537.png    OK
     testing: xl/media/image631.png    OK
     testing: xl/media/image632.png    OK
     testing: xl/media/image633.png    OK
     testing: xl/media/image634.png    OK
-    testing: xl/media/image535.png    OK
+    testing: xl/media/image635.png    OK
     testing: xl/media/image636.png    OK
     testing: xl/media/image637.png    OK
     testing: xl/media/image638.png    OK
@@ -746,7 +702,7 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image677.png    OK
     testing: xl/media/image678.png    OK
     testing: xl/media/image679.png    OK
-    testing: xl/media/image680.png    OK
+    testing: xl/media/image680.emf    OK
     testing: xl/media/image681.png    OK
     testing: xl/media/image682.png    OK
     testing: xl/media/image683.png    OK
@@ -754,23 +710,22 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/media/image685.png    OK
     testing: xl/media/image686.png    OK
     testing: xl/media/image687.png    OK
-    testing: xl/media/image688.png    OK
     testing: xl/drawings/drawing2.xml   OK
     testing: xl/drawings/vmlDrawing1.vml   OK
     testing: xl/drawings/drawing3.xml   OK
-    testing: xl/media/image689.png    OK
+    testing: xl/media/image688.png    OK
     testing: xl/drawings/drawing4.xml   OK
     testing: xl/drawings/drawing5.xml   OK
+    testing: xl/media/image689.png    OK
     testing: xl/media/image690.png    OK
     testing: xl/media/image691.png    OK
-    testing: xl/media/image692.png    OK
     testing: xl/drawings/drawing6.xml   OK
+    testing: xl/media/image692.png    OK
     testing: xl/media/image693.png    OK
     testing: xl/media/image694.png    OK
-    testing: xl/media/image695.png    OK
     testing: xl/vbaProject.bin        OK
-    testing: xl/worksheets/sheet1.xml   OK
     testing: xl/worksheets/sheet2.xml   OK
+    testing: xl/worksheets/sheet3.xml   OK
     testing: xl/worksheets/_rels/sheet1.xml.rels   OK
     testing: xl/worksheets/_rels/sheet2.xml.rels   OK
     testing: xl/worksheets/_rels/sheet3.xml.rels   OK
@@ -780,27 +735,15 @@ Archive:  SACLA/2024_10.xlsm
     testing: xl/worksheets/_rels/sheet9.xml.rels   OK
     testing: xl/worksheets/_rels/sheet10.xml.rels   OK
     testing: xl/drawings/_rels/drawing1.xml.rels   OK
-    testing: xl/charts/_rels/chart1.xml.rels   OK
-    testing: xl/charts/_rels/chart2.xml.rels   OK
-    testing: xl/charts/_rels/chart3.xml.rels   OK
-    testing: xl/charts/_rels/chart4.xml.rels   OK
-    testing: xl/charts/_rels/chart5.xml.rels   OK
-    testing: xl/charts/_rels/chart20.xml.rels   OK
-    testing: xl/charts/_rels/chart21.xml.rels   OK
-    testing: xl/charts/_rels/chart22.xml.rels   OK
-    testing: xl/charts/_rels/chart23.xml.rels   OK
-    testing: xl/charts/_rels/chart24.xml.rels   OK
     testing: xl/drawings/_rels/drawing3.xml.rels   OK
     testing: xl/drawings/_rels/drawing5.xml.rels   OK
     testing: xl/drawings/_rels/drawing6.xml.rels   OK
-    testing: xl/media/image635.png    OK
-    testing: xl/printerSettings/printerSettings2.bin   OK
+    testing: xl/media/image630.png    OK
     testing: xl/ctrlProps/ctrlProp2.xml   OK
-    testing: xl/externalLinks/_rels/externalLink1.xml.rels   OK
-    testing: xl/externalLinks/externalLink1.xml   OK
-    testing: xl/printerSettings/printerSettings1.bin   OK
+    testing: xl/printerSettings/printerSettings2.bin   OK
     testing: xl/calcChain.xml         OK
-    testing: xl/ctrlProps/ctrlProp1.xml   OK
+    testing: xl/printerSettings/printerSettings1.bin   OK
     testing: docProps/core.xml        OK
     testing: docProps/app.xml         OK
-No errors detected in compressed data of SACLA/2024_10.xlsm.
+    testing: xl/ctrlProps/ctrlProp1.xml   OK
+No errors detected in compressed data of SACLA/2025_02.xlsm.
