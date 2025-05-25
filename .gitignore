@@ -13,3 +13,5 @@ output1.xlsx
 ~$output1.xlsx
 *.log
 *.html
+output.html
+error.log
