@@ -17,4 +17,3 @@ C:\"Program Files (x86)"\Microsoft Office\root\Office16\EXCEL.EXE
 
 excel.exe 2024_01.xlsm
 
-

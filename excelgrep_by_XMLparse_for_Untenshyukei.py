@@ -5,9 +5,16 @@ import sys
 import io
 import codecs
 import pandas as pd
+from pandas.errors import EmptyDataError
+from pathlib import Path
 
 from datetime import datetime, time
 from datetime import timedelta
+
+import tkinter as tk #ポップアップメッセージを出したい
+from tkinter import messagebox
+root = tk.Tk()# Tkinterのルートウィンドウを作成するが、非表示にする
+root.withdraw()
 
 #
 # python excelgrep_by_XMLparse_for_Untenshyukei.py sharedStrings.xml sheet1.xml
@@ -37,6 +44,78 @@ def highlight_column_BL3(val):
 # 特定の文字列が含まれる行に色を付ける関数 Not use
 #def highlight_syuryo(row):
 #    return ['background-color: red' if '終了' in str(row['C']) else '' for _ in row]
+
+# 指定されたExcelファイルとシート名を読み込み、pandasのDataFrameとして返します　==============================================================================================
+def load_excel_to_dataframe(file_path_str: str, sheet_name: str) -> pd.DataFrame | None:
+    """
+    Args:
+        file_path (str): 読み込むExcelファイル名 (例: 'test.xlsm')。
+        sheet_name (str): 読み込むシート名 (例: 'sheet1')。
+
+    Returns:
+        pd.DataFrame | None: 読み込まれたDataFrame、またはエラーが発生した場合はNone。
+    """
+    try:
+        # Excelファイルを読み込み、DataFrameに格納
+        file_path = Path(file_path_str) 
+        print(f"file:'{file_path_str}', sheet:'{sheet_name}'")
+        df = pd.read_excel(
+            file_path,        # ファイルパス
+            sheet_name=sheet_name, # 読み込むシート名
+            engine='openpyxl'  # .xlsm/.xlsxファイルに対応
+        )
+        print("Complete reading Excel file into DataFrame.")
+        return df
+
+    except FileNotFoundError:
+        print(f"エラー: ファイル '{file_path}' が見つかりません。ファイルパスを確認してください。")
+        return None
+    except ValueError as e:
+        # シート名が存在しない場合などに発生
+        print(f"エラー: 指定されたシート '{sheet_name}' が見つからないか、その他の読み込みエラーが発生しました。詳細: {e}")
+        return None
+    except EmptyDataError:
+        print(f"警告: ファイル '{file_path}' のシート '{sheet_name}' にデータが含まれていません。")
+        # 空のDataFrameを返すこともできます
+        # return pd.DataFrame()
+        return None
+    except Exception as e:
+        print(f"予期せぬエラーが発生しました: {e}")
+        return None
+
+#Pandas DataFrameの指定された列に、特定の日時データ(±許容時間内)が存在するかを確認します。==============================================================================================
+def check_datetime_existence_with_tolerance(
+    df: pd.DataFrame, 
+    column_name: str, 
+    date_to_check: datetime, 
+    tolerance_minutes: int = 1
+) -> bool:
+    """
+    Args:
+        df (pd.DataFrame): 対象のDataFrame。
+        column_name (str): 日時データが存在する列名 ('DT'など)。
+        date_to_check (datetime): 検索対象の日時データ (datetimeオブジェクト)。
+        tolerance_minutes (int): 許容するズレの時間（分）。デフォルトは1分。
+    Returns:
+        bool: 許容範囲内の日時データが存在すれば True、存在しなければ False。
+    """
+    try:
+        if not pd.api.types.is_datetime64_any_dtype(df[column_name]): # 列のデータ型をdatetimeに揃える (以前の関数と同様の処理を推奨)
+             df[column_name] = pd.to_datetime(df[column_name], errors='coerce', utc=True).dt.tz_localize(None)
+    except KeyError:
+        print(f"エラー: 指定された列名 '{column_name}' がDataFrameに存在しません。")
+        return False
+    except Exception as e:
+        print(f"日時変換中にエラーが発生しました: {e}")
+        return False        
+    
+    tolerance = timedelta(minutes=tolerance_minutes)    
+    start_time = date_to_check - tolerance
+    end_time = date_to_check + tolerance        
+    is_present = df[column_name].between(start_time, end_time).any()    
+    # (別解: 論理演算子を使う方法)
+    # is_present = ((df[column_name] >= start_time) & (df[column_name] <= end_time)).any()    
+    return is_present
 
 #ical用　始め　=============================================================================================
 import requests
@@ -139,10 +218,6 @@ def get_schedule_from_ical(df_lognote):
 
 
 
-
-
-
-
 print("version",pd.__version__)
 #pd.set_option('display.max_rows', 70)
 pd.set_option('display.max_rows', None)
@@ -166,8 +241,6 @@ print("Arg[sharedStrings.xml]:\t",args[1])
 print("Arg[sheet1.xml]:\t",args[2])
 
 
-    
-    
     
 
 #   sharedStrings.xml のsiタグの部分だけ配列に格納
@@ -279,7 +352,7 @@ for xml in xmls:
                                 except:
                                     df_tmp.iloc[0, 3] = 0
                             
-                            print(">>>df_tmp =\t",type(df_tmp.iloc[0, 3]),"\t",df_tmp.iloc[0, 3],end='\n')
+                            #print(">>>df_tmp =\t",type(df_tmp.iloc[0, 3]),"\t",df_tmp.iloc[0, 3],end='\n')
                             
                 df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
                 df_tmp.iloc[0, 2] = "-" # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
@@ -387,8 +460,41 @@ for xml in xmls:
     
     
     
-    
-    
+
+
+    #/=======SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認
+    #  なぜか、get_schedule_from_ical(df)の前でこれをすると、icalからとってきたスケジュールがうまくdfに入らない。なぜ？？？？
+    for index,item in df.iterrows():#ログノートの最初の日時を取得(ログノートが何月のなのかを確認するため)
+        if(type(item['DT']) is datetime):
+            first_dt = datetime(year=item['DT'].year, month=item['DT'].month, day=item['DT'].day, hour=0, minute=0, second=0)
+            break
+    print(first_dt)
+
+    with open(r"C:\me\unten\OperationSummary\dt_beg.txt", mode='r', encoding="UTF-8") as f:
+        buff_dt_beg = f.read()
+    with open(r"C:\me\unten\OperationSummary\dt_end.txt", mode='r', encoding="UTF-8") as f:
+        buff_dt_end = f.read()
+    dt_beg = datetime.strptime(buff_dt_beg, "%Y/%m/%d %H:%M")
+    dt_end = datetime.strptime(buff_dt_end, "%Y/%m/%d %H:%M")
+    print("dt_beg=",dt_beg)
+    print("dt_end=",dt_end)            
+    data_df = load_excel_to_dataframe(r"\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm", "調整時間")
+    #print (data_df)
+    start_row_index = 1 # 2行目以降
+    column_index = 2 # 'end'列目  調整時間のstartにはチョッパーOFF時間になってる事があるので、ログノートの記載時間と合わないことがあるのでendで確認する。
+    target_series = data_df.iloc[start_row_index:, column_index]
+    for index, value in target_series.items():
+        if value.month == first_dt.month and value >= dt_beg and value <= dt_end: #指定された月のログノートで、かつ、運転集計する期間内だけ確認
+            print(f"index: {index}, value: {value}, type(value): {type(value)}")
+            result = check_datetime_existence_with_tolerance(df, 'DT', value, tolerance_minutes=0.5)            
+            if not result:
+                print(f"    >>>>>>>>>>>>>>>   {value}   is Exit <!!!!!{result}!!!!!>")
+                messagebox.showwarning("要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整時間がログノートに存在しません！\n" + str(value))
+            else:
+                print(f"    >>>>>>>>>>>>>>>   {value}   is Exit <{result}>")          
+        else:
+            print(f"index: {index}, value: {value} is out of range.")
+    #========================================================================/
     print("Finish~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 
