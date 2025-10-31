@@ -278,7 +278,9 @@ for xml in xmls:
                                     df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
                                 except:
                                     df_tmp.iloc[0, 3] = 0
-                                    
+                            
+                            print(">>>df_tmp =\t",type(df_tmp.iloc[0, 3]),"\t",df_tmp.iloc[0, 3],end='\n')
+                            
                 df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
                 df_tmp.iloc[0, 2] = "-" # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
 
@@ -339,7 +341,7 @@ for xml in xmls:
     
 #    print(df.loc[1:10,['DT','BL3ical', 'C']])
 #    print(df.loc[:,['DT','BL3ical', 'C']])
-            
+    
     styler = df.loc[:,['formatted_DT','BL2ical', 'BL3ical', 'C']].style.map(lambda x: 'background-color: skyblue' if ('引渡' or '引き渡') in str(x) else '')
 #    styler = styler.map(lambda x: 'color: yellow' if ('変更依頼' or 'ユニット' or '切替') in str(x) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('切替') in str(x) else '')

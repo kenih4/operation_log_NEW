@@ -90,7 +90,6 @@ for arg in ${@}; do
 
 
 
-#ret=${tmpdir/\/tmp\//C:\\Users\\kenichi\\AppData\\Local\\Temp\\}
 ret=${tmpdir/\/tmp\//C:\\Users\\kenic\\AppData\\Local\\Temp\\}
 #echo start \"$ret\\xl\\media\"
 if [ ! -e $ret\\xl\\media ]; then

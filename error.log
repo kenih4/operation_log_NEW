@@ -1,8 +1,11 @@
-Archive:  SACLA/2025_05.xlsm
+Archive:  SACLA/2025_10.xlsm
     testing: [Content_Types].xml      OK
     testing: _rels/.rels              OK
     testing: xl/workbook.xml          OK
     testing: xl/_rels/workbook.xml.rels   OK
+    testing: xl/worksheets/sheet1.xml   OK
+    testing: xl/worksheets/sheet2.xml   OK
+    testing: xl/worksheets/sheet3.xml   OK
     testing: xl/worksheets/sheet4.xml   OK
     testing: xl/worksheets/sheet5.xml   OK
     testing: xl/worksheets/sheet6.xml   OK
@@ -10,12 +13,13 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/worksheets/sheet8.xml   OK
     testing: xl/worksheets/sheet9.xml   OK
     testing: xl/worksheets/sheet10.xml   OK
+    testing: xl/worksheets/sheet11.xml   OK
     testing: xl/theme/theme1.xml      OK
     testing: xl/styles.xml            OK
     testing: xl/sharedStrings.xml     OK
     testing: xl/drawings/drawing1.xml   OK
-    testing: xl/media/image1.jpeg     OK
-    testing: xl/media/image2.jpeg     OK
+    testing: xl/media/image1.png      OK
+    testing: xl/media/image2.png      OK
     testing: xl/media/image3.png      OK
     testing: xl/media/image4.png      OK
     testing: xl/media/image5.png      OK
@@ -27,10 +31,10 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image11.png     OK
     testing: xl/media/image12.png     OK
     testing: xl/media/image13.png     OK
-    testing: xl/media/image14.svg     OK
-    testing: xl/media/image15.png     OK
+    testing: xl/media/image14.png     OK
+    testing: xl/media/image15.gif     OK
     testing: xl/media/image16.png     OK
-    testing: xl/media/image17.png     OK
+    testing: xl/media/image17.gif     OK
     testing: xl/media/image18.png     OK
     testing: xl/media/image19.png     OK
     testing: xl/media/image20.png     OK
@@ -39,16 +43,16 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image23.png     OK
     testing: xl/media/image24.png     OK
     testing: xl/media/image25.png     OK
-    testing: xl/media/image26.png     OK
+    testing: xl/media/image26.gif     OK
     testing: xl/media/image27.png     OK
     testing: xl/media/image28.png     OK
     testing: xl/media/image29.png     OK
-    testing: xl/media/image30.png     OK
+    testing: xl/media/image30.gif     OK
     testing: xl/media/image31.png     OK
     testing: xl/media/image32.png     OK
     testing: xl/media/image33.png     OK
     testing: xl/media/image34.png     OK
-    testing: xl/media/image35.png     OK
+    testing: xl/media/image35.gif     OK
     testing: xl/media/image36.png     OK
     testing: xl/media/image37.png     OK
     testing: xl/media/image38.png     OK
@@ -58,35 +62,35 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image42.png     OK
     testing: xl/media/image43.png     OK
     testing: xl/media/image44.png     OK
-    testing: xl/media/image45.gif     OK
-    testing: xl/media/image46.png     OK
+    testing: xl/media/image45.png     OK
+    testing: xl/media/image46.gif     OK
     testing: xl/media/image47.png     OK
-    testing: xl/media/image48.gif     OK
+    testing: xl/media/image48.png     OK
     testing: xl/media/image49.png     OK
-    testing: xl/media/image50.gif     OK
+    testing: xl/media/image50.png     OK
     testing: xl/media/image51.png     OK
     testing: xl/media/image52.png     OK
     testing: xl/media/image53.png     OK
-    testing: xl/media/image54.png     OK
+    testing: xl/media/image54.jpeg    OK
     testing: xl/media/image55.png     OK
-    testing: xl/media/image56.png     OK
+    testing: xl/media/image56.jpeg    OK
     testing: xl/media/image57.png     OK
     testing: xl/media/image58.png     OK
     testing: xl/media/image59.png     OK
-    testing: xl/media/image60.png     OK
+    testing: xl/media/image60.gif     OK
     testing: xl/media/image61.png     OK
     testing: xl/media/image62.png     OK
     testing: xl/media/image63.png     OK
-    testing: xl/media/image64.png     OK
+    testing: xl/media/image64.gif     OK
     testing: xl/media/image65.png     OK
     testing: xl/media/image66.png     OK
-    testing: xl/media/image67.jpeg    OK
-    testing: xl/media/image68.jpeg    OK
+    testing: xl/media/image67.png     OK
+    testing: xl/media/image68.gif     OK
     testing: xl/media/image69.png     OK
-    testing: xl/media/image70.png     OK
-    testing: xl/media/image71.png     OK
+    testing: xl/media/image70.gif     OK
+    testing: xl/media/image71.gif     OK
     testing: xl/media/image72.png     OK
-    testing: xl/media/image73.png     OK
+    testing: xl/media/image73.gif     OK
     testing: xl/media/image74.png     OK
     testing: xl/media/image75.png     OK
     testing: xl/media/image76.png     OK
@@ -97,7 +101,7 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image81.png     OK
     testing: xl/media/image82.png     OK
     testing: xl/media/image83.png     OK
-    testing: xl/media/image84.gif     OK
+    testing: xl/media/image84.png     OK
     testing: xl/media/image85.png     OK
     testing: xl/media/image86.png     OK
     testing: xl/media/image87.png     OK
@@ -111,39 +115,38 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image95.png     OK
     testing: xl/media/image96.png     OK
     testing: xl/media/image97.png     OK
-    testing: xl/media/image98.gif     OK
+    testing: xl/media/image98.png     OK
     testing: xl/media/image99.png     OK
     testing: xl/media/image100.png    OK
     testing: xl/media/image101.png    OK
     testing: xl/media/image102.png    OK
     testing: xl/media/image103.png    OK
-    testing: xl/media/image104.gif    OK
+    testing: xl/media/image104.png    OK
     testing: xl/media/image105.png    OK
     testing: xl/media/image106.png    OK
     testing: xl/media/image107.png    OK
     testing: xl/media/image108.png    OK
     testing: xl/media/image109.png    OK
     testing: xl/media/image110.png    OK
-    testing: xl/media/image111.png    OK
+    testing: xl/media/image111.emf    OK
     testing: xl/media/image112.png    OK
-    testing: xl/media/image113.gif    OK
+    testing: xl/media/image113.png    OK
     testing: xl/media/image114.png    OK
     testing: xl/media/image115.png    OK
     testing: xl/media/image116.png    OK
     testing: xl/media/image117.png    OK
     testing: xl/media/image118.png    OK
     testing: xl/media/image119.png    OK
-    testing: xl/charts/chart1.xml     OK
-    testing: xl/media/image120.png    OK
-    testing: xl/media/image121.gif    OK
+    testing: xl/media/image120.emf    OK
+    testing: xl/media/image121.png    OK
     testing: xl/media/image122.png    OK
-    testing: xl/media/image123.gif    OK
+    testing: xl/media/image123.png    OK
     testing: xl/media/image124.png    OK
     testing: xl/media/image125.png    OK
     testing: xl/media/image126.png    OK
     testing: xl/media/image127.png    OK
     testing: xl/media/image128.png    OK
-    testing: xl/media/image129.gif    OK
+    testing: xl/media/image129.png    OK
     testing: xl/media/image130.png    OK
     testing: xl/media/image131.png    OK
     testing: xl/media/image132.png    OK
@@ -158,7 +161,7 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image141.png    OK
     testing: xl/media/image142.png    OK
     testing: xl/media/image143.png    OK
-    testing: xl/media/image144.png    OK
+    testing: xl/media/image144.gif    OK
     testing: xl/media/image145.png    OK
     testing: xl/media/image146.png    OK
     testing: xl/media/image147.png    OK
@@ -176,61 +179,71 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image159.png    OK
     testing: xl/media/image160.png    OK
     testing: xl/media/image161.png    OK
-    testing: xl/media/image162.png    OK
+    testing: xl/media/image162.gif    OK
     testing: xl/media/image163.png    OK
     testing: xl/media/image164.png    OK
-    testing: xl/media/image165.gif    OK
+    testing: xl/media/image165.png    OK
     testing: xl/media/image166.png    OK
     testing: xl/media/image167.png    OK
-    testing: xl/media/image168.gif    OK
+    testing: xl/media/image168.png    OK
     testing: xl/media/image169.png    OK
-    testing: xl/media/image170.png    OK
+    testing: xl/media/image170.gif    OK
     testing: xl/media/image171.png    OK
     testing: xl/media/image172.png    OK
     testing: xl/media/image173.png    OK
     testing: xl/media/image174.png    OK
     testing: xl/media/image175.png    OK
-    testing: xl/media/image176.gif    OK
+    testing: xl/media/image176.png    OK
     testing: xl/media/image177.gif    OK
     testing: xl/media/image178.png    OK
     testing: xl/media/image179.png    OK
     testing: xl/media/image180.png    OK
     testing: xl/media/image181.png    OK
     testing: xl/media/image182.png    OK
-    testing: xl/media/image183.png    OK
+    testing: xl/media/image183.emf    OK
     testing: xl/media/image184.png    OK
-    testing: xl/media/image185.png    OK
+    testing: xl/charts/chart1.xml     OK
+    testing: xl/charts/chart2.xml     OK
+    testing: xl/media/image185.gif    OK
     testing: xl/media/image186.png    OK
-    testing: xl/media/image187.gif    OK
+    testing: xl/media/image187.png    OK
     testing: xl/media/image188.png    OK
     testing: xl/media/image189.png    OK
     testing: xl/media/image190.png    OK
     testing: xl/media/image191.png    OK
     testing: xl/media/image192.png    OK
     testing: xl/media/image193.png    OK
-    testing: xl/media/image194.gif    OK
+    testing: xl/media/image194.png    OK
     testing: xl/media/image195.png    OK
     testing: xl/media/image196.png    OK
     testing: xl/media/image197.png    OK
     testing: xl/media/image198.png    OK
+    testing: xl/charts/chart3.xml     OK
+    testing: xl/charts/chart4.xml     OK
+    testing: xl/charts/chart5.xml     OK
+    testing: xl/charts/chart6.xml     OK
+    testing: xl/charts/chart7.xml     OK
+    testing: xl/charts/chart8.xml     OK
     testing: xl/media/image199.png    OK
+    testing: xl/charts/chart9.xml     OK
     testing: xl/media/image200.png    OK
     testing: xl/media/image201.png    OK
     testing: xl/media/image202.png    OK
-    testing: xl/media/image203.gif    OK
+    testing: xl/media/image203.png    OK
     testing: xl/media/image204.png    OK
     testing: xl/media/image205.png    OK
-    testing: xl/media/image206.gif    OK
+    testing: xl/media/image206.png    OK
     testing: xl/media/image207.png    OK
     testing: xl/media/image208.png    OK
     testing: xl/media/image209.gif    OK
     testing: xl/media/image210.png    OK
-    testing: xl/media/image211.gif    OK
+    testing: xl/media/image211.png    OK
     testing: xl/media/image212.png    OK
+    testing: xl/charts/chart10.xml    OK
     testing: xl/media/image213.png    OK
-    testing: xl/media/image214.png    OK
+    testing: xl/media/image214.gif    OK
     testing: xl/media/image215.png    OK
-    testing: xl/media/image216.png    OK
+    testing: xl/media/image216.gif    OK
     testing: xl/media/image217.png    OK
     testing: xl/media/image218.png    OK
     testing: xl/media/image219.png    OK
@@ -240,46 +253,53 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image223.png    OK
     testing: xl/media/image224.png    OK
     testing: xl/media/image225.png    OK
-    testing: xl/media/image226.png    OK
+    testing: xl/media/image226.gif    OK
     testing: xl/media/image227.png    OK
     testing: xl/media/image228.png    OK
     testing: xl/media/image229.png    OK
     testing: xl/media/image230.png    OK
     testing: xl/media/image231.png    OK
     testing: xl/media/image232.png    OK
-    testing: xl/media/image233.gif    OK
+    testing: xl/media/image233.png    OK
     testing: xl/media/image234.png    OK
     testing: xl/media/image235.png    OK
     testing: xl/media/image236.png    OK
     testing: xl/media/image237.png    OK
-    testing: xl/media/image238.png    OK
+    testing: xl/media/image238.gif    OK
     testing: xl/media/image239.png    OK
+    testing: xl/charts/chart11.xml    OK
     testing: xl/media/image240.png    OK
+    testing: xl/charts/chart12.xml    OK
+    testing: xl/charts/chart13.xml    OK
+    testing: xl/charts/chart14.xml    OK
+    testing: xl/charts/chart15.xml    OK
+    testing: xl/charts/chart16.xml    OK
+    testing: xl/charts/chart17.xml    OK
     testing: xl/media/image241.png    OK
     testing: xl/media/image242.png    OK
     testing: xl/media/image243.png    OK
     testing: xl/media/image244.png    OK
     testing: xl/media/image245.png    OK
     testing: xl/media/image246.png    OK
-    testing: xl/media/image247.gif    OK
-    testing: xl/media/image248.gif    OK
+    testing: xl/media/image247.png    OK
+    testing: xl/media/image248.png    OK
     testing: xl/media/image249.png    OK
     testing: xl/media/image250.png    OK
-    testing: xl/media/image251.gif    OK
-    testing: xl/media/image252.gif    OK
+    testing: xl/media/image251.png    OK
+    testing: xl/media/image252.png    OK
     testing: xl/media/image253.png    OK
-    testing: xl/media/image254.gif    OK
-    testing: xl/media/image255.gif    OK
-    testing: xl/media/image256.gif    OK
-    testing: xl/media/image257.gif    OK
+    testing: xl/media/image254.png    OK
+    testing: xl/media/image255.png    OK
+    testing: xl/media/image256.png    OK
+    testing: xl/media/image257.png    OK
     testing: xl/media/image258.png    OK
-    testing: xl/media/image259.gif    OK
-    testing: xl/media/image260.gif    OK
+    testing: xl/media/image259.png    OK
+    testing: xl/media/image260.png    OK
     testing: xl/media/image261.png    OK
-    testing: xl/media/image262.gif    OK
+    testing: xl/media/image262.png    OK
     testing: xl/media/image263.png    OK
     testing: xl/media/image264.gif    OK
-    testing: xl/media/image265.gif    OK
+    testing: xl/media/image265.png    OK
     testing: xl/media/image266.png    OK
     testing: xl/media/image267.png    OK
     testing: xl/media/image268.png    OK
@@ -288,163 +308,163 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image271.png    OK
     testing: xl/media/image272.png    OK
     testing: xl/media/image273.png    OK
-    testing: xl/media/image274.gif    OK
+    testing: xl/media/image274.png    OK
     testing: xl/media/image275.gif    OK
     testing: xl/media/image276.png    OK
-    testing: xl/media/image277.gif    OK
-    testing: xl/media/image278.gif    OK
+    testing: xl/media/image277.png    OK
+    testing: xl/media/image278.png    OK
     testing: xl/media/image279.png    OK
-    testing: xl/media/image280.png    OK
-    testing: xl/media/image281.gif    OK
-    testing: xl/media/image282.gif    OK
+    testing: xl/media/image280.gif    OK
+    testing: xl/media/image281.png    OK
+    testing: xl/media/image282.png    OK
     testing: xl/media/image283.png    OK
     testing: xl/media/image284.png    OK
     testing: xl/media/image285.gif    OK
-    testing: xl/media/image286.gif    OK
+    testing: xl/media/image286.png    OK
     testing: xl/media/image287.png    OK
     testing: xl/media/image288.gif    OK
-    testing: xl/media/image289.png    OK
+    testing: xl/media/image289.gif    OK
     testing: xl/media/image290.png    OK
-    testing: xl/media/image291.png    OK
-    testing: xl/media/image292.png    OK
+    testing: xl/media/image291.gif    OK
+    testing: xl/media/image292.gif    OK
     testing: xl/media/image293.gif    OK
     testing: xl/media/image294.gif    OK
-    testing: xl/media/image295.gif    OK
-    testing: xl/media/image296.gif    OK
-    testing: xl/media/image297.png    OK
+    testing: xl/media/image295.png    OK
+    testing: xl/media/image296.png    OK
+    testing: xl/media/image297.gif    OK
     testing: xl/media/image298.png    OK
-    testing: xl/media/image299.png    OK
-    testing: xl/media/image300.png    OK
-    testing: xl/media/image301.png    OK
+    testing: xl/media/image299.gif    OK
+    testing: xl/media/image300.gif    OK
+    testing: xl/media/image301.gif    OK
     testing: xl/media/image302.png    OK
     testing: xl/media/image303.gif    OK
-    testing: xl/media/image304.gif    OK
-    testing: xl/media/image305.png    OK
+    testing: xl/media/image304.png    OK
+    testing: xl/media/image305.gif    OK
     testing: xl/media/image306.gif    OK
     testing: xl/media/image307.gif    OK
-    testing: xl/media/image308.png    OK
+    testing: xl/media/image308.gif    OK
     testing: xl/media/image309.png    OK
-    testing: xl/media/image310.png    OK
-    testing: xl/media/image311.png    OK
-    testing: xl/media/image312.png    OK
-    testing: xl/media/image313.png    OK
-    testing: xl/media/image314.png    OK
+    testing: xl/media/image310.gif    OK
+    testing: xl/media/image311.gif    OK
+    testing: xl/media/image312.gif    OK
+    testing: xl/media/image313.gif    OK
+    testing: xl/media/image314.gif    OK
     testing: xl/media/image315.png    OK
     testing: xl/media/image316.png    OK
-    testing: xl/media/image317.png    OK
+    testing: xl/media/image317.gif    OK
     testing: xl/media/image318.png    OK
-    testing: xl/media/image319.png    OK
+    testing: xl/media/image319.gif    OK
     testing: xl/media/image320.png    OK
-    testing: xl/media/image321.png    OK
+    testing: xl/media/image321.gif    OK
     testing: xl/media/image322.gif    OK
     testing: xl/media/image323.gif    OK
-    testing: xl/media/image324.gif    OK
-    testing: xl/media/image325.png    OK
+    testing: xl/media/image324.png    OK
+    testing: xl/media/image325.gif    OK
     testing: xl/media/image326.png    OK
     testing: xl/media/image327.png    OK
     testing: xl/media/image328.gif    OK
-    testing: xl/media/image329.png    OK
-    testing: xl/media/image330.png    OK
-    testing: xl/media/image331.png    OK
+    testing: xl/media/image329.gif    OK
+    testing: xl/media/image330.gif    OK
+    testing: xl/media/image331.gif    OK
     testing: xl/media/image332.png    OK
-    testing: xl/media/image333.png    OK
-    testing: xl/media/image334.jpeg   OK
-    testing: xl/media/image335.jpeg   OK
-    testing: xl/media/image336.jpeg   OK
+    testing: xl/media/image333.gif    OK
+    testing: xl/media/image334.png    OK
+    testing: xl/media/image335.png    OK
+    testing: xl/media/image336.gif    OK
     testing: xl/media/image337.png    OK
-    testing: xl/media/image338.png    OK
-    testing: xl/media/image339.png    OK
-    testing: xl/media/image340.png    OK
-    testing: xl/media/image341.jpeg   OK
-    testing: xl/media/image342.png    OK
-    testing: xl/media/image343.png    OK
+    testing: xl/media/image338.gif    OK
+    testing: xl/media/image339.gif    OK
+    testing: xl/media/image340.gif    OK
+    testing: xl/media/image341.png    OK
+    testing: xl/media/image342.gif    OK
+    testing: xl/media/image343.gif    OK
     testing: xl/media/image344.png    OK
     testing: xl/media/image345.png    OK
-    testing: xl/media/image346.jpeg   OK
+    testing: xl/media/image346.gif    OK
     testing: xl/media/image347.png    OK
     testing: xl/media/image348.png    OK
     testing: xl/media/image349.png    OK
     testing: xl/media/image350.png    OK
     testing: xl/media/image351.png    OK
-    testing: xl/media/image352.jpeg   OK
+    testing: xl/media/image352.png    OK
     testing: xl/media/image353.png    OK
     testing: xl/media/image354.png    OK
     testing: xl/media/image355.png    OK
     testing: xl/media/image356.png    OK
-    testing: xl/media/image357.gif    OK
-    testing: xl/media/image358.gif    OK
+    testing: xl/media/image357.png    OK
+    testing: xl/media/image358.png    OK
     testing: xl/media/image359.png    OK
     testing: xl/media/image360.gif    OK
-    testing: xl/media/image361.png    OK
+    testing: xl/media/image361.gif    OK
     testing: xl/media/image362.png    OK
-    testing: xl/media/image363.png    OK
-    testing: xl/media/image364.png    OK
+    testing: xl/media/image363.gif    OK
+    testing: xl/media/image364.gif    OK
     testing: xl/media/image365.png    OK
     testing: xl/media/image366.png    OK
     testing: xl/media/image367.png    OK
     testing: xl/media/image368.png    OK
-    testing: xl/media/image369.gif    OK
+    testing: xl/media/image369.png    OK
     testing: xl/media/image370.png    OK
-    testing: xl/media/image371.gif    OK
+    testing: xl/media/image371.png    OK
     testing: xl/media/image372.png    OK
     testing: xl/media/image373.png    OK
     testing: xl/media/image374.png    OK
     testing: xl/media/image375.png    OK
-    testing: xl/media/image376.png    OK
-    testing: xl/media/image377.gif    OK
+    testing: xl/media/image376.gif    OK
+    testing: xl/media/image377.png    OK
     testing: xl/media/image378.png    OK
     testing: xl/media/image379.png    OK
     testing: xl/media/image380.png    OK
     testing: xl/media/image381.png    OK
-    testing: xl/media/image382.gif    OK
+    testing: xl/media/image382.png    OK
     testing: xl/media/image383.png    OK
     testing: xl/media/image384.png    OK
     testing: xl/media/image385.png    OK
     testing: xl/media/image386.png    OK
     testing: xl/media/image387.png    OK
-    testing: xl/media/image388.gif    OK
+    testing: xl/media/image388.png    OK
     testing: xl/media/image389.png    OK
-    testing: xl/media/image390.png    OK
+    testing: xl/media/image390.gif    OK
     testing: xl/media/image391.png    OK
-    testing: xl/media/image392.png    OK
-    testing: xl/media/image393.png    OK
-    testing: xl/media/image394.gif    OK
-    testing: xl/media/image395.png    OK
+    testing: xl/media/image392.gif    OK
+    testing: xl/media/image393.gif    OK
+    testing: xl/media/image394.png    OK
+    testing: xl/media/image395.jpeg   OK
     testing: xl/media/image396.png    OK
     testing: xl/media/image397.png    OK
     testing: xl/media/image398.png    OK
     testing: xl/media/image399.gif    OK
-    testing: xl/media/image400.gif    OK
+    testing: xl/media/image400.png    OK
     testing: xl/media/image401.gif    OK
     testing: xl/media/image402.png    OK
-    testing: xl/media/image403.gif    OK
-    testing: xl/media/image404.gif    OK
-    testing: xl/media/image405.gif    OK
+    testing: xl/media/image403.png    OK
+    testing: xl/media/image404.png    OK
+    testing: xl/media/image405.png    OK
     testing: xl/media/image406.png    OK
     testing: xl/media/image407.png    OK
     testing: xl/media/image408.png    OK
-    testing: xl/media/image409.png    OK
-    testing: xl/media/image410.png    OK
-    testing: xl/media/image411.png    OK
+    testing: xl/media/image409.gif    OK
+    testing: xl/media/image410.gif    OK
+    testing: xl/media/image411.emf    OK
     testing: xl/media/image412.png    OK
     testing: xl/media/image413.png    OK
     testing: xl/media/image414.png    OK
     testing: xl/media/image415.png    OK
     testing: xl/media/image416.png    OK
     testing: xl/media/image417.png    OK
-    testing: xl/media/image418.gif    OK
+    testing: xl/media/image418.png    OK
     testing: xl/media/image419.png    OK
-    testing: xl/media/image420.gif    OK
+    testing: xl/media/image420.png    OK
     testing: xl/media/image421.png    OK
-    testing: xl/media/image422.png    OK
-    testing: xl/worksheets/sheet1.xml   OK
+    testing: xl/media/image422.gif    OK
+    testing: xl/media/image423.png    OK
     testing: xl/media/image424.png    OK
     testing: xl/media/image425.png    OK
     testing: xl/media/image426.png    OK
     testing: xl/media/image427.png    OK
-    testing: xl/media/image428.gif    OK
+    testing: xl/media/image428.png    OK
     testing: xl/media/image429.png    OK
-    testing: xl/media/image430.gif    OK
+    testing: xl/media/image430.png    OK
     testing: xl/media/image431.png    OK
     testing: xl/media/image432.png    OK
     testing: xl/media/image433.png    OK
@@ -453,40 +473,40 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image436.png    OK
     testing: xl/media/image437.png    OK
     testing: xl/media/image438.png    OK
-    testing: xl/media/image439.gif    OK
-    testing: xl/media/image440.gif    OK
+    testing: xl/media/image439.png    OK
+    testing: xl/media/image440.png    OK
     testing: xl/media/image441.png    OK
     testing: xl/media/image442.png    OK
-    testing: xl/media/image443.gif    OK
+    testing: xl/media/image443.png    OK
     testing: xl/media/image444.png    OK
-    testing: xl/media/image445.gif    OK
+    testing: xl/media/image445.png    OK
     testing: xl/media/image446.png    OK
     testing: xl/media/image447.png    OK
     testing: xl/media/image448.png    OK
-    testing: xl/media/image449.png    OK
-    testing: xl/media/image450.gif    OK
+    testing: xl/media/image449.gif    OK
+    testing: xl/media/image450.png    OK
     testing: xl/media/image451.png    OK
     testing: xl/media/image452.png    OK
     testing: xl/media/image453.png    OK
     testing: xl/media/image454.png    OK
     testing: xl/media/image455.png    OK
-    testing: xl/media/image456.gif    OK
+    testing: xl/media/image456.png    OK
     testing: xl/media/image457.png    OK
-    testing: xl/media/image458.png    OK
+    testing: xl/media/image458.gif    OK
     testing: xl/media/image459.png    OK
     testing: xl/media/image460.png    OK
     testing: xl/media/image461.png    OK
-    testing: xl/media/image462.gif    OK
-    testing: xl/media/image463.gif    OK
-    testing: xl/media/image464.gif    OK
-    testing: xl/media/image465.gif    OK
+    testing: xl/media/image462.png    OK
+    testing: xl/media/image463.png    OK
+    testing: xl/media/image464.png    OK
+    testing: xl/media/image465.png    OK
     testing: xl/media/image466.png    OK
     testing: xl/media/image467.png    OK
-    testing: xl/media/image468.gif    OK
-    testing: xl/media/image469.gif    OK
+    testing: xl/media/image468.png    OK
+    testing: xl/media/image469.png    OK
     testing: xl/media/image470.png    OK
-    testing: xl/media/image471.gif    OK
-    testing: xl/media/image472.gif    OK
+    testing: xl/media/image471.png    OK
+    testing: xl/media/image472.png    OK
     testing: xl/media/image473.png    OK
     testing: xl/media/image474.png    OK
     testing: xl/media/image475.png    OK
@@ -495,7 +515,7 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image478.png    OK
     testing: xl/media/image479.png    OK
     testing: xl/media/image480.png    OK
-    testing: xl/media/image481.png    OK
+    testing: xl/media/image481.gif    OK
     testing: xl/media/image482.png    OK
     testing: xl/media/image483.png    OK
     testing: xl/media/image484.png    OK
@@ -510,60 +530,477 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/media/image493.png    OK
     testing: xl/media/image494.png    OK
     testing: xl/media/image495.png    OK
-    testing: xl/media/image423.png    OK
-    testing: xl/media/image497.png    OK
+    testing: xl/media/image496.gif    OK
+    testing: xl/media/image497.gif    OK
     testing: xl/media/image498.png    OK
     testing: xl/media/image499.png    OK
     testing: xl/media/image500.png    OK
     testing: xl/media/image501.png    OK
     testing: xl/media/image502.png    OK
-    testing: xl/media/image503.gif    OK
-    testing: xl/media/image504.gif    OK
+    testing: xl/media/image503.png    OK
+    testing: xl/media/image504.png    OK
     testing: xl/media/image505.png    OK
     testing: xl/media/image506.png    OK
-    testing: xl/media/image507.jpeg   OK
-    testing: xl/media/image508.jpeg   OK
-    testing: xl/media/image509.gif    OK
+    testing: xl/media/image507.gif    OK
+    testing: xl/media/image508.gif    OK
+    testing: xl/media/image509.png    OK
     testing: xl/media/image510.png    OK
-    testing: xl/media/image511.gif    OK
+    testing: xl/media/image511.png    OK
     testing: xl/media/image512.png    OK
-    testing: xl/media/image513.jpeg   OK
-    testing: xl/media/image514.gif    OK
+    testing: xl/media/image513.png    OK
+    testing: xl/media/image514.png    OK
     testing: xl/media/image515.png    OK
     testing: xl/media/image516.png    OK
-    testing: xl/media/image517.gif    OK
+    testing: xl/media/image517.png    OK
     testing: xl/media/image518.png    OK
-    testing: xl/media/image519.gif    OK
-    testing: xl/media/image520.gif    OK
+    testing: xl/media/image519.png    OK
+    testing: xl/media/image520.png    OK
     testing: xl/media/image521.png    OK
     testing: xl/media/image522.png    OK
-    testing: xl/media/image523.png    OK
-    testing: xl/media/image524.png    OK
+    testing: xl/media/image523.gif    OK
+    testing: xl/media/image524.gif    OK
     testing: xl/media/image525.png    OK
-    testing: xl/media/image526.png    OK
+    testing: xl/media/image526.gif    OK
     testing: xl/media/image527.png    OK
     testing: xl/media/image528.png    OK
-    testing: xl/media/image529.gif    OK
+    testing: xl/media/image529.png    OK
     testing: xl/media/image530.png    OK
-    testing: xl/media/image531.png    OK
+    testing: xl/media/image531.gif    OK
     testing: xl/media/image532.gif    OK
-    testing: xl/media/image533.png    OK
+    testing: xl/media/image533.gif    OK
+    testing: xl/media/image534.gif    OK
+    testing: xl/media/image535.png    OK
+    testing: xl/media/image536.png    OK
+    testing: xl/media/image537.gif    OK
+    testing: xl/media/image538.gif    OK
+    testing: xl/media/image539.gif    OK
+    testing: xl/media/image540.gif    OK
+    testing: xl/media/image541.png    OK
+    testing: xl/media/image542.png    OK
+    testing: xl/media/image543.gif    OK
+    testing: xl/media/image544.png    OK
+    testing: xl/media/image545.png    OK
+    testing: xl/media/image546.gif    OK
+    testing: xl/media/image547.gif    OK
+    testing: xl/media/image548.png    OK
+    testing: xl/media/image549.png    OK
+    testing: xl/media/image550.gif    OK
+    testing: xl/media/image551.jpeg   OK
+    testing: xl/media/image552.jpeg   OK
+    testing: xl/media/image553.gif    OK
+    testing: xl/media/image554.png    OK
+    testing: xl/media/image555.gif    OK
+    testing: xl/media/image556.png    OK
+    testing: xl/media/image557.gif    OK
+    testing: xl/media/image558.emf    OK
+    testing: xl/media/image559.gif    OK
+    testing: xl/media/image560.gif    OK
+    testing: xl/media/image561.png    OK
+    testing: xl/media/image562.png    OK
+    testing: xl/media/image563.png    OK
+    testing: xl/media/image564.png    OK
+    testing: xl/media/image565.png    OK
+    testing: xl/media/image566.png    OK
+    testing: xl/media/image567.gif    OK
+    testing: xl/media/image568.png    OK
+    testing: xl/media/image569.gif    OK
+    testing: xl/media/image570.gif    OK
+    testing: xl/media/image571.gif    OK
+    testing: xl/media/image572.png    OK
+    testing: xl/media/image573.png    OK
+    testing: xl/media/image574.gif    OK
+    testing: xl/media/image575.gif    OK
+    testing: xl/media/image576.png    OK
+    testing: xl/media/image577.png    OK
+    testing: xl/media/image578.gif    OK
+    testing: xl/media/image579.png    OK
+    testing: xl/media/image580.gif    OK
+    testing: xl/media/image581.png    OK
+    testing: xl/media/image582.png    OK
+    testing: xl/media/image583.gif    OK
+    testing: xl/media/image584.png    OK
+    testing: xl/media/image585.gif    OK
+    testing: xl/media/image586.png    OK
+    testing: xl/media/image587.png    OK
+    testing: xl/media/image588.gif    OK
+    testing: xl/media/image589.png    OK
+    testing: xl/media/image590.png    OK
+    testing: xl/media/image591.png    OK
+    testing: xl/media/image592.gif    OK
+    testing: xl/media/image593.png    OK
+    testing: xl/media/image594.png    OK
+    testing: xl/media/image595.png    OK
+    testing: xl/media/image596.png    OK
+    testing: xl/media/image597.png    OK
+    testing: xl/media/image598.png    OK
+    testing: xl/media/image599.png    OK
+    testing: xl/media/image600.png    OK
+    testing: xl/media/image601.png    OK
+    testing: xl/media/image602.png    OK
+    testing: xl/media/image603.png    OK
+    testing: xl/media/image604.png    OK
+    testing: xl/media/image605.png    OK
+    testing: xl/media/image606.gif    OK
+    testing: xl/media/image607.gif    OK
+    testing: xl/media/image608.gif    OK
+    testing: xl/media/image609.png    OK
+    testing: xl/media/image610.png    OK
+    testing: xl/media/image611.gif    OK
+    testing: xl/media/image612.gif    OK
+    testing: xl/media/image613.png    OK
+    testing: xl/media/image614.gif    OK
+    testing: xl/media/image615.gif    OK
+    testing: xl/media/image616.gif    OK
+    testing: xl/media/image617.gif    OK
+    testing: xl/media/image618.png    OK
+    testing: xl/media/image619.png    OK
+    testing: xl/media/image620.png    OK
+    testing: xl/media/image621.png    OK
+    testing: xl/media/image622.png    OK
+    testing: xl/media/image623.png    OK
+    testing: xl/media/image624.png    OK
+    testing: xl/media/image625.png    OK
+    testing: xl/media/image626.gif    OK
+    testing: xl/media/image627.png    OK
+    testing: xl/media/image628.png    OK
+    testing: xl/media/image629.png    OK
+    testing: xl/media/image630.png    OK
+    testing: xl/media/image631.png    OK
+    testing: xl/media/image632.png    OK
+    testing: xl/media/image633.png    OK
+    testing: xl/media/image634.png    OK
+    testing: xl/media/image635.png    OK
+    testing: xl/media/image636.png    OK
+    testing: xl/media/image637.png    OK
+    testing: xl/media/image638.png    OK
+    testing: xl/media/image639.png    OK
+    testing: xl/media/image640.png    OK
+    testing: xl/media/image641.png    OK
+    testing: xl/media/image642.png    OK
+    testing: xl/media/image643.png    OK
+    testing: xl/media/image644.png    OK
+    testing: xl/media/image645.png    OK
+    testing: xl/media/image646.png    OK
+    testing: xl/media/image647.png    OK
+    testing: xl/media/image648.png    OK
+    testing: xl/media/image649.png    OK
+    testing: xl/media/image650.png    OK
+    testing: xl/media/image651.gif    OK
+    testing: xl/media/image652.png    OK
+    testing: xl/media/image653.png    OK
+    testing: xl/media/image654.png    OK
+    testing: xl/media/image655.gif    OK
+    testing: xl/media/image656.png    OK
+    testing: xl/media/image657.png    OK
+    testing: xl/media/image658.png    OK
+    testing: xl/media/image659.gif    OK
+    testing: xl/media/image660.png    OK
+    testing: xl/media/image661.png    OK
+    testing: xl/media/image662.png    OK
+    testing: xl/media/image663.png    OK
+    testing: xl/media/image664.png    OK
+    testing: xl/media/image665.png    OK
+    testing: xl/media/image666.gif    OK
+    testing: xl/media/image667.png    OK
+    testing: xl/media/image668.png    OK
+    testing: xl/media/image669.png    OK
+    testing: xl/media/image670.png    OK
+    testing: xl/charts/chart18.xml    OK
+    testing: xl/media/image671.png    OK
+    testing: xl/media/image672.png    OK
+    testing: xl/media/image673.png    OK
+    testing: xl/media/image674.png    OK
+    testing: xl/media/image675.png    OK
+    testing: xl/media/image676.png    OK
+    testing: xl/media/image677.png    OK
+    testing: xl/media/image678.png    OK
+    testing: xl/media/image679.png    OK
+    testing: xl/media/image680.png    OK
+    testing: xl/media/image681.png    OK
+    testing: xl/media/image682.gif    OK
+    testing: xl/media/image683.png    OK
+    testing: xl/media/image684.png    OK
+    testing: xl/media/image685.png    OK
+    testing: xl/media/image686.png    OK
+    testing: xl/media/image687.png    OK
+    testing: xl/media/image688.png    OK
+    testing: xl/media/image689.png    OK
+    testing: xl/media/image690.png    OK
+    testing: xl/media/image691.png    OK
+    testing: xl/media/image692.png    OK
+    testing: xl/media/image693.png    OK
+    testing: xl/media/image694.png    OK
+    testing: xl/media/image695.png    OK
+    testing: xl/media/image696.png    OK
+    testing: xl/media/image697.png    OK
+    testing: xl/media/image698.gif    OK
+    testing: xl/media/image699.gif    OK
+    testing: xl/media/image700.gif    OK
+    testing: xl/media/image701.gif    OK
+    testing: xl/media/image702.png    OK
+    testing: xl/media/image703.gif    OK
+    testing: xl/media/image704.gif    OK
+    testing: xl/media/image705.gif    OK
+    testing: xl/media/image706.gif    OK
+    testing: xl/media/image707.png    OK
+    testing: xl/media/image708.png    OK
+    testing: xl/media/image709.png    OK
+    testing: xl/media/image710.png    OK
+    testing: xl/media/image711.png    OK
+    testing: xl/media/image712.png    OK
+    testing: xl/media/image713.gif    OK
+    testing: xl/media/image714.gif    OK
+    testing: xl/media/image715.gif    OK
+    testing: xl/media/image716.gif    OK
+    testing: xl/media/image717.png    OK
+    testing: xl/media/image718.gif    OK
+    testing: xl/media/image719.gif    OK
+    testing: xl/media/image720.gif    OK
+    testing: xl/media/image721.gif    OK
+    testing: xl/media/image722.png    OK
+    testing: xl/media/image723.gif    OK
+    testing: xl/media/image724.gif    OK
+    testing: xl/media/image725.gif    OK
+    testing: xl/media/image726.gif    OK
+    testing: xl/media/image727.png    OK
+    testing: xl/media/image728.gif    OK
+    testing: xl/media/image729.gif    OK
+    testing: xl/media/image730.gif    OK
+    testing: xl/media/image731.gif    OK
+    testing: xl/media/image732.png    OK
+    testing: xl/media/image733.gif    OK
+    testing: xl/media/image734.gif    OK
+    testing: xl/media/image735.gif    OK
+    testing: xl/media/image736.gif    OK
+    testing: xl/media/image738.gif    OK
+    testing: xl/media/image739.png    OK
+    testing: xl/media/image740.png    OK
+    testing: xl/media/image741.gif    OK
+    testing: xl/media/image742.gif    OK
+    testing: xl/media/image743.gif    OK
+    testing: xl/media/image744.png    OK
+    testing: xl/media/image745.gif    OK
+    testing: xl/media/image746.png    OK
+    testing: xl/media/image747.gif    OK
+    testing: xl/media/image748.png    OK
+    testing: xl/media/image749.png    OK
+    testing: xl/media/image750.png    OK
+    testing: xl/media/image751.png    OK
+    testing: xl/media/image752.png    OK
+    testing: xl/media/image753.png    OK
+    testing: xl/media/image754.png    OK
+    testing: xl/media/image755.gif    OK
+    testing: xl/media/image756.gif    OK
+    testing: xl/media/image757.gif    OK
+    testing: xl/media/image758.gif    OK
+    testing: xl/media/image759.png    OK
+    testing: xl/media/image760.png    OK
+    testing: xl/media/image761.png    OK
+    testing: xl/media/image762.gif    OK
+    testing: xl/media/image763.gif    OK
+    testing: xl/media/image764.png    OK
+    testing: xl/media/image765.png    OK
+    testing: xl/media/image766.png    OK
+    testing: xl/media/image767.png    OK
+    testing: xl/media/image768.png    OK
+    testing: xl/media/image769.png    OK
+    testing: xl/media/image770.png    OK
+    testing: xl/media/image771.png    OK
+    testing: xl/media/image772.gif    OK
+    testing: xl/media/image773.gif    OK
+    testing: xl/media/image774.png    OK
+    testing: xl/media/image775.png    OK
+    testing: xl/media/image776.png    OK
+    testing: xl/media/image777.png    OK
+    testing: xl/media/image778.png    OK
+    testing: xl/media/image779.png    OK
+    testing: xl/media/image780.gif    OK
+    testing: xl/media/image781.png    OK
+    testing: xl/media/image782.png    OK
+    testing: xl/media/image783.png    OK
+    testing: xl/media/image784.png    OK
+    testing: xl/media/image785.png    OK
+    testing: xl/media/image786.gif    OK
+    testing: xl/media/image787.gif    OK
+    testing: xl/media/image788.png    OK
+    testing: xl/media/image789.png    OK
+    testing: xl/media/image790.png    OK
+    testing: xl/media/image791.png    OK
+    testing: xl/media/image792.png    OK
+    testing: xl/media/image793.png    OK
+    testing: xl/media/image794.png    OK
+    testing: xl/media/image795.png    OK
+    testing: xl/media/image796.png    OK
+    testing: xl/media/image797.gif    OK
+    testing: xl/media/image798.gif    OK
+    testing: xl/media/image799.png    OK
+    testing: xl/media/image800.gif    OK
+    testing: xl/media/image801.png    OK
+    testing: xl/media/image802.png    OK
+    testing: xl/media/image803.png    OK
+    testing: xl/media/image804.png    OK
+    testing: xl/media/image805.png    OK
+    testing: xl/media/image806.png    OK
+    testing: xl/media/image807.png    OK
+    testing: xl/media/image808.png    OK
+    testing: xl/media/image809.png    OK
+    testing: xl/media/image810.png    OK
+    testing: xl/media/image811.png    OK
+    testing: xl/media/image812.png    OK
+    testing: xl/media/image813.png    OK
+    testing: xl/media/image814.png    OK
+    testing: xl/media/image815.png    OK
+    testing: xl/media/image816.png    OK
+    testing: xl/media/image817.png    OK
+    testing: xl/media/image818.png    OK
+    testing: xl/media/image819.png    OK
+    testing: xl/media/image820.png    OK
+    testing: xl/media/image821.png    OK
+    testing: xl/media/image822.png    OK
+    testing: xl/media/image823.png    OK
+    testing: xl/media/image824.png    OK
+    testing: xl/media/image825.png    OK
+    testing: xl/media/image826.png    OK
+    testing: xl/media/image827.png    OK
+    testing: xl/media/image828.png    OK
+    testing: xl/media/image829.png    OK
+    testing: xl/media/image830.png    OK
+    testing: xl/media/image831.png    OK
+    testing: xl/media/image832.png    OK
+    testing: xl/media/image833.png    OK
+    testing: xl/media/image834.png    OK
+    testing: xl/media/image835.png    OK
+    testing: xl/media/image836.png    OK
+    testing: xl/media/image837.png    OK
+    testing: xl/media/image838.png    OK
+    testing: xl/media/image839.png    OK
+    testing: xl/media/image840.png    OK
+    testing: xl/media/image841.png    OK
+    testing: xl/media/image842.png    OK
+    testing: xl/media/image843.png    OK
+    testing: xl/media/image844.gif    OK
+    testing: xl/media/image845.png    OK
+    testing: xl/media/image846.png    OK
+    testing: xl/media/image847.png    OK
+    testing: xl/media/image848.png    OK
+    testing: xl/media/image849.jpeg   OK
+    testing: xl/media/image850.png    OK
+    testing: xl/media/image851.png    OK
+    testing: xl/media/image852.png    OK
+    testing: xl/media/image853.png    OK
+    testing: xl/media/image854.png    OK
+    testing: xl/media/image855.png    OK
+    testing: xl/media/image856.png    OK
+    testing: xl/media/image857.png    OK
+    testing: xl/media/image858.png    OK
+    testing: xl/media/image859.png    OK
+    testing: xl/media/image860.png    OK
+    testing: xl/media/image861.png    OK
+    testing: xl/media/image862.png    OK
+    testing: xl/media/image863.png    OK
+    testing: xl/media/image864.png    OK
+    testing: xl/media/image737.png    OK
+    testing: xl/media/image866.png    OK
+    testing: xl/media/image867.png    OK
+    testing: xl/media/image868.png    OK
+    testing: xl/charts/chart19.xml    OK
+    testing: xl/charts/chart20.xml    OK
+    testing: xl/charts/chart21.xml    OK
+    testing: xl/charts/chart22.xml    OK
+    testing: xl/charts/chart23.xml    OK
+    testing: xl/charts/chart24.xml    OK
+    testing: xl/charts/chart25.xml    OK
+    testing: xl/charts/chart26.xml    OK
+    testing: xl/media/image869.png    OK
+    testing: xl/media/image870.png    OK
+    testing: xl/media/image871.png    OK
+    testing: xl/media/image872.png    OK
+    testing: xl/media/image873.png    OK
+    testing: xl/media/image874.gif    OK
+    testing: xl/media/image875.png    OK
+    testing: xl/media/image876.png    OK
+    testing: xl/media/image877.png    OK
+    testing: xl/media/image878.png    OK
+    testing: xl/media/image879.png    OK
+    testing: xl/media/image880.png    OK
+    testing: xl/media/image881.gif    OK
+    testing: xl/media/image882.png    OK
+    testing: xl/media/image883.png    OK
+    testing: xl/media/image884.png    OK
+    testing: xl/media/image885.png    OK
+    testing: xl/media/image886.gif    OK
+    testing: xl/media/image887.gif    OK
+    testing: xl/media/image888.png    OK
+    testing: xl/media/image889.png    OK
+    testing: xl/media/image890.png    OK
+    testing: xl/media/image891.png    OK
+    testing: xl/media/image892.png    OK
+    testing: xl/media/image893.gif    OK
+    testing: xl/media/image894.png    OK
+    testing: xl/media/image895.png    OK
+    testing: xl/media/image896.png    OK
+    testing: xl/media/image897.png    OK
+    testing: xl/media/image898.gif    OK
+    testing: xl/media/image899.gif    OK
+    testing: xl/media/image900.png    OK
+    testing: xl/media/image901.gif    OK
+    testing: xl/media/image902.gif    OK
+    testing: xl/media/image903.png    OK
+    testing: xl/media/image904.gif    OK
+    testing: xl/media/image905.gif    OK
+    testing: xl/media/image906.gif    OK
+    testing: xl/media/image907.gif    OK
+    testing: xl/media/image908.png    OK
+    testing: xl/media/image909.png    OK
+    testing: xl/media/image910.png    OK
+    testing: xl/media/image911.png    OK
+    testing: xl/media/image912.png    OK
+    testing: xl/media/image913.png    OK
+    testing: xl/media/image914.png    OK
+    testing: xl/media/image915.png    OK
+    testing: xl/media/image916.gif    OK
+    testing: xl/media/image917.gif    OK
+    testing: xl/media/image918.gif    OK
+    testing: xl/media/image919.gif    OK
+    testing: xl/media/image920.png    OK
+    testing: xl/media/image921.gif    OK
+    testing: xl/media/image922.gif    OK
+    testing: xl/media/image923.png    OK
+    testing: xl/media/image924.gif    OK
+    testing: xl/media/image925.gif    OK
+    testing: xl/media/image926.png    OK
+    testing: xl/media/image927.gif    OK
+    testing: xl/media/image928.gif    OK
+    testing: xl/media/image929.png    OK
+    testing: xl/media/image930.png    OK
+    testing: xl/media/image931.png    OK
+    testing: xl/media/image932.png    OK
+    testing: xl/media/image933.png    OK
+    testing: xl/media/image934.gif    OK
+    testing: xl/media/image935.png    OK
+    testing: xl/media/image936.png    OK
+    testing: xl/media/image937.png    OK
+    testing: xl/media/image938.png    OK
+    testing: xl/media/image939.png    OK
+    testing: xl/media/image940.png    OK
+    testing: xl/media/image941.png    OK
     testing: xl/drawings/drawing2.xml   OK
     testing: xl/drawings/vmlDrawing1.vml   OK
     testing: xl/drawings/drawing3.xml   OK
-    testing: xl/media/image534.png    OK
+    testing: xl/media/image942.png    OK
+    testing: xl/media/image943.png    OK
     testing: xl/drawings/drawing4.xml   OK
-    testing: xl/media/image535.png    OK
-    testing: xl/media/image536.png    OK
-    testing: xl/media/image537.png    OK
+    testing: xl/media/image944.png    OK
     testing: xl/drawings/drawing5.xml   OK
     testing: xl/drawings/drawing6.xml   OK
-    testing: xl/media/image538.png    OK
-    testing: xl/media/image539.png    OK
-    testing: xl/media/image540.png    OK
+    testing: xl/media/image945.png    OK
+    testing: xl/media/image946.png    OK
+    testing: xl/media/image947.png    OK
+    testing: xl/drawings/drawing7.xml   OK
+    testing: xl/media/image948.png    OK
+    testing: xl/media/image949.png    OK
+    testing: xl/media/image950.png    OK
     testing: xl/vbaProject.bin        OK
-    testing: xl/worksheets/sheet2.xml   OK
-    testing: xl/worksheets/sheet3.xml   OK
     testing: xl/worksheets/_rels/sheet1.xml.rels   OK
     testing: xl/worksheets/_rels/sheet2.xml.rels   OK
     testing: xl/worksheets/_rels/sheet3.xml.rels   OK
@@ -572,16 +1009,24 @@ Archive:  SACLA/2025_05.xlsm
     testing: xl/worksheets/_rels/sheet8.xml.rels   OK
     testing: xl/worksheets/_rels/sheet9.xml.rels   OK
     testing: xl/worksheets/_rels/sheet10.xml.rels   OK
+    testing: xl/worksheets/_rels/sheet11.xml.rels   OK
     testing: xl/drawings/_rels/drawing1.xml.rels   OK
     testing: xl/drawings/_rels/drawing3.xml.rels   OK
     testing: xl/drawings/_rels/drawing4.xml.rels   OK
     testing: xl/drawings/_rels/drawing6.xml.rels   OK
-    testing: xl/media/image496.png    OK
+    testing: xl/drawings/_rels/drawing7.xml.rels   OK
+    testing: xl/media/image865.png    OK
     testing: xl/printerSettings/printerSettings1.bin   OK
-    testing: xl/printerSettings/printerSettings2.bin   OK
-    testing: xl/calcChain.xml         OK
-    testing: xl/ctrlProps/ctrlProp1.xml   OK
     testing: docProps/core.xml        OK
     testing: docProps/app.xml         OK
+    testing: xl/externalLinks/externalLink2.xml   OK
+    testing: xl/externalLinks/_rels/externalLink1.xml.rels   OK
+    testing: xl/externalLinks/_rels/externalLink2.xml.rels   OK
+    testing: xl/externalLinks/_rels/externalLink3.xml.rels   OK
+    testing: xl/externalLinks/externalLink1.xml   OK
+    testing: xl/printerSettings/printerSettings2.bin   OK
+    testing: xl/ctrlProps/ctrlProp1.xml   OK
     testing: xl/ctrlProps/ctrlProp2.xml   OK
-No errors detected in compressed data of SACLA/2025_05.xlsm.
+    testing: xl/externalLinks/externalLink3.xml   OK
+    testing: xl/calcChain.xml         OK
+No errors detected in compressed data of SACLA/2025_10.xlsm.
