@@ -772,6 +772,7 @@ Archive:  SACLA/2025_10.xlsm
     testing: xl/media/image734.gif    OK
     testing: xl/media/image735.gif    OK
     testing: xl/media/image736.gif    OK
+    testing: xl/media/image737.png    OK
     testing: xl/media/image738.gif    OK
     testing: xl/media/image739.png    OK
     testing: xl/media/image740.png    OK
@@ -788,7 +789,6 @@ Archive:  SACLA/2025_10.xlsm
     testing: xl/media/image751.png    OK
     testing: xl/media/image752.png    OK
     testing: xl/media/image753.png    OK
-    testing: xl/media/image754.png    OK
     testing: xl/media/image755.gif    OK
     testing: xl/media/image756.gif    OK
     testing: xl/media/image757.gif    OK
@@ -899,7 +899,7 @@ Archive:  SACLA/2025_10.xlsm
     testing: xl/media/image862.png    OK
     testing: xl/media/image863.png    OK
     testing: xl/media/image864.png    OK
-    testing: xl/media/image737.png    OK
+    testing: xl/media/image865.png    OK
     testing: xl/media/image866.png    OK
     testing: xl/media/image867.png    OK
     testing: xl/media/image868.png    OK
@@ -919,7 +919,7 @@ Archive:  SACLA/2025_10.xlsm
     testing: xl/media/image874.gif    OK
     testing: xl/media/image875.png    OK
     testing: xl/media/image876.png    OK
-    testing: xl/media/image877.png    OK
+    testing: xl/media/image754.png    OK
     testing: xl/media/image878.png    OK
     testing: xl/media/image879.png    OK
     testing: xl/media/image880.png    OK
@@ -984,22 +984,45 @@ Archive:  SACLA/2025_10.xlsm
     testing: xl/media/image939.png    OK
     testing: xl/media/image940.png    OK
     testing: xl/media/image941.png    OK
+    testing: xl/media/image942.png    OK
+    testing: xl/media/image943.png    OK
+    testing: xl/media/image944.gif    OK
+    testing: xl/media/image945.gif    OK
+    testing: xl/media/image946.gif    OK
+    testing: xl/media/image947.gif    OK
+    testing: xl/media/image948.png    OK
+    testing: xl/media/image949.png    OK
+    testing: xl/media/image950.gif    OK
+    testing: xl/media/image951.png    OK
+    testing: xl/media/image952.gif    OK
+    testing: xl/media/image953.png    OK
+    testing: xl/media/image954.png    OK
+    testing: xl/media/image955.png    OK
+    testing: xl/media/image956.png    OK
+    testing: xl/media/image957.png    OK
+    testing: xl/media/image958.png    OK
+    testing: xl/media/image959.png    OK
+    testing: xl/media/image960.png    OK
+    testing: xl/media/image961.png    OK
+    testing: xl/media/image962.png    OK
+    testing: xl/media/image963.png    OK
+    testing: xl/media/image964.png    OK
     testing: xl/drawings/drawing2.xml   OK
     testing: xl/drawings/vmlDrawing1.vml   OK
     testing: xl/drawings/drawing3.xml   OK
-    testing: xl/media/image942.png    OK
-    testing: xl/media/image943.png    OK
+    testing: xl/media/image965.png    OK
+    testing: xl/media/image966.png    OK
     testing: xl/drawings/drawing4.xml   OK
-    testing: xl/media/image944.png    OK
+    testing: xl/media/image967.png    OK
     testing: xl/drawings/drawing5.xml   OK
     testing: xl/drawings/drawing6.xml   OK
-    testing: xl/media/image945.png    OK
-    testing: xl/media/image946.png    OK
-    testing: xl/media/image947.png    OK
+    testing: xl/media/image968.png    OK
+    testing: xl/media/image969.png    OK
+    testing: xl/media/image970.png    OK
     testing: xl/drawings/drawing7.xml   OK
-    testing: xl/media/image948.png    OK
-    testing: xl/media/image949.png    OK
-    testing: xl/media/image950.png    OK
+    testing: xl/media/image971.png    OK
+    testing: xl/media/image972.png    OK
+    testing: xl/media/image973.png    OK
     testing: xl/vbaProject.bin        OK
     testing: xl/worksheets/_rels/sheet1.xml.rels   OK
     testing: xl/worksheets/_rels/sheet2.xml.rels   OK
@@ -1015,7 +1038,7 @@ Archive:  SACLA/2025_10.xlsm
     testing: xl/drawings/_rels/drawing4.xml.rels   OK
     testing: xl/drawings/_rels/drawing6.xml.rels   OK
     testing: xl/drawings/_rels/drawing7.xml.rels   OK
-    testing: xl/media/image865.png    OK
+    testing: xl/media/image877.png    OK
     testing: xl/printerSettings/printerSettings1.bin   OK
     testing: docProps/core.xml        OK
     testing: docProps/app.xml         OK

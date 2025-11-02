@@ -464,6 +464,7 @@ for xml in xmls:
 
     #/=======SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認
     #  なぜか、get_schedule_from_ical(df)の前でこれをすると、icalからとってきたスケジュールがうまくdfに入らない。なぜ？？？？
+    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     for index,item in df.iterrows():#ログノートの最初の日時を取得(ログノートが何月のなのかを確認するため)
         if(type(item['DT']) is datetime):
             first_dt = datetime(year=item['DT'].year, month=item['DT'].month, day=item['DT'].day, hour=0, minute=0, second=0)
@@ -478,11 +479,11 @@ for xml in xmls:
     dt_end = datetime.strptime(buff_dt_end, "%Y/%m/%d %H:%M")
     print("dt_beg=",dt_beg)
     print("dt_end=",dt_end)            
-    data_df = load_excel_to_dataframe(r"\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm", "調整時間")
-    #print (data_df)
+    df_kiroku = load_excel_to_dataframe(r"\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm", "調整時間")
+    #print (df_kiroku)
     start_row_index = 1 # 2行目以降
     column_index = 2 # 'end'列目  調整時間のstartにはチョッパーOFF時間になってる事があるので、ログノートの記載時間と合わないことがあるのでendで確認する。
-    target_series = data_df.iloc[start_row_index:, column_index]
+    target_series = df_kiroku.iloc[start_row_index:, column_index]
     for index, value in target_series.items():
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end: #指定された月のログノートで、かつ、運転集計する期間内だけ確認
             print(f"index: {index}, value: {value}, type(value): {type(value)}")
@@ -495,8 +496,8 @@ for xml in xmls:
         else:
             print(f"index: {index}, value: {value} is out of range.")
     #========================================================================/
-    print("Finish~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
+    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認　が終了しました。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    
 
     
 
