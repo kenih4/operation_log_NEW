@@ -64,7 +64,7 @@ def load_excel_to_dataframe(file_path_str: str, sheet_name: str) -> pd.DataFrame
             sheet_name=sheet_name, # 読み込むシート名
             engine='openpyxl'  # .xlsm/.xlsxファイルに対応
         )
-        print("Complete reading Excel file into DataFrame.")
+#        print("Complete reading Excel file into DataFrame.")
         return df
 
     except FileNotFoundError:
@@ -84,38 +84,74 @@ def load_excel_to_dataframe(file_path_str: str, sheet_name: str) -> pd.DataFrame
         return None
 
 #Pandas DataFrameの指定された列に、特定の日時データ(±許容時間内)が存在するかを確認します。==============================================================================================
+from typing import Union, List
 def check_datetime_existence_with_tolerance(
     df: pd.DataFrame, 
     column_name: str, 
     date_to_check: datetime, 
     tolerance_minutes: int = 1
-) -> bool:
+) -> Union[int, List[int]]:
     """
+    Pandas DataFrameの指定された列に、特定の日時データ(±許容時間内)が存在するかを確認し、
+    存在する場合は対応するインデックスを返します。
+    
     Args:
-        df (pd.DataFrame): 対象のDataFrame。
-        column_name (str): 日時データが存在する列名 ('DT'など)。
-        date_to_check (datetime): 検索対象の日時データ (datetimeオブジェクト)。
-        tolerance_minutes (int): 許容するズレの時間（分）。デフォルトは1分。
+        df (pd.DataFrame): 検索対象のDataFrame。
+        column_name (str): 検索対象の日時列名。
+        date_to_check (datetime): 存在を確認したい基準日時。
+        tolerance_minutes (int): 許容時間 (分)。デフォルトは1分。
+        
     Returns:
-        bool: 許容範囲内の日時データが存在すれば True、存在しなければ False。
+        Union[int, List[int]]: 条件を満たす行のインデックス。
+                              該当する行が複数ある場合はインデックスのリスト。
+                              存在しない場合は -1 を返します。
     """
+    
+    # 1. 前処理とエラーハンドリング
     try:
-        if not pd.api.types.is_datetime64_any_dtype(df[column_name]): # 列のデータ型をdatetimeに揃える (以前の関数と同様の処理を推奨)
-             df[column_name] = pd.to_datetime(df[column_name], errors='coerce', utc=True).dt.tz_localize(None)
+        # 列のデータ型をdatetimeに揃える (元の関数と同様の処理を推奨)
+        if not pd.api.types.is_datetime64_any_dtype(df[column_name]):
+            # utc=Trueで一度UTCに変換し、tz_localize(None)でタイムゾーン情報を除去（比較をしやすくするため）
+            # ただし、date_to_checkもタイムゾーン情報がない（naive）前提での処理
+            df[column_name] = pd.to_datetime(df[column_name], errors='coerce', utc=True).dt.tz_localize(None)
     except KeyError:
         print(f"エラー: 指定された列名 '{column_name}' がDataFrameに存在しません。")
-        return False
+        return -1
     except Exception as e:
         print(f"日時変換中にエラーが発生しました: {e}")
-        return False        
-    
-    tolerance = timedelta(minutes=tolerance_minutes)    
+        return -1
+
+    # 2. 許容範囲の計算
+    tolerance = timedelta(minutes=tolerance_minutes) 
     start_time = date_to_check - tolerance
-    end_time = date_to_check + tolerance        
-    is_present = df[column_name].between(start_time, end_time).any()    
-    # (別解: 論理演算子を使う方法)
-    # is_present = ((df[column_name] >= start_time) & (df[column_name] <= end_time)).any()    
-    return is_present
+    end_time = date_to_check + tolerance 
+    
+    # 3. 条件を満たす行のインデックスを取得
+    
+    # 日時が許容範囲内にあるかどうかの真偽値シリーズを作成
+    mask = df[column_name].between(start_time, end_time)
+    
+    # 条件を満たす行のインデックスを取得
+    matching_indices = df[mask].index.tolist()
+    
+    # 4. 結果の返却
+    if matching_indices:
+        # 該当するインデックスが存在する場合
+        # 1つだけ見つかった場合はそのインデックス (int) を返し、
+        # 複数見つかった場合はリスト (List[int]) を返す
+        if len(matching_indices) == 1:
+            return matching_indices[0]
+        else:
+            return matching_indices
+    else:
+        # 該当するインデックスが存在しない場合は -1 を返す
+        return -1
+
+# ***********************************
+# 💡 注意: 戻り値の型を Union[int, List[int]] としています。
+# 該当行が複数見つかる可能性があるためです。
+# 常に最初のインデックスだけが欲しい場合は、df[mask].index[0] のように変更可能です。
+# ***********************************
 
 #ical用　始め　=============================================================================================
 import requests
@@ -456,11 +492,6 @@ for xml in xmls:
     
     
 
-    
-    
-    
-    
-
 
     #/=======SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認
     #  なぜか、get_schedule_from_ical(df)の前でこれをすると、icalからとってきたスケジュールがうまくdfに入らない。なぜ？？？？
@@ -480,25 +511,29 @@ for xml in xmls:
     print("dt_beg=",dt_beg)
     print("dt_end=",dt_end)            
     df_kiroku = load_excel_to_dataframe(r"\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm", "調整時間")
-    #print (df_kiroku)
     start_row_index = 1 # 2行目以降
     column_index = 2 # 'end'列目  調整時間のstartにはチョッパーOFF時間になってる事があるので、ログノートの記載時間と合わないことがあるのでendで確認する。
-    target_series = df_kiroku.iloc[start_row_index:, column_index]
-    for index, value in target_series.items():
+    ans_line=-1
+    for index, value in df_kiroku.iloc[start_row_index:, column_index].items():
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end: #指定された月のログノートで、かつ、運転集計する期間内だけ確認
-            print(f"index: {index}, value: {value}, type(value): {type(value)}")
             result = check_datetime_existence_with_tolerance(df, 'DT', value, tolerance_minutes=0.5)            
-            if not result:
-                print(f"    >>>>>>>>>>>>>>>   {value}   is Exit <!!!!!{result}!!!!!>")
-                messagebox.showwarning("要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整時間がログノートに存在しません！\n" + str(value))
-            else:
-                print(f"    >>>>>>>>>>>>>>>   {value}   is Exit <{result}>")          
+            print(f"💡index: {index}, value: {value}, type(value): {type(value)}     検索結果のインデックス: {result}")
+            if result == -1:
+                print("💡 SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
+                messagebox.showwarning("要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整「終了」時間がログノートに存在しません！\n" + str(value))
+                ans_line=result
+            elif isinstance(result, int):# 1つのインデックス（int型）が返された場合                
+                ans_line=result
+            else: # 複数のインデックス（リスト型）が返された場合
+                ans_line=result[0]
+            
+            if ans_line != -1:
+                matching_row = df.loc[ans_line,['C']]#matching_row = df.loc[result,['formatted_DT','BL2ical', 'BL3ical', 'C']]
+                print(matching_row.to_string(header=False, index=False).replace('\n', ' ').strip())
+                if not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip():
+                    messagebox.showwarning("要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整「終了」時間がログノートに存在しますが、「引渡」と書かれていませんよ！！\n" + str(value))                
         else:
             print(f"index: {index}, value: {value} is out of range.")
+    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認　が終了しました。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")    
+    sys.exit()
     #========================================================================/
-    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認　が終了しました。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    
-
-    
-
-
