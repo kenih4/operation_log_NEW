@@ -3,6 +3,9 @@ SACLA/
 SCSS/
 SP8/
 .BU/
+.ipynb_checkpoints/
+.vs/
+.venv/
 .vscode/
 tmp*
 test*
