@@ -517,39 +517,30 @@ for xml in xmls:
     for index, value in df_kiroku.iloc[start_row_index:, column_index].items():
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end: #指定された月のログノートで、かつ、運転集計する期間内だけ確認
             result = check_datetime_existence_with_tolerance(df, 'DT', value, tolerance_minutes=0.5)            
-            print(f"DEBUG: index: {index}, value: {value}, type(value): {type(value)} result: {result}")
+            #print(f"DEBUG: index: {index}, value: {value}, type(value): {type(value)} result: {result}")
             if result == -1:
-                print("🚨 SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
-                #messagebox.showwarning("🚨要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整「終了」時間がログノートに存在しません！\n" + str(value))
+                print("🚨Warning SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
                 ans_line=result
             elif isinstance(result, int):# 1つのインデックス（int型）が返された場合                
                 ans_line=result
             else: # 複数のインデックス（リスト型）が返された場合
                 ans_line=result[0]
-            print("DEBUG:  ans_line = ", ans_line)
+#            print("DEBUG:  ans_line = ", ans_line)
             if ans_line != -1:
                 matching_row = df.loc[ans_line,['C']]#matching_row = df.loc[result,['formatted_DT','BL2ical', 'BL3ical', 'C']]
-                print("DEBUG: matching_row=",matching_row.to_string(header=False, index=False).replace('\n', ' ').strip())
-                #if not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip():
-                    #messagebox.showwarning("🚨要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整「終了」時間がログノートに存在しますが、「引渡」と書かれていませんよ！！\n" + str(value))
-                #    print("🚨要確認", "SACLA運転集計記録test.xlsmの\nシート[調整時間]に\n記載されている調整「終了」時間がログノートに存在しますが、「引渡」と書かれていませんよ！！\n" + str(value))
-                #else:
-                #    print("✅ 調整終了時間に、ちゃんと「引渡」との記載があります。")
+#                print("DEBUG: matching_row=",matching_row.to_string(header=False, index=False).replace('\n', ' ').strip())
                 try:
                     condition = not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip()
                     if condition:
-                        print("Check!!! SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しますが、「引渡」と書かれていませんよ！！")
+                        print("🚨Warning  Not found [Hikiwatashi]   " + str(value))
                     else:
-                        print("B")
+                        print("✅OK found [Hikiwatashi] on Log note " + str(value)) #なぜか日本語にするとターミナルに何も表示されなくなる。
                 except Exception as e:
-                    print(f"ERROR: 条件式内で例外が発生しました: {e}")
-                print("DEBUG 2: matching_row=",matching_row.to_string(header=False, index=False).replace('\n', ' ').strip())
-                
-                
+                    print(f"ERROR: {e}")
             else:
-                print("Check!!! SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))            
+                print("🚨Warning Not found [Hikiwatashi] on Log note    " + str(value))
         else:
-            print(f"index: {index}, value: {value} is out of range.")
+            print(f"index: {index}, value: {value} is out of range.運転集計する期間内ではないのでスキップします。")
     print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認　が終了しました。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")    
 #    sys.exit()
     #========================================================================/
