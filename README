@@ -2,9 +2,9 @@
 
 
 =============================================================================================
-
-
-
+#
+# ターミナルに色を付けて出力する場合、excelgrep_by_XMLparse.sh内の「ターミナルに色を付けて出力する場合」のコメントを外す
+#
 ./excelgrep_by_XMLparse.sh 'シケイン' SACLA/*.xlsm | grep --ignore-case 結晶
 
 「シード」を検索
@@ -51,6 +51,9 @@ SP8 ============================================================================
 「Bから始まってstで終わる3桁の文字列」
 ./excelgrep_by_XMLparse.sh 'Bst|B.st' SP8/*.xlsm
 ./excelgrep_by_XMLparse.sh 'Bst|B.st' SP8/*.xlsm | grep --color -e アボート -e -i abort
+
+
+
 
 
 
