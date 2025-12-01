@@ -3,26 +3,25 @@
 
 =============================================================================================
 #
-# ターミナルに色を付けて出力する場合、excelgrep_by_XMLparse.sh内の「ターミナルに色を付けて出力する場合」のコメントを外す
-#
-./excelgrep_by_XMLparse.sh 'シケイン' SACLA/*.xlsm | grep --ignore-case 結晶
+# 
+./excelgrep_by_XMLparse.sh -k='シケイン' SACLA/*.xlsm | grep --ignore-case 結晶
 
 「シード」を検索
-./excelgrep_by_XMLparse.sh 'シード|seed' SACLA/*.xlsm
-./excelgrep_by_XMLparse.sh 'シード|seed' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm
 
 「CB08-1」を検索
-./excelgrep_by_XMLparse.sh 'CB0{0,1}8.1' SACLA/*.xlsm
-./excelgrep_by_XMLparse.sh 'CB0{0,1}17.1' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' SACLA/*.xlsm
 
 「CB05」セクションを検索
-./excelgrep_by_XMLparse.sh 'CB0{0,1}5.[1-4]' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' SACLA/*.xlsm
 
-./excelgrep_by_XMLparse.sh 'rf.def' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='rf.def' SACLA/*.xlsm
 
-./excelgrep_by_XMLparse.sh 'スイーパ|sweep' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' SACLA/*.xlsm
 
-./excelgrep_by_XMLparse.sh 'チョッパ|Chopper' SACLA/*.xlsm | grep 波高
+./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' SACLA/*.xlsm | grep 波高
 
 
 
@@ -33,24 +32,24 @@ LB Ikに変動が見られる（LB　サイラトロン監視用オシロ：IP a
 
 SCSS =============================================================================================
 
-./excelgrep_by_XMLparse.sh 'spec|スぺ' SCSS/*.xlsm
+./excelgrep_by_XMLparse.sh -k='spec|スぺ' SCSS/*.xlsm
 
 SP8 =============================================================================================
 
 「BH1」を検索
-./excelgrep_by_XMLparse.sh 'BH.{0,1}1' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='BH.{0,1}1' SP8/*.xlsm
 
-./excelgrep_by_XMLparse.sh 'アボート|abort' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='アボート|abort' SP8/*.xlsm
 
 「過電流 または、Over Current」を検索する場合
-./excelgrep_by_XMLparse.sh '過電流|over\scurrent' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='過電流|over\scurrent' SP8/*.xlsm
 
 「Bから始まってstで終わる2桁以上の文字列」   2桁以上なんでいらないもの出てきちゃう
-./excelgrep_by_XMLparse.sh 'B.*st' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='B.*st' SP8/*.xlsm
 
 「Bから始まってstで終わる3桁の文字列」
-./excelgrep_by_XMLparse.sh 'Bst|B.st' SP8/*.xlsm
-./excelgrep_by_XMLparse.sh 'Bst|B.st' SP8/*.xlsm | grep --color -e アボート -e -i abort
+./excelgrep_by_XMLparse.sh -k='Bst|B.st' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='Bst|B.st' SP8/*.xlsm | grep --color -e アボート -e -i abort
 
 
 
@@ -64,10 +63,7 @@ SP8 ============================================================================
 ./excelgrep_by_XMLparse.sh SACLA/2024_03*.xlsm '引渡|引き渡' '波長変更依頼' 'ユニット' '利用終了|運転終了'
 
 #検索した行以外を消さずに色を付ける　要は全部表示　色だけ付ける
-./excelgrep_by_XMLparse.sh SACLA/2024_03.xlsm '$|引渡' '$|引き渡' '$|波長変更依頼' '$|ユニット' '$|利用終了' '$|運転終了'
-./excelgrep_by_XMLparse.sh SACLA/2024_10.xlsm '$|引渡' '$|引き渡' '$|波長変更依頼' '$|ユニット' '$|利用終了' '$|運転終了'
-./excelgrep_by_XMLparse.sh SACLA/2024_11.xlsm '$|引渡' '$|引き渡' '$|波長変更依頼' '$|ユニット' '$|利用終了' '$|運転終了'
-./excelgrep_by_XMLparse.sh SACLA/2025_10.xlsm '$|引渡' '$|引き渡' '$|波長変更依頼' '$|ユニット' '$|利用終了' '$|運転終了'
+./excelgrep_by_XMLparse.sh SACLA/2025_10_SACLA.xlsm '$|引渡' '$|引き渡' '$|波長変更依頼' '$|ユニット' '$|利用終了' '$|運転終了'
 
 grep -a --color -n -A 0 -iE '引渡し' test.out
 grep -a --color -ie '引渡し' -ie "利用終了" test.out

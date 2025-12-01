@@ -495,7 +495,7 @@ for xml in xmls:
 
     #/=======SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認
     #  なぜか、get_schedule_from_ical(df)の前でこれをすると、icalからとってきたスケジュールがうまくdfに入らない。なぜ？？？？
-    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間終了がログノートに存在するか確認~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     for index,item in df.iterrows():#ログノートの最初の日時を取得(ログノートが何月のなのかを確認するため)
         if(type(item['DT']) is datetime):
             first_dt = datetime(year=item['DT'].year, month=item['DT'].month, day=item['DT'].day, hour=0, minute=0, second=0)
@@ -517,7 +517,7 @@ for xml in xmls:
     for index, value in df_kiroku.iloc[start_row_index:, column_index].items():
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end: #指定された月のログノートで、かつ、運転集計する期間内だけ確認
             result = check_datetime_existence_with_tolerance(df, 'DT', value, tolerance_minutes=0.5)            
-            print(f"\nDEBUG: index: {index}, value: {value}, type(value): {type(value)} result: {result}")
+            #print(f"\nDEBUG: index: {index}, value: {value}, type(value): {type(value)} result: {result}")
             if result == -1:
                 #print("🚨Warning SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
                 ans_line=result
@@ -541,6 +541,6 @@ for xml in xmls:
                 print("🚨Warning SACLA運転集計記録test.xlsmのシート調整時間に記載されている調整「終了」時間がログノートに存在しません    " + str(value))
         else:
             print(f"index: {index}, value: {value} is out of range.運転集計する期間内ではないのでスキップします。")
-    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間がログノートに存在するか確認　が終了しました。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")    
+    print("SACLA運転集計記録.xlsmのシート調整時間を読み込んで、調整時間終了がログノートに存在するか確認　が終了しました。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")    
 #    sys.exit()
     #========================================================================/

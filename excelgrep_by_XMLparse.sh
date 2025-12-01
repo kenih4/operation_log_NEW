@@ -13,31 +13,46 @@
 
 echo Argument:   ${@}
 
-# 引数からgrepの操作内容を取り出す
+
+
+
+# 引数からgrepの操作内容を取り出す^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 i=0
 for arg in ${@}; do
-  echo arg:   $arg
-  
-  if [ $(echo ${arg} | grep -vE '\.xlsm$|\.xls$') ]; then
+  echo arg $i:   $arg
+  #/~~~~~~~~~~~~~~~~~~~~~~
+  case "$arg" in
+    -k=*)
+      # "-k=" という文字より左側（-u=自体）を削除して、値だけ取り出す
+      VAL="${arg#*=}"      
+      echo "指定された値は: $VAL"
+      targetstr=${VAL}
+      FLG_K=true
+      ;;      
+    *)
+      # その他の引数の処理（必要なら記述）
+      ;;
+  esac
+  #~~~~~~~~~~~~~~~~~~~~~~/  
+#  if [ $(echo ${arg} | grep -vE '\.xlsm$|\.xls$') ]; then
     # FIXME シングルクォーテーションが消えてしまう
-#    targetstr=${targetstr}" "${arg}
-    targets[i]=${arg}
-    i=`expr $i + 1`
-  fi
+#    targets[i]=${arg} #    targetstr=${targetstr}" "${arg}
+#    i=`expr $i + 1`
+#  fi
 done
 
-for i in ${!targets[@]}
-do
-  echo target[$i] = ${targets[$i]}
-  if [ $i -eq 0 ]; then
-      targetstr=${targets[0]}
-  else
-      targetstr=${targetstr}"|"${targets[$i]}
-  fi
-done
+#for i in ${!targets[@]}
+#do
+#  echo target[$i] = ${targets[$i]}
+#  if [ $i -eq 0 ]; then
+#      targetstr=${targets[0]} #  スクリプトexcelgrep_by_XMLparse.shのコマンドラインオプション.... どうしよ
+#  else
+#      targetstr=${targetstr}"|"${targets[$i]}
+#  fi
+#done
+
 echo targetstr = ${targetstr}
-
-#exit
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 # 一つ一つのExcelファイルに対してgrepする
@@ -100,16 +115,20 @@ fi
 #   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml 
 
 
-# ターミナルに色を付けて出力する場合
-#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
-#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
-#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml > ${tmp_out}
+
+if [ "$FLG_K" = true ]; then
+  echo "💡 ログノート検索モード(ターミナルに色を付けて出力)です。"
+  #python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
+  python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
+  #python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml > ${tmp_out}
+else
+  echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはpythonスクリプトにべた書き"
+  #python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | grep -v -E '引渡し前|引渡し時|引渡し希望|引渡し後|引渡しが|引渡す|引渡て|引渡した事|引渡した旨|引渡しに|終了後|終了時|切替以降' | GREP_COLOR='1;4;33;41' grep -a --color -iE ${targetstr}
+  python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
+  #python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targets[0]}'|'${targets[1]} 
+fi
 
 
-#集計用  output.htmlを出力　 色を付けるワードはpythonスクリプトにべた書き
-#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | grep -v -E '引渡し前|引渡し時|引渡し希望|引渡し後|引渡しが|引渡す|引渡て|引渡した事|引渡した旨|引渡しに|終了後|終了時|切替以降' | GREP_COLOR='1;4;33;41' grep -a --color -iE ${targetstr}
-python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
-#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targets[0]}'|'${targets[1]} 
 
 
 
