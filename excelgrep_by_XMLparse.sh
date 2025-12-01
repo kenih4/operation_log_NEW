@@ -3,8 +3,8 @@
 #Usage:
 # https://qiita.com/UKIUKI_ENGINEER/items/76d1ba94c2e210bc5f5d
 #
-## ./excelgrep_by_XMLparse.sh -k='dcct' SP8/*.xlsm
-#
+#  Terminal:	GitBash
+# ./excelgrep_by_XMLparse.sh -k='dcct' SP8/*.xlsm
 #
 # excelgrep_by_XMLparse.sh を検索モードか集計モードか、-k=検索ワードとすると検索モードで実行
 #
@@ -16,15 +16,14 @@
 echo Argument: ${@}
 
 # 引数からgrepの操作内容を取り出す^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-i=0
 for arg in ${@}; do
-	echo arg $i: $arg
+	echo arg: $arg
 	case "$arg" in
 	-k=*)
 		# "-k=" という文字より左側（-u=自体）を削除して、値だけ取り出す
 		targetstr="${arg#*=}"
-		echo "検索ワード: $targetstr"
 		FLG_K=true
+		echo "💡 ログノート検索モード(ターミナルに色を付けて出力)です。検索ワード: 「$targetstr」"
 		;;
 	*)
 		# その他の引数の処理（必要なら記述）
@@ -49,8 +48,7 @@ for arg in ${@}; do
 		continue
 	fi
 
-	echo
-	echo File: ${arg} '&   ---------------------------------------------------------------------------'
+	echo "📘 File: ${arg}__________________________________________________________________________"
 
 	#  read -p "Hit enter: "
 
@@ -59,7 +57,7 @@ for arg in ${@}; do
 	# 一時ファイル作成
 	#  tmp_out=$(mktemp)
 
-	echo tmpdir = ${tmpdir}
+	#echo tmpdir = ${tmpdir}
 	#  echo tmp_out = ${tmp_out}
 
 	#read -p "Hit enter: "
@@ -68,11 +66,11 @@ for arg in ${@}; do
 	# 標準出力とエラー出力は鬱陶しいので捨てる
 	unzip -t "${arg}" >error.log #  2> error.log標準エラー出力のみ
 	if [ $? -ne 0 ]; then        # $? は、直前に実行したコマンドの終了ステータス
-		echo "ZIPファイルは異常です。"
+		echo "❌ ZIPファイルは異常です。"
 		#cat error.log
 		# 特定のエラーメッセージに基づく処理
 		if grep -q "End-of-central-directory signature not found" error.log; then
-			echo "指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
+			echo "❌ 指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
 		fi
 		exit
 		#  else
@@ -83,19 +81,18 @@ for arg in ${@}; do
 	ret=${tmpdir/\/tmp\//C:\\Users\\kenic\\AppData\\Local\\Temp\\}
 	#echo start \"$ret\\xl\\media\"
 	if [ ! -e $ret\\xl\\media ]; then
-		echo "Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! May be unzip fail..."
+		echo "❌ Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! May be unzip fail..."
 		exit
 	fi
 	#   /tmp/tmp.KBjrD6k7Uq/xl/worksheets/sheet1.xml
 	#   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml
 
 	if [ "$FLG_K" = true ]; then
-		echo "💡 ログノート検索モード(ターミナルに色を付けて出力)です。"
 		#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
 		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
 		#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml > ${tmp_out}
 	else
-		echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはpythonスクリプトにべた書き"
+		echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
 		#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | grep -v -E '引渡し前|引渡し時|引渡し希望|引渡し後|引渡しが|引渡す|引渡て|引渡した事|引渡した旨|引渡しに|終了後|終了時|切替以降' | GREP_COLOR='1;4;33;41' grep -a --color -iE ${targetstr}
 		python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
 		#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targets[0]}'|'${targets[1]}
