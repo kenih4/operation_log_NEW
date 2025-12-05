@@ -536,7 +536,7 @@ for xml in xmls:
             first_dt = datetime(
                 year=item['DT'].year, month=item['DT'].month, day=item['DT'].day, hour=0, minute=0, second=0)
             break
-    print(first_dt)
+    # print(first_dt)
 
     with open(r"C:\me\unten\OperationSummary\dt_beg.txt", mode='r', encoding="UTF-8") as f:
         buff_dt_beg = f.read()
