@@ -34,9 +34,12 @@ done
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # 一つ一つのExcelファイルに対してgrepする
-for arg in ${@}; do
+files=("$@")
+file_count=${#files[@]} # 2. 配列の要素数（ファイル数）を取得する
+#for ((i = 0; i < file_count; i++)); do # 昇順ループ
+for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 	# *.xlsm以外の引数の場合次のループへ
-	if [ $(echo ${arg} | grep -vE '\.xlsm$|\.xls$') ]; then
+	if [ $(echo "${files[i]}" | grep -vE '\.xlsm$|\.xls$') ]; then
 		continue
 	fi
 
@@ -44,11 +47,11 @@ for arg in ${@}; do
 	#メモ：　ハット（^）は「～で始まる」、ドル記号（$）は「～で終わる」を意味します
 
 	#  「~$2024_06_SP8.xlsm」のような一時ファイルは除く
-	if [ $(echo ${arg} | grep '~') ]; then
+	if [ $(echo "${files[i]}" | grep '~') ]; then
 		continue
 	fi
 
-	echo "📘 File: ${arg}__________________________________________________________________________"
+	echo "📘 File: "${files[i]}"__________________________________________________________________________"
 
 	#  read -p "Hit enter: "
 
@@ -64,19 +67,19 @@ for arg in ${@}; do
 
 	# エクセルファイルを一時ディレクトリに解凍する
 	# 標準出力とエラー出力は鬱陶しいので捨てる
-	unzip -t "${arg}" >error.log #  2> error.log標準エラー出力のみ
-	if [ $? -ne 0 ]; then        # $? は、直前に実行したコマンドの終了ステータス
+	unzip -t ""${files[i]}"" >error.log #  2> error.log標準エラー出力のみ　　「-t」オプション：正常に展開できるかテストする
+	if [ $? -ne 0 ]; then               # $? は、直前に実行したコマンドの終了ステータス
 		echo "❌ ZIPファイルは異常です。"
 		#cat error.log
 		# 特定のエラーメッセージに基づく処理
 		if grep -q "End-of-central-directory signature not found" error.log; then
 			echo "❌ 指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
 		fi
-		exit
+		continue
 		#  else
 		#      echo "ZIPファイルは正常です。"
 	fi
-	unzip ${arg} -d ${tmpdir} 1>/dev/null 2>&1 # -d ディレクトリ	指定したディレクトリに展開する
+	unzip "${files[i]}" -d ${tmpdir} 1>/dev/null 2>&1 # -d ディレクトリ	指定したディレクトリに展開する
 
 	ret=${tmpdir/\/tmp\//C:\\Users\\kenic\\AppData\\Local\\Temp\\}
 	#echo start \"$ret\\xl\\media\"
