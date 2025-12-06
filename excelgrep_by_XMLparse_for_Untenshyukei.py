@@ -553,10 +553,10 @@ for xml in xmls:
     for index, value in df_kiroku.iloc[start_row_index:, column_index].items():
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end:  # 指定された月のログノートで、かつ、運転集計する期間内だけ確認
             result = check_datetime_existence_with_tolerance(
-                df, 'DT', value, tolerance_minutes=0.5)
+                df, 'DT', value, tolerance_minutes=0.99)  # ±1分の許容時間で確認
             # print(f"\nDEBUG: index: {index}, value: {value}, type(value): {type(value)} result: {result}")
             if result == -1:
-                # print("🚨Warning SACLA運転集計記録test.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
+                # print("🚨Warning SACLA運転集計記録.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
                 ans_line = result
             elif isinstance(result, int):  # 1つのインデックス（int型）が返された場合
                 ans_line = result
@@ -571,7 +571,7 @@ for xml in xmls:
                     #                    condition = not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip()
                     if not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip():
                         print(
-                            "🚨Warning  Not found [Hikiwatashi]   " + str(value))
+                            "🚨Warning  SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間がログノートに存在しますが、「引渡」の記載がありません。" + str(value) + "    " + matching_row.to_string(header=False, index=False).replace('\n', '').strip())
                     else:
                         # なぜか日本語にするとターミナルに何も表示されなくなる。
                         print(
@@ -580,7 +580,7 @@ for xml in xmls:
                     print(f"ERROR: {e}")
             else:
                 print(
-                    "🚨Warning SACLA運転集計記録test.xlsmのシート調整時間に記載されている調整「終了」時間がログノートに存在しません    " + str(value))
+                    "🚨Warning SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間がログノートに存在しません    " + str(value) + "    " + matching_row.to_string(header=False, index=False).replace('\n', ' ').strip())
         else:
             print(
                 f"index: {index}, value: {value} is out of range.運転集計する期間内ではないのでスキップします。")
