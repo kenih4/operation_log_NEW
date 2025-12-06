@@ -571,7 +571,7 @@ for xml in xmls:
                     #                    condition = not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip()
                     if not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip():
                         print(
-                            "🚨Warning  SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間がログノートに存在しますが、「引渡」の記載がありません。" + str(value) + "    " + matching_row.to_string(header=False, index=False).replace('\n', '').strip())
+                            "🚨Warning  SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間( " + str(value) + " )がログノートに存在しますが、「引渡」の記載がありません。ログノートの内容：" + matching_row.to_string(header=False, index=False).replace('\n', '').strip())
                     else:
                         # なぜか日本語にするとターミナルに何も表示されなくなる。
                         print(
@@ -580,7 +580,7 @@ for xml in xmls:
                     print(f"ERROR: {e}")
             else:
                 print(
-                    "🚨Warning SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間がログノートに存在しません    " + str(value) + "    " + matching_row.to_string(header=False, index=False).replace('\n', ' ').strip())
+                    "🚨Warning SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間( " + str(value) + " )がログノートに存在しません")
         else:
             print(
                 f"index: {index}, value: {value} is out of range.運転集計する期間内ではないのでスキップします。")
