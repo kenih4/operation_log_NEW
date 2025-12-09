@@ -53,7 +53,12 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 
 	echo "📘 File: "${files[i]}"__________________________________________________________________________"
 
-	#  read -p "Hit enter: "
+	# ZIP展開後のXMLファイルが既に存在するか確認するバージョン　作りかけたが時間かかってるのはunzipでない
+	#if [ -f "${files[i]%%/*}/sharedStrings_${files[i]#*/}.xml" ] && [ -f ${files[i]%%/*}/sheet1_${files[i]#*/}.xml ]; then
+	#	echo "両方存在します"
+	#else
+	#	echo "どちらか、または両方存在しません"
+	#fi
 
 	# zip展開用一時ディレクトリ作成
 	tmpdir=$(mktemp -d)
@@ -61,28 +66,25 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 	#  tmp_out=$(mktemp)
 
 	#echo tmpdir = ${tmpdir}
-	#  echo tmp_out = ${tmp_out}
 
 	#read -p "Hit enter: "
 
-	# エクセルファイルを一時ディレクトリに解凍する
-	# 標準出力とエラー出力は鬱陶しいので捨てる
+	# エクセルファイルを一時ディレクトリに解凍する 標準出力とエラー出力は鬱陶しいので捨てる
 	unzip -t ""${files[i]}"" >error.log #  2> error.log標準エラー出力のみ　　「-t」オプション：正常に展開できるかテストする
 	if [ $? -ne 0 ]; then               # $? は、直前に実行したコマンドの終了ステータス
 		echo "❌ ZIPファイルは異常です。"
-		#cat error.log
-		# 特定のエラーメッセージに基づく処理
-		if grep -q "End-of-central-directory signature not found" error.log; then
+		if grep -q "End-of-central-directory signature not found" error.log; then # 特定のエラーメッセージに基づく処理
 			echo "❌ 指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
 		fi
 		continue
-		#  else
-		#      echo "ZIPファイルは正常です。"
 	fi
 	unzip "${files[i]}" -d ${tmpdir} 1>/dev/null 2>&1 # -d ディレクトリ	指定したディレクトリに展開する
 
 	ret=${tmpdir/\/tmp\//C:\\Users\\kenic\\AppData\\Local\\Temp\\}
 	#echo start \"$ret\\xl\\media\"
+	#cp ${tmpdir}/xl/sharedStrings.xml ${files[i]%%/*}/sharedStrings_${files[i]#*/}.xml 	# ZIP展開後のXMLファイルが既に存在するか確認するバージョン　作りかけたが時間かかってるのはunzipでない
+	#cp ${tmpdir}/xl/worksheets/sheet1.xml ${files[i]%%/*}/sheet1_${files[i]#*/}.xml 	# ZIP展開後のXMLファイルが既に存在するか確認するバージョン　作りかけたが時間かかってるのはunzipでない
+
 	if [ ! -e $ret\\xl\\media ]; then
 		echo "❌ Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! May be unzip fail..."
 		exit
@@ -91,14 +93,11 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 	#   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml
 
 	if [ "$FLG_K" = true ]; then
-		#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
+		#		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
 		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
-		#python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml > ${tmp_out}
 	else
 		echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
-		#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | grep -v -E '引渡し前|引渡し時|引渡し希望|引渡し後|引渡しが|引渡す|引渡て|引渡した事|引渡した旨|引渡しに|終了後|終了時|切替以降' | GREP_COLOR='1;4;33;41' grep -a --color -iE ${targetstr}
 		python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
-		#python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targets[0]}'|'${targets[1]}
 	fi
 
 	#grep -a もしくは grep --text を使って「ちょっとバイナリファイルっぽくても諦めんなよ」という思い
@@ -115,6 +114,5 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 
 	# 一時ディレクトリとファイルを削除
 	rm -r ${tmpdir}
-	#  rm ${tmp_out}
 
 done
