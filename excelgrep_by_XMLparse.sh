@@ -91,8 +91,8 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 	fi
 	#   /tmp/tmp.KBjrD6k7Uq/xl/worksheets/sheet1.xml
 	#   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml
-
-	if [ "$FLG_K" = true ]; then
+	if [ "$FLG_K" = true ]; then # ログノート検索モード
+		echo "💡 ログノート検索モード（ターミナルに出力）を実行します"
 		#		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
 		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
 	else

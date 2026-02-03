@@ -13,58 +13,56 @@ from datetime import timedelta
 # python excelgrep_by_XMLparse.py sharedStrings.xml sheet1.xml
 # TEST
 # python excelgrep_by_XMLparse.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
-#
-
+# SP8
+# python excelgrep_by_XMLparse.py C:/Users/kenic/AppData/Local/Temp/tmp.JaSROYgtE7/xl/sharedStrings.xml C:/Users/kenic/AppData/Local/Temp/tmp.JaSROYgtE7/xl/worksheets/sheet1.xml
+# SACLA
+# python excelgrep_by_XMLparse.py C:/Users/kenic/AppData/Local/Temp/tmp.kZnXuHiRaP/xl/sharedStrings.xml C:/Users/kenic/AppData/Local/Temp/tmp.kZnXuHiRaP/xl/worksheets/sheet1.xml
 print("============ ここから excelgrep_by_XMLparse.py ============")
 
-#print("TEST",sDateTime)
-#sys.exit()
+# print("TEST",sDateTime)
+# sys.exit()
 
 
-print("version",pd.__version__)
-#pd.set_option('display.max_rows', 70)
+print("version", pd.__version__)
+# pd.set_option('display.max_rows', 70)
 pd.set_option('display.max_rows', None)
-pd.options.display.colheader_justify = 'left' #列名表示の右寄せ
+pd.options.display.colheader_justify = 'left'  # 列名表示の右寄せ
 
 print('sys.stdout.encoding:', sys.stdout.encoding)
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')  # default でutf-8なのに、これをしないと文字化けする。なぜ？？
+# default でutf-8なのに、これをしないと文字化けする。なぜ？？
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 print('sys.stdout.encoding:', sys.stdout.encoding)
-#sys.exit()
-
-
+# sys.exit()
 
 
 args = sys.argv
-print("Arg[sharedStrings.xml]:\t",args[1])
-print("Arg[sheet1.xml]:\t",args[2])
-
-
-    
-    
-    
+print("Arg[sharedStrings.xml]:\t", args[1])
+print("Arg[sheet1.xml]:\t", args[2])
+input("Press Enter to continue...")
 
 #   sharedStrings.xml のsiタグの部分だけ配列に格納
 sslist = []
 xmls = glob.glob(args[1], recursive=True)
 for xml in xmls:
-#    print("xml file=",xml)
+    #    print("xml file=",xml)
     tree = ET.parse(xml)
     root = tree.getroot()
     for ssl in root:
         for child in ssl.iter():
-                   
-            if child.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}si':   # 特定要素(si)の抽出
-#                print("child.tag = ", child.tag)
-                
+
+            # 特定要素(si)の抽出
+            if child.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}si':
+                #                print("child.tag = ", child.tag)
+
                 for child2 in child.iter():
-                     if child2.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t':
-                        #print("Hit child2.text= ",child2.text)
+                    if child2.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t':
+                        # print("Hit child2.text= ",child2.text)
                         sslist.append(child2.text)
                         break
 
 
 maxsslit = len(sslist)
-print("lenght of maxsslit = ",maxsslit)
+print("lenght of maxsslit = ", maxsslit)
 #!for index, item in enumerate(sslist):
 #!    print("Index:",str(index)," value:",item)
 #!    print("Index:",str(index)," value:",item.encode('cp932', 'replace').decode("cp932", errors="replace"))    #   s-jisにバイト型にエンコードして、s-jisでstr型にデコードにしてprint    CP932に存在しない文字は、'?'に置き換わるとともにエラーを回避できます。
@@ -73,7 +71,7 @@ print("lenght of maxsslit = ",maxsslit)
 # $ ./excelgrep_by_XMLparse.sh 'dcct' SP8/2024_06_SP8.xlsm  | xargs -I{} grep --color -iE 'dcct'  {}
 # すると以下のようになる。   コマンドプロンプトの文字コート変えても同じ。
 # xargsで渡すのが問題なのか？？？？
-#     
+#
 #    print("インデックス：" + str(index) + ", 値：" + item)
 #       UnicodeEncodeError: 'cp932(shift_jis)' codec can't encode character '\xa0' in position 14: illegal multibyte sequence
 #   print("インデックス：" + str(index) + ", 値：" + item.encode('cp932', "ignore"))
@@ -82,41 +80,42 @@ print("lenght of maxsslit = ",maxsslit)
 #   TypeError: str.replace() takes no keyword arguments
 
 
-
-
-    
-#=====================================================================================================    
+# =====================================================================================================
 #   sheet1.xml のA,B,C列をピックアップ
 xmls = glob.glob(args[2], recursive=True)
 
-columns = ['A', 'B', 'C', 'DT'] # DTはA(日付)とB(時間)を日時にしたものを入れる
-df = pd.DataFrame(columns=columns) 
-df.style.set_properties(**{'text-align': 'left'})   # pip install Jinja2  左寄せ　うまくいかず、、、
-df.style.background_gradient(cmap='viridis', low=.5, high=0) # 連続値のグラデーション背景 Matplotlib colormapのviridisにして、0.0 - 5.0のレンジでグラデーション
-df.style.set_properties(**{'background-color': 'black', # 背景
-                           'color': 'lawngreen', # 文字色
-                           'border-color': 'white', # 枠の色っぽいが、変わってない？
-                           'align':'left'}) # 文字の揃える位置っぽいが、変わってない？
+columns = ['A', 'B', 'C', 'DT']  # DTはA(日付)とB(時間)を日時にしたものを入れる
+df = pd.DataFrame(columns=columns)
+# pip install Jinja2  左寄せ　うまくいかず、、、
+df.style.set_properties(**{'text-align': 'left'})
+# 連続値のグラデーション背景 Matplotlib colormapのviridisにして、0.0 - 5.0のレンジでグラデーション
+df.style.background_gradient(cmap='viridis', low=.5, high=0)
+df.style.set_properties(**{'background-color': 'black',  # 背景
+                           'color': 'lawngreen',  # 文字色
+                           'border-color': 'white',  # 枠の色っぽいが、変わってない？
+                           'align': 'left'})  # 文字の揃える位置っぽいが、変わってない？
 
-df_tmp = pd.DataFrame(index=[1],columns=columns)
+df_tmp = pd.DataFrame(index=[1], columns=columns)
 
 for xml in xmls:
-#    print("xml file=",xml)
+    #    print("xml file=",xml)
     tree = ET.parse(xml)
     root = tree.getroot()
     for sheetData in root:
-        for child in sheetData.iter():                        
-            if child.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}row':   # 特定要素(row)の抽出
+        for child in sheetData.iter():
+            # 特定要素(row)の抽出
+            if child.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}row':
                 CELL = "-"
                 for child2 in child.iter():
-                    if child2.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}c':    # 特定要素(c)の抽出
+                    # 特定要素(c)の抽出
+                    if child2.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}c':
                         if not child2.attrib["r"].find('A') or not child2.attrib["r"].find('B') or not child2.attrib["r"].find('C'):
                             for child3 in child2.iter():
                                 CELL = child2.attrib["r"]
-                                #print("\t",CELL,end='')
+                                # print("\t",CELL,end='')
                                 VAL = "-"
                                 if child3.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}v':
-                                    #print("Hit child3.tag =   ",child3.text)
+                                    # print("Hit child3.tag =   ",child3.text)
                                     if not child2.attrib["r"].find('A'):
                                         VAL = int(child3.text)
 #                                        print("\t",CELL,"\t",VAL)
@@ -128,7 +127,7 @@ for xml in xmls:
 #                                        df_tmp.iloc[0, 1] = (datetime(1899,12,30) + timedelta(VAL)).strftime('%H:%M')
                                         df_tmp.iloc[0, 1] = VAL
                                     if not child2.attrib["r"].find('C'):
-#                                        print("\t",CELL,"\t",VAL)
+                                        #                                        print("\t",CELL,"\t",VAL)
                                         try:
                                             if int(child3.text) < maxsslit:
                                                 VAL = sslist[int(child3.text)]
@@ -136,54 +135,83 @@ for xml in xmls:
                                                 VAL = child3.text
                                         except:
                                             VAL = child3.text
-                                        #print("\t",CELL,"\t",VAL,end='')
-                                        df_tmp.iloc[0, 2] = VAL.ljust(500)  #左寄せ
-                            
+                                        # print("\t",CELL,"\t",VAL,end='')
+                                        df_tmp.iloc[0, 2] = VAL.ljust(
+                                            500)  # 左寄せ
+
 #                            print("TYPE =\t",type(df_tmp.iloc[0, 0]),"\t",type(df_tmp.iloc[0, 1]),end='\n')
 #                            print("VALUE =\t",df_tmp.iloc[0, 0],"\t",df_tmp.iloc[0, 1],end='\n')
                             try:
-                                df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]+df_tmp.iloc[0, 1]) #　B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
+                                # 　B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
+                                df_tmp.iloc[0, 3] = datetime(
+                                    1899, 12, 30) + timedelta(df_tmp.iloc[0, 0]+df_tmp.iloc[0, 1])
                             except:
                                 try:
-                                    df_tmp.iloc[0, 3] = datetime(1899,12,30) + timedelta(df_tmp.iloc[0, 0]) 
+                                    df_tmp.iloc[0, 3] = datetime(
+                                        1899, 12, 30) + timedelta(df_tmp.iloc[0, 0])
                                 except:
                                     df_tmp.iloc[0, 3] = 0
-                
-                df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
-                df_tmp.iloc[0, 2] = "-" # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
+
+                # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
+                df = pd.concat([df, df_tmp], ignore_index=True, axis=0)
+                # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
+                df_tmp.iloc[0, 2] = "-"
 
 #!                if not df_tmp['C'].hasnans:     # C列(内容部分)に値があるときだけ
 #!                    df = pd.concat([df, df_tmp], ignore_index=True, axis=0)  # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
 
     try:
-        df['A'] = pd.to_timedelta(df['A'],unit='D',errors="coerce")+pd.to_datetime("1899/12/30")    #  errors=‘coerce’, then invalid parsing will be set as NaT.  ‘ignore’, then invalid parsing will return the input.
+        # errors=‘coerce’, then invalid parsing will be set as NaT.  ‘ignore’, then invalid parsing will return the input.
+        df['A'] = pd.to_timedelta(
+            df['A'], unit='D', errors="coerce")+pd.to_datetime("1899/12/30")
     except:
         print('Error')
 
 
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("print Before drop ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print(df)
 
-#df.drop(df[(df['A'] <= 3) & (df['B'] == 'orange')].index, inplace=True)
-    df.drop(df[(df['C'] == "-") ].index, inplace=True)
-    df.drop(df[df['C'].str.contains('>本シフトの運転状況<',case=False,na=False)].index, inplace=True) 
-    df.drop(df[df['C'].str.contains('シフト交替',case=False,na=False)].index, inplace=True)
-    df.drop(df[df['C'].str.contains('シフトリーダー:',case=False,na=False)].index, inplace=True)
-    df.drop(df[df['C'].str.contains('オペレーター:',case=False,na=False)].index, inplace=True)
-    df.drop(df[df['C'].str.contains('プロファイル定時確認',case=False,na=False)].index, inplace=True)
-#大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
+# df.drop(df[(df['A'] <= 3) & (df['B'] == 'orange')].index, inplace=True)
+    df.drop(df[(df['C'] == "-")].index, inplace=True)
+    df.drop(df[df['C'].str.contains('>本シフトの運転状況<',
+            case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'シフト交替', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'シフトリーダー:', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'オペレーター:', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('プロファイル定時確認',
+            case=False, na=False)].index, inplace=True)
 
+    # SR LOG特有の不要行削除　　なぜかうまく動かない
+    df.drop(df[df['C'].str.contains(
+        'シフト交代', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        '運転員:', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('パラメータセーブ',
+            case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'バンチ純度測定結果', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'クレーン', case=False, na=False)].index, inplace=True)
 
-    print(df.loc[:,['DT', 'C']])
-    
+# 大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False。　inplace=Trueを指定すると、元のデータフレームdfが直接変更
+    print(
+        "print df.loc[:, [DT, C]]====================================================")
+    print(df.loc[:, ['DT', 'C']])
+
 #    df.style.render()
 #    df.loc[:,['DT', 'C']].style.render()
-    styler = df.loc[:,['DT', 'C']].style.map(lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
-    styler = styler.map(lambda x: 'background-color: blue' if ('利用終了' or '運転終了') in str(x) else '')
-    styler = styler.map(lambda x: 'color: yellow' if ('波長変更依頼' or 'ユニット') in str(x) else '')
+    styler = df.loc[:, ['DT', 'C']].style.map(
+        lambda x: 'background-color: red' if ('引渡' or '引渡し') in str(x) else '')
+    styler = styler.map(
+        lambda x: 'background-color: blue' if ('利用終了' or '運転終了') in str(x) else '')
+    styler = styler.map(lambda x: 'color: yellow' if (
+        '波長変更依頼' or 'ユニット') in str(x) else '')
 #    styler = styler.map(lambda x: 'color: yellow' if ('BL2') in str(x) else '')
-    styler = styler.set_properties(**{'text-align': 'left'}) #左寄せ
+    styler = styler.set_properties(**{'text-align': 'left'})  # 左寄せ
 
 
 #    styler.to_html('hoge.html')
@@ -191,17 +219,8 @@ for xml in xmls:
 #    webbrowser.open_new_tab('hoge.html')
 #    display(styler)
 
-
     print(f"type: {type(df)}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("Finish~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-#for index, row in df.iterrows():
+# for index, row in df.iterrows():
 #    print(f"Index: {index}", f"A: {row['A']}, B: {row['B']}, C: {row['C']}, DT: {row['DT']}")
-    
-    
-
-    
-
-
-
-

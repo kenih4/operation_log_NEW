@@ -3,6 +3,7 @@
 
 =============================================================================================
 #
+#  -k オプションを付けると、ログノート検索モードになりターミナルに出力される
 # 
 ./excelgrep_by_XMLparse.sh -k='シケイン' SACLA/*.xlsm | grep --ignore-case 結晶
 
@@ -23,6 +24,8 @@
 
 ./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' SACLA/*.xlsm | grep 波高
 
+SR
+./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' SP8/2026_02*.xlsm
 
 
 
@@ -43,6 +46,9 @@ SP8 ============================================================================
 
 「過電流 または、Over Current」を検索する場合
 ./excelgrep_by_XMLparse.sh -k='過電流|over\scurrent' SP8/*.xlsm
+
+./excelgrep_by_XMLparse.sh -k='入射軌道|リミット' SP8/*.xlsm
+
 
 「Bから始まってstで終わる2桁以上の文字列」   2桁以上なんでいらないもの出てきちゃう
 ./excelgrep_by_XMLparse.sh -k='B.*st' SP8/*.xlsm

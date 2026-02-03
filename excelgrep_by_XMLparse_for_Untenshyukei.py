@@ -30,8 +30,8 @@ root.withdraw()
 # python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/worksheets/sheet1.xml
 #
 # # Formatter     Shift+Alt+F
-#
-print("============ ここから excelgrep_by_XMLparse.py ============")
+# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenic/AppData/Local/Temp/tmp.mc62u1goTm/xl/sharedStrings.xml C:/Users/kenic/AppData/Local/Temp/tmp.mc62u1goTm/xl/worksheets/sheet1.xml
+print("============ ここから excelgrep_by_XMLparse_for_Untenshukei.py ============")
 
 # print("TEST",sDateTime)
 # sys.exit()
@@ -285,11 +285,11 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 print('sys.stdout.encoding:', sys.stdout.encoding)
 # sys.exit()
 
-
+print("DEBUG: TEST pause here")
 args = sys.argv
 print("Arg[sharedStrings.xml]:\t", args[1])
 print("Arg[sheet1.xml]:\t", args[2])
-
+# input("Press Enter to continue... A")
 
 #   sharedStrings.xml のsiタグの部分だけ配列に格納
 sslist = []
@@ -426,20 +426,24 @@ for xml in xmls:
 
 
 #    df = df.replace('\uff5e', '-',regex=True).replace('\uff0d', '-',regex=True).replace('\xa0', '',regex=True)         #shift-jisにない文字を置換
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-
+#    print("print Before drop ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+#    print(df.loc[:, ['DT', 'C']])
+#    input("Press Enter to continue...   B")
 
 # 消すな将来用    df['C'] = df['C'].replace({'終了時': '終了 時', '終了後': '終了 後'},regex=True) # とりあえずテスト的。今のところ意味ない
 
+    # 不要行削除
+    # SRのログノート、日本語の文字列を含む行がdropできなかったが、前後の空白を削除することによって対処できた。
+    df['C'] = df['C'].str.strip()
     df.drop(df[(df['C'] == "-")].index, inplace=True)
     df.drop(df[df['C'].str.contains('>本シフトの運転状況<',
             case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains(
         'シフト交替', case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains(
-        'シフトリーダー:', case=False, na=False)].index, inplace=True)
+        'シフトリーダー', case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains(
-        'オペレーター:', case=False, na=False)].index, inplace=True)
+        'オペレーター', case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains('プロファイル定時確認',
             case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains(
@@ -448,7 +452,25 @@ for xml in xmls:
         'BL2: ', case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains(
         'BL3: ', case=False, na=False)].index, inplace=True)
-    # 大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False
+
+    # SR LOG特有の不要行削除
+    df.drop(df[df['C'].str.contains(
+        'シフト交代', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        '運転員', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains('パラメータセーブ',
+            case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'バンチ純度測定結果', case=False, na=False)].index, inplace=True)
+    df.drop(df[df['C'].str.contains(
+        'クレーン', case=False, na=False)].index, inplace=True)
+    # 大文字小文字を無視したい場合は、case=False,NaNを無視するには、na=False。　inplace=Trueを指定すると、元のデータフレームdfが直接変更
+    # なくてもOKだったので以下はなし。regex=False: これを追加することで、str.contains()が正規表現ではなく、単純な文字列検索を行います。これにより、日本語の文字列を正しく扱うことができるようになります。
+
+#    print(
+#        "print df.loc[:, [DT, C]]====================================================")
+#    print(df.loc[:, ['DT', 'C']])
+#    input("Press Enter to continue...   C")
 
     # ログノートA列の日付が00:00を過ぎても日付はそのままなので対処
     bf_itemDT = datetime(year=2000, month=1, day=1, hour=0, minute=0, second=0)
