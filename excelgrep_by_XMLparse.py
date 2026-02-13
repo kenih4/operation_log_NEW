@@ -13,10 +13,6 @@ from datetime import timedelta
 # python excelgrep_by_XMLparse.py sharedStrings.xml sheet1.xml
 # TEST
 # python excelgrep_by_XMLparse.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
-# SP8
-# python excelgrep_by_XMLparse.py C:/Users/kenic/AppData/Local/Temp/tmp.JaSROYgtE7/xl/sharedStrings.xml C:/Users/kenic/AppData/Local/Temp/tmp.JaSROYgtE7/xl/worksheets/sheet1.xml
-# SACLA
-# python excelgrep_by_XMLparse.py C:/Users/kenic/AppData/Local/Temp/tmp.kZnXuHiRaP/xl/sharedStrings.xml C:/Users/kenic/AppData/Local/Temp/tmp.kZnXuHiRaP/xl/worksheets/sheet1.xml
 print("============ ここから excelgrep_by_XMLparse.py ============")
 
 # print("TEST",sDateTime)
@@ -38,7 +34,7 @@ print('sys.stdout.encoding:', sys.stdout.encoding)
 args = sys.argv
 print("Arg[sharedStrings.xml]:\t", args[1])
 print("Arg[sheet1.xml]:\t", args[2])
-input("Press Enter to continue...")
+# input("Press Enter to continue...")
 
 #   sharedStrings.xml のsiタグの部分だけ配列に格納
 sslist = []
@@ -117,11 +113,17 @@ for xml in xmls:
                                 if child3.tag == '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}v':
                                     # print("Hit child3.tag =   ",child3.text)
                                     if not child2.attrib["r"].find('A'):
-                                        VAL = int(child3.text)
+                                        try:
+                                            VAL = int(child3.text)
+                                        except:
+                                            VAL = child3.text
 #                                        print("\t",CELL,"\t",VAL)
                                         df_tmp.iloc[0, 0] = VAL
                                     if not child2.attrib["r"].find('B'):
-                                        VAL = float(child3.text)
+                                        try:
+                                            VAL = float(child3.text)
+                                        except:
+                                            VAL = child3.text
 #                                        print("\t",CELL,"\t",VAL,end='')
 #                                        df_tmp.iloc[0, 1] = VAL*24 #時間に変換
 #                                        df_tmp.iloc[0, 1] = (datetime(1899,12,30) + timedelta(VAL)).strftime('%H:%M')
@@ -185,7 +187,7 @@ for xml in xmls:
     df.drop(df[df['C'].str.contains('プロファイル定時確認',
             case=False, na=False)].index, inplace=True)
 
-    # SR LOG特有の不要行削除　　なぜかうまく動かない
+    # SR LOG特有の不要行削除　　うまく動かない 日本語がダメなようだ。
     df.drop(df[df['C'].str.contains(
         'シフト交代', case=False, na=False)].index, inplace=True)
     df.drop(df[df['C'].str.contains(

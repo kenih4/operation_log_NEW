@@ -4,28 +4,30 @@
 =============================================================================================
 #
 #  -k オプションを付けると、ログノート検索モードになりターミナルに出力される
-# 
-./excelgrep_by_XMLparse.sh -k='シケイン' SACLA/*.xlsm | grep --ignore-case 結晶
+# 　ターミナルはGit Bashで！！！！！！！！！！
+./excelgrep_by_XMLparse.sh -k='シケイン' SACLA/*.xlsm | grep --ignore-case 結晶 | tee test.log
+
+./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' SACLA/*.xlsm | tee test.log
 
 「シード」を検索
-./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm
-./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm | tee test.log
 
 「CB08-1」を検索
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' SACLA/*.xlsm
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' SACLA/*.xlsm | tee test.log
 
 「CB05」セクションを検索
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='rf.def' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='rf.def' SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' SACLA/*.xlsm | grep 波高
+./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' SACLA/*.xlsm | grep 波高 | tee test.log
 
 SR
-./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' SP8/2026_02*.xlsm
+./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' SP8/2026_02*.xlsm | tee test.log
 
 
 

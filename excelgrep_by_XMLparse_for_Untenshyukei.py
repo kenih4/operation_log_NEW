@@ -30,7 +30,6 @@ root.withdraw()
 # python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/worksheets/sheet1.xml
 #
 # # Formatter     Shift+Alt+F
-# python excelgrep_by_XMLparse_for_Untenshyukei.py C:/Users/kenic/AppData/Local/Temp/tmp.mc62u1goTm/xl/sharedStrings.xml C:/Users/kenic/AppData/Local/Temp/tmp.mc62u1goTm/xl/worksheets/sheet1.xml
 print("============ ここから excelgrep_by_XMLparse_for_Untenshukei.py ============")
 
 # print("TEST",sDateTime)
