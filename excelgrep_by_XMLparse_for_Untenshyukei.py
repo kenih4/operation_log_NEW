@@ -485,7 +485,8 @@ for xml in xmls:
                 # 2直17:00には絶対時刻があるので、28,800sec=8時間以上開いてる時だけ0時を堺に日付を+1日する
                 if (abs(item['DT'] - bf_itemDT).total_seconds() > 28800):
                     df.loc[index, 'DT'] = item['DT'] + timedelta(days=1)
-#                    print(index,' TIME INVERT: ',  item['DT']," - ", bf_itemDT, " = ", (item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT']  )
+                    print(index, ' TIME INVERT: ',  item['DT'], " - ", bf_itemDT, " = ", (item['DT'] -
+                          bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT'])
                 else:
                     print(index, ' TIME INVERT: ログノートの時刻記載が間違ってる可能性があります。',  item['DT'], " - ", bf_itemDT, " = ", (
                         item['DT'] - bf_itemDT).total_seconds(), " NEW df.loc[index, 'DT'] = ",  df.loc[index, 'DT'])
@@ -574,16 +575,17 @@ for xml in xmls:
     for index, value in df_kiroku.iloc[start_row_index:, column_index].items():
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end:  # 指定された月のログノートで、かつ、運転集計する期間内だけ確認
             result = check_datetime_existence_with_tolerance(
-                df, 'DT', value, tolerance_minutes=0.99)  # ±1分の許容時間で確認
+                df, 'DT', value, tolerance_minutes=1.0)  # ±1分の許容時間で確認
             # print(f"\nDEBUG: index: {index}, value: {value}, type(value): {type(value)} result: {result}")
             if result == -1:
                 # print("🚨Warning SACLA運転集計記録.xlsmのシート[調整時間]に記載されている調整「終了」時間がログノートに存在しません！    " + str(value))
                 ans_line = result
             elif isinstance(result, int):  # 1つのインデックス（int型）が返された場合
                 ans_line = result
-            else:  # 複数のインデックス（リスト型）が返された場合
+            else:  # 複数のインデックス（リスト型）が返された場合、とりあえず、最初のインデックスだけを使用。。。要改修
                 ans_line = result[0]
-#            print("DEBUG:  ans_line = ", ans_line)
+#               print("複数のインデックス（リスト型）が返されました:  result = ", result)
+
             if ans_line != -1:
                 # matching_row = df.loc[result,['formatted_DT','BL2ical', 'BL3ical', 'C']]
                 matching_row = df.loc[ans_line, ['C']]
@@ -592,16 +594,17 @@ for xml in xmls:
                     #                    condition = not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip()
                     if not "引" in matching_row.to_string(header=False, index=False).replace('\n', ' ').strip():
                         print(
-                            "🚨Warning  SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間( " + str(value) + " )がログノートに存在しますが、「引渡」の記載がありません。ログノートの内容：" + matching_row.to_string(header=False, index=False).replace('\n', '').strip())
+                            "🚨Warning  SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間( " + str(value) + " )がログノートに存在しますが、「引渡」と書かれていません。ログノートの内容：" + matching_row.to_string(header=False, index=False).replace('\n', '').strip())
                     else:
                         # なぜか日本語にするとターミナルに何も表示されなくなる。
                         print(
-                            "✅OK found [Hikiwatashi] on Log note " + str(value))
+                            "✅OK found 「引渡」 on Log note " + str(value))
                 except Exception as e:
                     print(f"ERROR: {e}")
             else:
                 print(
-                    "🚨Warning SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間( " + str(value) + " )がログノートに存在しません")
+                    "🚨Warning SACLA運転集計記録.xlsmのシート調整時間に記載されている調整「終了」時間( " + str(value) + " )がログノートに存在しません。調整理由:" + str(df_kiroku.iloc[index, 3]))
+
         else:
             print(
                 f"index: {index}, value: {value} is out of range.運転集計する期間内ではないのでスキップします。")

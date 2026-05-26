@@ -13,6 +13,9 @@ from datetime import timedelta
 # python excelgrep_by_XMLparse.py sharedStrings.xml sheet1.xml
 # TEST
 # python excelgrep_by_XMLparse.py C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
+#
+# マクロいろいろ.xlsxから実行しているコマンド
+# ./excelgrep_by_XMLparse.sh  SACLA/2026_05_SACLA.xlsm '$|引渡' '$|引き渡' '$|波長変更依頼' '$|ユニット' '$|利用終了' '$|運転終了'
 print("============ ここから excelgrep_by_XMLparse.py ============")
 
 # print("TEST",sDateTime)

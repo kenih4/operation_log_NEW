@@ -9,6 +9,8 @@
 
 ./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' SACLA/*.xlsm | tee test.log
 
+./excelgrep_by_XMLparse.sh -k='L-B|LB|Lバンド' SACLA/*.xlsm | grep コイル | tee test.log
+
 「シード」を検索
 ./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm | tee test.log
 ./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm | tee test.log
@@ -26,10 +28,6 @@
 
 ./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' SACLA/*.xlsm | grep 波高 | tee test.log
 
-SR
-./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' SP8/2026_02*.xlsm | tee test.log
-
-
 
 LB Ikに変動が見られる（LB　サイラトロン監視用オシロ：IP addr : 172.16.5.218）
 
@@ -41,6 +39,16 @@ SCSS ===========================================================================
 
 SP8 =============================================================================================
 
+
+./excelgrep_by_XMLparse.sh -k='シャン' SP8/2025_*.xlsm
+./excelgrep_by_XMLparse.sh -k='漏洩' SP8/2025_*.xlsm
+
+./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' SP8/2026_02*.xlsm | tee test.log
+
+./excelgrep_by_XMLparse.sh -k='over|OT' SP8/.xlsm | tee test.log
+
+./excelgrep_by_XMLparse.sh -k='水漏|量' SP8/2025_10*.xlsm
+
 「BH1」を検索
 ./excelgrep_by_XMLparse.sh -k='BH.{0,1}1' SP8/*.xlsm
 
@@ -51,20 +59,19 @@ SP8 ============================================================================
 
 ./excelgrep_by_XMLparse.sh -k='入射軌道|リミット' SP8/*.xlsm
 
-
 「Bから始まってstで終わる2桁以上の文字列」   2桁以上なんでいらないもの出てきちゃう
-./excelgrep_by_XMLparse.sh -k='B.*st' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='B.*st|B.*ステ' SP8/*.xlsm
 
 「Bから始まってstで終わる3桁の文字列」
-./excelgrep_by_XMLparse.sh -k='Bst|B.st' SP8/*.xlsm
-./excelgrep_by_XMLparse.sh -k='Bst|B.st' SP8/*.xlsm | grep --color -e アボート -e -i abort
+./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' SP8/*.xlsm | grep --color -e アボート -e -i abort
 
 
 
 
 
 
-集計用=============================================
+集計用========================================================================
 ./excelgrep_by_XMLparse.sh '引渡|引き渡' SACLA/2024_03*.xlsm
 ./excelgrep_by_XMLparse.sh '利用終了|運転終了' SACLA/2024_10*.xlsm
 ./excelgrep_by_XMLparse.sh '引渡|引き渡|利用終了|運転終了' SACLA/2024_03*.xlsm
