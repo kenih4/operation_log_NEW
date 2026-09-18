@@ -5,28 +5,29 @@
 #
 #  -k オプションを付けると、ログノート検索モードになりターミナルに出力される
 # 　ターミナルはGit Bashで！！！！！！！！！！
-./excelgrep_by_XMLparse.sh -k='シケイン' SACLA/*.xlsm | grep --ignore-case 結晶 | tee test.log
+./excelgrep_by_XMLparse.sh -k='シケイン' D:/LOGNOTE/SACLA/*.xlsm | grep --ignore-case 結晶 | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='L-B|LB|Lバンド' SACLA/*.xlsm | grep コイル | tee test.log
+./excelgrep_by_XMLparse.sh -k='L-B|LB|Lバンド' D:/LOGNOTE/SACLA/*.xlsm | grep コイル | tee test.log
 
 「シード」を検索
-./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm | tee test.log
-./excelgrep_by_XMLparse.sh -k='シード|seed' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='シード|seed' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='シード|seed' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
 
 「CB08-1」を検索
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' SACLA/*.xlsm | tee test.log
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}12.3' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
 
 「CB05」セクションを検索
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='rf.def' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='rf.def' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
 
-./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' SACLA/*.xlsm | grep 波高 | tee test.log
+./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' D:/LOGNOTE/SACLA/*.xlsm | grep 波高 | tee test.log
 
 
 LB Ikに変動が見られる（LB　サイラトロン監視用オシロ：IP addr : 172.16.5.218）
@@ -35,36 +36,42 @@ LB Ikに変動が見られる（LB　サイラトロン監視用オシロ：IP a
 
 SCSS =============================================================================================
 
-./excelgrep_by_XMLparse.sh -k='spec|スぺ' SCSS/*.xlsm
+./excelgrep_by_XMLparse.sh -k='spec|スぺ' D:/LOGNOTE/SCSS/*.xlsm
 
 SP8 =============================================================================================
 
+./excelgrep_by_XMLparse.sh -k='BL32|bl32' D:/LOGNOTE/SP8/2026_*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='シャン' SP8/2025_*.xlsm
-./excelgrep_by_XMLparse.sh -k='漏洩' SP8/2025_*.xlsm
+./excelgrep_by_XMLparse.sh -k='xsbt_h|h_xsbt' D:/LOGNOTE/SP8/2026_*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' SP8/2026_02*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='誤爆' D:/LOGNOTE/SP8/202_*.xlsm
+./excelgrep_by_XMLparse.sh -k='入射効率|0アドレス' D:/LOGNOTE/SP8/2023_*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='over|OT' SP8/.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='シャン' D:/LOGNOTE/SP8/2025_*.xlsm
+./excelgrep_by_XMLparse.sh -k='漏洩' D:/LOGNOTE/SP8/2025_*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='水漏|量' SP8/2025_10*.xlsm
+./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' D:/LOGNOTE/SP8/2026_02*.xlsm | tee test.log
+
+./excelgrep_by_XMLparse.sh -k='over|OT' D:/LOGNOTE/SP8/.xlsm | tee test.log
+
+./excelgrep_by_XMLparse.sh -k='水漏|量' D:/LOGNOTE/SP8/2025_10*.xlsm
 
 「BH1」を検索
-./excelgrep_by_XMLparse.sh -k='BH.{0,1}1' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='BH.{0,1}1' D:/LOGNOTE/SP8/*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='アボート|abort' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='アボート|abort' D:/LOGNOTE/SP8/*.xlsm
 
 「過電流 または、Over Current」を検索する場合
-./excelgrep_by_XMLparse.sh -k='過電流|over\scurrent' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='過電流|over\scurrent' D:/LOGNOTE/SP8/*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='入射軌道|リミット' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='入射軌道|リミット' D:/LOGNOTE/SP8/*.xlsm
 
 「Bから始まってstで終わる2桁以上の文字列」   2桁以上なんでいらないもの出てきちゃう
-./excelgrep_by_XMLparse.sh -k='B.*st|B.*ステ' SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='B.*st|B.*ステ' D:/LOGNOTE/SP8/*.xlsm
 
 「Bから始まってstで終わる3桁の文字列」
-./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' SP8/*.xlsm
-./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' SP8/*.xlsm | grep --color -e アボート -e -i abort
+./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' D:/LOGNOTE/SP8/*.xlsm
+./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' D:/LOGNOTE/SP8/*.xlsm | grep --color -e アボート -e -i abort
 
 
 
