@@ -18,3 +18,5 @@ output1.xlsx
 output.html
 *.html
 error.log
+lognote_copy.bat
+*.xlsx

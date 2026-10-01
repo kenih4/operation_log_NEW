@@ -5,6 +5,8 @@
 #
 #  -k オプションを付けると、ログノート検索モードになりターミナルに出力される
 # 　ターミナルはGit Bashで！！！！！！！！！！
+./excelgrep_by_XMLparse.sh -k='LBC | NODE' D:/LOGNOTE/SACLA/*.xlsm
+
 ./excelgrep_by_XMLparse.sh -k='シケイン' D:/LOGNOTE/SACLA/*.xlsm | grep --ignore-case 結晶 | tee test.log
 
 ./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
@@ -39,6 +41,12 @@ SCSS ===========================================================================
 ./excelgrep_by_XMLparse.sh -k='spec|スぺ' D:/LOGNOTE/SCSS/*.xlsm
 
 SP8 =============================================================================================
+
+./excelgrep_by_XMLparse.sh -k='FEスリット更新' D:/LOGNOTE/SP8/2026_*.xlsm
+
+./excelgrep_by_XMLparse.sh -k='bwd' D:/LOGNOTE/SP8/2026_*.xlsm
+
+./excelgrep_by_XMLparse.sh -k='set|セット|閾値' D:/LOGNOTE/SP8/2026_*.xlsm
 
 ./excelgrep_by_XMLparse.sh -k='BL32|bl32' D:/LOGNOTE/SP8/2026_*.xlsm
 
@@ -79,7 +87,9 @@ SP8 ============================================================================
 
 
 集計用========================================================================
-./excelgrep_by_XMLparse.sh '引渡|引き渡' SACLA/2024_03*.xlsm
+
+./excelgrep_by_XMLparse.sh D:/LOGNOTE/SP8/2026_09_SP8.xlsm
+
 ./excelgrep_by_XMLparse.sh '利用終了|運転終了' SACLA/2024_10*.xlsm
 ./excelgrep_by_XMLparse.sh '引渡|引き渡|利用終了|運転終了' SACLA/2024_03*.xlsm
 ./excelgrep_by_XMLparse.sh SACLA/2024_03*.xlsm '引渡|引き渡' '波長変更依頼' 'ユニット' '利用終了|運転終了'
