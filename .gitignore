@@ -23,3 +23,5 @@ lognote_copy.bat
 *.xlsx
 *.ipynb
 README_old.txt
+*.txt
+output/

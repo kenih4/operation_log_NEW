@@ -22,6 +22,8 @@ from typing import Union, List
 #   --mode search  (既定) ログノート検索モード。DT,C列から -k の検索ワード(grep -iE)に一致する行を色付きで出力する
 #   --mode summary        運転集計モード。icalカレンダーを付与してHTML出力し、
 #                         SACLA運転集計記録.xlsmの調整時間がログノートに記載されているか確認する
+#   --mode log            ログ出力モード。運転集計モードと同じ前処理(不要行削除・日付跨ぎ補正)をして
+#                         日時とログ内容を「D:\LOGNOTE\output\エクセルファイル名.txt」にテキスト出力する(ical付与・突合チェックはしない)
 #
 # xlsmはzipとして直接読む(展開しない)。複数ファイルを渡しても、Pythonの起動とpandasのimportは1回だけ。
 #
@@ -30,6 +32,8 @@ from typing import Union, List
 # Formatter     Shift+Alt+F
 
 NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
+
+LOG_OUTPUT_DIR = r'D:\LOGNOTE\output'  # ログ出力モードの出力先フォルダ
 
 COLUMNS = ['A', 'B', 'C', 'DT', 'formatted_DT', 'BL1ical',
            'BL2ical', 'BL3ical']  # DTはA(日付)とB(時間)を日時にしたものを入れる
@@ -386,14 +390,8 @@ def setup_summary() -> pd.DataFrame:
     return pd.read_excel("ical_SACLA.xlsx", sheet_name="sig")
 
 
-def run_summary(df: pd.DataFrame) -> None:
-    import webbrowser
-
-    df_sig = setup_summary()
-
-    pd.options.display.max_colwidth = 2000
-    pd.set_option('display.width', 1000)  # 少ないと改行されてしまうので増やす
-
+def prepare_lognote(df: pd.DataFrame) -> None:
+    """運転集計モード/ログ出力モード共通の前処理(不要行の削除と、日付跨ぎの補正+formatted_DTの作成)"""
     # 不要行削除
     # SRのログノート、日本語の文字列を含む行がdropできなかったが、前後の空白を削除することによって対処できた。
     df['C'] = df['C'].str.strip()
@@ -418,6 +416,26 @@ def run_summary(df: pd.DataFrame) -> None:
                                                    'DT'].strftime('%Y/%#m/%#d %#H:%#M')
         except Exception as e:
             print(f"message:{e}")
+
+
+def run_log(df: pd.DataFrame) -> str:
+    """ログ出力モード: 運転集計モードの前処理だけを行い、日時とログ内容をテキストにして返す
+    (色付け/HTML出力、icalの付与、運転集計記録との突合は行わない)"""
+    prepare_lognote(df)
+    return '\n'.join(
+        f"{'' if pd.isna(formatted) else formatted}\t{str(c).replace(chr(10), ' ')}"
+        for formatted, c in zip(df['formatted_DT'], df['C']) if not pd.isna(c))  # C列が空の行は出力しない
+
+
+def run_summary(df: pd.DataFrame) -> None:
+    import webbrowser
+
+    df_sig = setup_summary()
+
+    pd.options.display.max_colwidth = 2000
+    pd.set_option('display.width', 1000)  # 少ないと改行されてしまうので増やす
+
+    prepare_lognote(df)
 
     print("この処理には時間が掛かる~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     get_schedule_from_ical(df, df_sig)
@@ -531,8 +549,9 @@ def check_adjustment_time(df: pd.DataFrame) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="ログノート(xlsm)を解析する")
-    parser.add_argument('-m', '--mode', choices=['search', 'summary'], default='search',
-                        help="search: ログノート検索(既定) / summary: 運転集計(ical付きHTML出力+調整時間の確認)")
+    parser.add_argument('-m', '--mode', choices=['search', 'summary', 'log'], default='search',
+                        help="search: ログノート検索(既定) / summary: 運転集計(ical付きHTML出力+調整時間の確認) / "
+                             f"log: ログ出力({LOG_OUTPUT_DIR}にエクセルファイル名.txtでテキスト出力)")
     parser.add_argument('-k', '--keyword', help="searchモードの検索ワード(grep -iE の正規表現)")
     parser.add_argument('files', nargs='+', help="xlsm/xlsファイル(複数可)")
     args = parser.parse_args()
@@ -551,6 +570,13 @@ def main() -> None:
                 continue
             if args.mode == 'summary':
                 run_summary(df)
+            elif args.mode == 'log':
+                out_dir = Path(LOG_OUTPUT_DIR)
+                out_dir.mkdir(parents=True, exist_ok=True)
+                out_path = out_dir / (Path(path).stem + '.txt')  # エクセルファイル名.txt
+                with open(out_path, 'w', encoding='utf-8') as f:
+                    f.write(run_log(df) + '\n')
+                print(f"📝 ログを {out_path} に出力しました")
             else:
                 run_search(df, args.keyword)
         except zipfile.BadZipFile:

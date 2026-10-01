@@ -7,6 +7,8 @@
 # ./excelgrep_by_XMLparse.sh -k='dcct' SP8/*.xlsm
 #
 # excelgrep_by_XMLparse.sh を検索モードか集計モードか、-k=検索ワードとすると検索モードで実行
+# -l を付けるとログ出力モード(運転集計と同じ前処理をして、日時とログ内容を「D:\LOGNOTE\output\エクセルファイル名.txt」に出力)
+#   ./excelgrep_by_XMLparse.sh -l SACLA/2026_05_SACLA.xlsm
 #
 # xlsmの解凍は不要(Python側でzipのまま読む)。複数ファイルでもPythonは1回だけ起動する。
 #
@@ -26,6 +28,10 @@ for arg in "$@"; do
 		targetstr="${arg#*=}"
 		FLG_K=true
 		echo "💡 ログノート検索モード(ターミナルに色を付けて出力)です。検索ワード: 「$targetstr」"
+		;;
+	-l)
+		FLG_L=true
+		echo "💡 ログ出力モード(D:\LOGNOTE\output\エクセルファイル名.txtにテキスト出力)です。"
 		;;
 	*)
 		# その他の引数の処理（必要なら記述）
@@ -59,6 +65,9 @@ if [ "$FLG_K" = true ]; then # ログノート検索モード
 	echo "💡 ログノート検索モード（ターミナルに出力）を実行します"
 	# MSYS2_ARG_CONV_EXCL: 検索ワードがパスと誤認されて変換されないようにする
 	MSYS2_ARG_CONV_EXCL='--keyword=' python excelgrep_by_XMLparse.py --mode search --keyword="${targetstr}" "${targets[@]}"
+elif [ "$FLG_L" = true ]; then # ログ出力モード
+	echo "💡 ログ出力モード（D:\LOGNOTE\output\エクセルファイル名.txtに出力）を実行します"
+	python excelgrep_by_XMLparse.py --mode log "${targets[@]}"
 else
 	echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
 	python excelgrep_by_XMLparse.py --mode summary "${targets[@]}"

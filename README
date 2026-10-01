@@ -4,8 +4,8 @@
 
 ## シェルスクリプト excelgrep_by_XMLparse.sh
 
-引数の xlsm を1つずつ解凍し、`excelgrep_by_XMLparse.py` を実行する。
-`-k=` の有無でモードが切り替わる。
+引数の xlsm(複数可)を `excelgrep_by_XMLparse.py` に渡して実行する(xlsm は解凍せず zip のまま読み、Python は1回だけ起動する)。
+`-k=` と `-l` の有無でモードが切り替わる。
 
 ### ログノート検索モード (`-k=検索ワード` を付ける)
 ログノートの日時(DT)と内容(C)をターミナルに出力し、検索ワード(正規表現可、大文字小文字無視)に一致した行に色を付ける。
@@ -16,7 +16,15 @@
 ./excelgrep_by_XMLparse.sh -k='bwd' D:/LOGNOTE/SP8/2026_*.xlsm
 ```
 
-### 運転集計モード (`-k=` を付けない)
+### ログ出力モード (`-l` を付ける)
+運転集計モードと同じ前処理(不要行の削除、日付跨ぎの補正)をして、日時とログ内容を `D:\LOGNOTE\output\エクセルファイル名.txt` にテキスト出力する(例: `2026_05_SACLA.xlsm` → `D:\LOGNOTE\output\2026_05_SACLA.txt`。フォルダが無ければ作成。タブ区切り。複数ファイルを指定すると、ファイルごとに出力)。
+色付け/HTML 出力、ical の付与、運転集計記録との突合チェックはしない。
+
+```bash
+./excelgrep_by_XMLparse.sh -l D:/LOGNOTE/SACLA/2026_05_SACLA.xlsm
+```
+
+### 運転集計モード (`-k=` も `-l` も付けない)
 運転集計用の処理を行う。SACLA のログノート専用で、環境依存のパスを使う。
 
 ```bash
@@ -37,10 +45,11 @@
 ## Python スクリプト excelgrep_by_XMLparse.py を直接実行する場合
 
 ```bash
-python excelgrep_by_XMLparse.py [--mode search|summary] sharedStrings.xml sheet1.xml
+python excelgrep_by_XMLparse.py [--mode search|summary|log] [-k 検索ワード] file1.xlsm [file2.xlsm ...]
 ```
 
 | `--mode` | 内容 |
 |---|---|
-| `search` (既定) | ログノート検索モード。DT,C列を標準出力に出す(grepで検索する前提) |
+| `search` (既定) | ログノート検索モード。`-k` の検索ワード(grep -iE)に一致する行を色付きで出力 |
 | `summary` | 運転集計モード。上記「運転集計モード」の処理 |
+| `log` | ログ出力モード。上記「ログ出力モード」の処理 |
