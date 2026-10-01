@@ -1,8 +1,14 @@
 import xml.etree.ElementTree as ET
-import glob
 import argparse
-import sys
+import functools
 import io
+import os
+import re
+import subprocess
+import sys
+import traceback
+import zipfile
+import numpy as np
 import pandas as pd
 
 from datetime import datetime, timedelta, timezone
@@ -11,15 +17,13 @@ from typing import Union, List
 
 #
 # 使い方:
-#   python excelgrep_by_XMLparse.py [--mode search|summary] sharedStrings.xml sheet1.xml
+#   python excelgrep_by_XMLparse.py [--mode search|summary] [-k 検索ワード] file1.xlsm [file2.xlsm ...]
 #
-#   --mode search  (既定) ログノート検索モード。DT,C列をターミナルに出力する(呼び出し側のgrepで検索)
+#   --mode search  (既定) ログノート検索モード。DT,C列から -k の検索ワード(grep -iE)に一致する行を色付きで出力する
 #   --mode summary        運転集計モード。icalカレンダーを付与してHTML出力し、
 #                         SACLA運転集計記録.xlsmの調整時間がログノートに記載されているか確認する
 #
-# TEST
-# python excelgrep_by_XMLparse.py --mode search C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.jdpng8Hbvj/xl/worksheets/sheet1.xml
-# python excelgrep_by_XMLparse.py --mode summary C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/sharedStrings.xml C:/Users/kenichi/AppData/Local/Temp/tmp.XwS6GHBs35/xl/worksheets/sheet1.xml
+# xlsmはzipとして直接読む(展開しない)。複数ファイルを渡しても、Pythonの起動とpandasのimportは1回だけ。
 #
 # 通常は excelgrep_by_XMLparse.sh から呼ばれる(-k=検索ワード があれば search、なければ summary)
 #
@@ -48,83 +52,71 @@ DROP_WORDS_SUMMARY = [
 # 共通処理
 # ============================================================================================
 
-def load_shared_strings(path_pattern: str) -> list:
+def load_shared_strings(source) -> list:
     """sharedStrings.xml のsiタグの部分(最初のtだけ)を配列に格納"""
     sslist = []
-    for xml in glob.glob(path_pattern, recursive=True):
-        root = ET.parse(xml).getroot()
-        for ssl in root:
-            for child in ssl.iter():
-                # 特定要素(si)の抽出
-                if child.tag == NS + 'si':
-                    for child2 in child.iter():
-                        if child2.tag == NS + 't':
-                            sslist.append(child2.text)
-                            break
+    root = ET.parse(source).getroot()
+    for ssl in root:
+        for child in ssl.iter():
+            # 特定要素(si)の抽出
+            if child.tag == NS + 'si':
+                for child2 in child.iter():
+                    if child2.tag == NS + 't':
+                        sslist.append(child2.text)
+                        break
     return sslist
 
 
-def load_sheet(path_pattern: str, sslist: list) -> pd.DataFrame:
-    """sheet1.xml のA,B,C列をピックアップしてDataFrameにする"""
+def load_sheet(source, sslist: list) -> pd.DataFrame:
+    """sheet1.xml のA,B,C列をピックアップしてDataFrameにする(行は貯めて最後に1回だけDataFrame化)"""
     maxsslit = len(sslist)
-    df = pd.DataFrame(columns=COLUMNS)
-    df_tmp = pd.DataFrame(index=[1], columns=COLUMNS)
+    root = ET.parse(source).getroot()
 
-    for xml in glob.glob(path_pattern, recursive=True):
-        root = ET.parse(xml).getroot()
-        for sheetData in root:
-            for child in sheetData.iter():
-                # 特定要素(row)の抽出
-                if child.tag != NS + 'row':
-                    continue
-                for child2 in child.iter():
-                    # 特定要素(c)の抽出
-                    if child2.tag != NS + 'c':
-                        continue
-                    ref = child2.attrib["r"]
-                    if not (not ref.find('A') or not ref.find('B') or not ref.find('C')):
-                        continue
-                    for child3 in child2.iter():
-                        if child3.tag != NS + 'v':
-                            continue
-                        if not ref.find('A'):
-                            try:
-                                VAL = int(child3.text)
-                            except Exception:
-                                VAL = child3.text
-                            df_tmp.iloc[0, 0] = VAL
-                        if not ref.find('B'):
-                            try:
-                                VAL = float(child3.text)
-                            except Exception:
-                                VAL = child3.text
-                            df_tmp.iloc[0, 1] = VAL
-                        if not ref.find('C'):
-                            try:
-                                if int(child3.text) < maxsslit:
-                                    VAL = sslist[int(child3.text)]
-                                else:
-                                    VAL = child3.text
-                            except Exception:
-                                VAL = child3.text
-                            df_tmp.iloc[0, 2] = VAL.ljust(500)  # 左寄せ
-
+    # A,B,Cはその行にセルが無ければ前の行の値を引き継ぐ(A、B列は日時なのでクリアしない)。C列(内容部分)だけ行ごとにクリア
+    A = B = C = DT = np.nan
+    rows = []
+    for row in root.iter(NS + 'row'):  # 特定要素(row)の抽出
+        touched = False
+        for cell in row.iter(NS + 'c'):  # 特定要素(c)の抽出
+            ref = cell.attrib["r"]
+            is_a, is_b, is_c = not ref.find('A'), not ref.find('B'), not ref.find('C')
+            if not (is_a or is_b or is_c):
+                continue
+            touched = True
+            for v in cell.iter(NS + 'v'):
+                if is_a:
                     try:
-                        # B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
-                        df_tmp.iloc[0, 3] = datetime(
-                            1899, 12, 30) + timedelta(df_tmp.iloc[0, 0]+df_tmp.iloc[0, 1])
+                        A = int(v.text)
                     except Exception:
-                        try:
-                            df_tmp.iloc[0, 3] = datetime(
-                                1899, 12, 30) + timedelta(df_tmp.iloc[0, 0])
-                        except Exception:
-                            df_tmp.iloc[0, 3] = 0
+                        A = v.text
+                if is_b:
+                    try:
+                        B = float(v.text)
+                    except Exception:
+                        B = v.text
+                if is_c:
+                    try:
+                        if int(v.text) < maxsslit:
+                            VAL = sslist[int(v.text)]
+                        else:
+                            VAL = v.text
+                    except Exception:
+                        VAL = v.text
+                    C = (VAL if VAL is not None else '').ljust(500)  # 左寄せ
 
-                # 行の結合 concat　　axis=0は縦方向に追加する　1だと横
-                df = pd.concat([df, df_tmp], ignore_index=True, axis=0)
-                # 次の行への準備。C列(内容部分)だけクリア、A、B列は日時なのでクリアしたくない
-                df_tmp.iloc[0, 2] = "-"
+        if touched:
+            try:
+                # B列(時間)がない場合、例外が発生するので、その時は00:00にするしかない
+                DT = datetime(1899, 12, 30) + timedelta(A + B)
+            except Exception:
+                try:
+                    DT = datetime(1899, 12, 30) + timedelta(A)
+                except Exception:
+                    DT = 0
+        rows.append({'A': A, 'B': B, 'C': C, 'DT': DT})
+        C = "-"
 
+    df = pd.DataFrame(rows, columns=COLUMNS, dtype=object)
     try:
         # errors='coerce'だと変換できない値はNaTになる
         df['A'] = pd.to_timedelta(
@@ -134,28 +126,51 @@ def load_sheet(path_pattern: str, sslist: list) -> pd.DataFrame:
     return df
 
 
+def load_xlsm(path: str):
+    """xlsmをzipのまま読み、(sharedStringsの配列, ログノートのDataFrame)を返す"""
+    with zipfile.ZipFile(path) as zf:
+        with zf.open('xl/sharedStrings.xml') as f:
+            sslist = load_shared_strings(f)
+        with zf.open('xl/worksheets/sheet1.xml') as f:
+            df = load_sheet(f, sslist)
+    return sslist, df
+
+
 def drop_unneeded_rows(df: pd.DataFrame, words: list) -> None:
-    """C列が「-」の行と、wordsのどれかを含む行を削除する(dfを直接変更)"""
-    df.drop(df[(df['C'] == "-")].index, inplace=True)
-    for word in words:
-        # 大文字小文字を無視するにはcase=False、NaNを無視するにはna=False。regex=Falseで単純な文字列検索
-        df.drop(df[df['C'].str.contains(
-            word, case=False, na=False, regex=False)].index, inplace=True)
+    """C列が「-」の行と、wordsのどれかを含む行を削除する(dfを直接変更。判定は1回でまとめて行う)"""
+    # 大文字小文字を無視するにはcase=False、NaNを無視するにはna=False。wordsはエスケープして単純な文字列として検索
+    pattern = '|'.join(re.escape(w) for w in words)
+    mask = (df['C'] == "-") | df['C'].str.contains(
+        pattern, case=False, na=False)
+    df.drop(index=df.index[mask], inplace=True)
 
 
 # ============================================================================================
 # 検索モード (--mode search)
 # ============================================================================================
 
-def run_search(df: pd.DataFrame) -> None:
+def grep_text(text: str, pattern: str) -> None:
+    """textをgrepにかけて色付きで出力する(grepはGit Bashのものを使う)"""
+    sys.stdout.flush()
+    env = dict(os.environ, GREP_COLOR='0;33')
+    try:
+        subprocess.run(['grep', '-a', '--color', '-n', '-A', '0', '-iE', pattern],
+                       input=text.encode('utf-8'), env=env)
+    except FileNotFoundError:
+        print("❌ grep が見つかりません。Git Bashから実行してください。")
+
+
+def run_search(df: pd.DataFrame, keyword: str | None) -> None:
     drop_unneeded_rows(df, DROP_WORDS_SEARCH)
 
-    print(
-        "print df.loc[:, [DT, C]]====================================================")
-    print(df.loc[:, ['DT', 'C']])
-
-    print(f"type: {type(df)}")
-    print("Finish~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    # print(df)だとC列が約50文字で切り詰められ、後半の語が検索にヒットしないので、1行に全文を出す
+    text = '\n'.join(
+        f"{index:<6}{dt}  {str(c).replace(chr(10), ' ').rstrip()}"
+        for index, dt, c in zip(df.index, df['DT'], df['C']))
+    if keyword:
+        grep_text(text, keyword)
+    else:
+        print(text)
 
 
 # ============================================================================================
@@ -310,10 +325,25 @@ def load_ical_events(icaldata: str) -> list:
     return events
 
 
+_ICAL_EVENTS_CACHE = {}  # url -> events (複数ファイルを処理しても同じicalは1回だけ取得する)
+
+
+def get_ical_events(urls: list) -> list:
+    """各urlのイベントのリストを返す。未取得のicalは並列に取得する"""
+    from concurrent.futures import ThreadPoolExecutor
+
+    todo = [u for u in dict.fromkeys(urls) if u not in _ICAL_EVENTS_CACHE]
+    if todo:
+        with ThreadPoolExecutor(max_workers=len(todo)) as ex:
+            texts = list(ex.map(get_ical, todo))
+        for url, text in zip(todo, texts):
+            _ICAL_EVENTS_CACHE[url] = load_ical_events(text)
+    return [_ICAL_EVENTS_CACHE[u] for u in urls]
+
+
 def get_schedule_from_ical(df_lognote: pd.DataFrame, df_sig: pd.DataFrame) -> None:
     """ログノートの各行の時刻に対応するicalの予定を、BL2ical/BL3ical列に入れる
     (イベントを先に1回だけ展開し、全ログ行をnumpyでまとめて判定する。複数の予定に重なる場合は後のイベントが優先)"""
-    import numpy as np
     JST = timezone(timedelta(hours=+9), 'JST')
 
     # 各ログ行のDTをJSTのtimestamp(秒)にする。DTが日時でない行はNaN(どのイベントにも一致しない)
@@ -325,14 +355,18 @@ def get_schedule_from_ical(df_lognote: pd.DataFrame, df_sig: pd.DataFrame) -> No
             except (OSError, OverflowError, ValueError):  # 1970年より前などの異常な日時は対象外
                 pass
 
-    for n in range(len(df_sig)):
-        label = df_sig.loc[n]['label']
+    labels = [df_sig.loc[n]['label'] for n in range(len(df_sig))]
+    for label in labels:
         print("label: ", str(label))
+    events_list = get_ical_events(
+        [str(df_sig.loc[n]['url']) for n in range(len(df_sig))])
+
+    for label, events in zip(labels, events_list):
         if label not in ("BL2", "BL3"):
             continue
         col = label + 'ical'
         result = np.full(len(df_lognote), None, dtype=object)
-        for start_ts, end_ts, summary in load_ical_events(get_ical(str(df_sig.loc[n]['url']))):
+        for start_ts, end_ts, summary in events:
             result[(dt_ts > start_ts) & (dt_ts < end_ts)] = summary
         matched = result != None  # noqa: E711  (object配列の要素ごとの比較)
         if matched.any():
@@ -341,16 +375,21 @@ def get_schedule_from_ical(df_lognote: pd.DataFrame, df_sig: pd.DataFrame) -> No
             df_lognote[col] = values
 
 
-def run_summary(df: pd.DataFrame) -> None:
+@functools.cache
+def setup_summary() -> pd.DataFrame:
+    """運転集計モードの準備(ロケール設定とical_SACLA.xlsxの読込)。複数ファイルでも1回だけ"""
     import locale
-    import webbrowser
-
-    # ical用 Japanese
     try:
         locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     except locale.Error as e:
         print(f"警告: ロケールを設定できませんでした: {e}")
-    df_sig = pd.read_excel("ical_SACLA.xlsx", sheet_name="sig")
+    return pd.read_excel("ical_SACLA.xlsx", sheet_name="sig")
+
+
+def run_summary(df: pd.DataFrame) -> None:
+    import webbrowser
+
+    df_sig = setup_summary()
 
     pd.options.display.max_colwidth = 2000
     pd.set_option('display.width', 1000)  # 少ないと改行されてしまうので増やす
@@ -491,38 +530,35 @@ def check_adjustment_time(df: pd.DataFrame) -> None:
 # ============================================================================================
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="ログノート(xlsm)のXMLを解析する")
+    parser = argparse.ArgumentParser(description="ログノート(xlsm)を解析する")
     parser.add_argument('-m', '--mode', choices=['search', 'summary'], default='search',
                         help="search: ログノート検索(既定) / summary: 運転集計(ical付きHTML出力+調整時間の確認)")
-    parser.add_argument('shared_strings', help="sharedStrings.xml のパス")
-    parser.add_argument('sheet', help="sheet1.xml のパス")
+    parser.add_argument('-k', '--keyword', help="searchモードの検索ワード(grep -iE の正規表現)")
+    parser.add_argument('files', nargs='+', help="xlsm/xlsファイル(複数可)")
     args = parser.parse_args()
 
-    print(f"============ ここから excelgrep_by_XMLparse.py (mode={args.mode}) ============")
-    print("version", pd.__version__)
+    # default でutf-8なのに、これをしないと文字化けする。なぜ？？
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     pd.set_option('display.max_rows', None)
     pd.options.display.colheader_justify = 'left'  # 列名表示の右寄せ
 
-    print('sys.stdout.encoding:', sys.stdout.encoding)
-    # default でutf-8なのに、これをしないと文字化けする。なぜ？？
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    print('sys.stdout.encoding:', sys.stdout.encoding)
-
-    print("Arg[sharedStrings.xml]:\t", args.shared_strings)
-    print("Arg[sheet1.xml]:\t", args.sheet)
-
-    sslist = load_shared_strings(args.shared_strings)
-    if len(sslist) == 0:
-        print("sharedStrings.xml のsiタグの数がlenght of maxsslit = 0 です。終了します")
-        sys.exit()
-    print("lenght of maxsslit = ", len(sslist))
-
-    df = load_sheet(args.sheet, sslist)
-
-    if args.mode == 'summary':
-        run_summary(df)
-    else:
-        run_search(df)
+    for path in args.files:
+        print(f"📘 File: {path}__________________________________________________________________________")
+        try:
+            sslist, df = load_xlsm(path)
+            if len(sslist) == 0:
+                print("sharedStrings.xml のsiタグの数が0です。スキップします")
+                continue
+            if args.mode == 'summary':
+                run_summary(df)
+            else:
+                run_search(df, args.keyword)
+        except zipfile.BadZipFile:
+            print("❌ ZIPファイルは異常です。指定されたファイルはZIP形式ではないか、壊れている可能性があります。")
+        except KeyError as e:
+            print(f"❌ xlsm内に必要なXMLが見つかりません: {e}")
+        except Exception:
+            traceback.print_exc()
 
 
 if __name__ == '__main__':

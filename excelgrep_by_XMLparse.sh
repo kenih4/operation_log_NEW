@@ -8,6 +8,8 @@
 #
 # excelgrep_by_XMLparse.sh を検索モードか集計モードか、-k=検索ワードとすると検索モードで実行
 #
+# xlsmの解凍は不要(Python側でzipのまま読む)。複数ファイルでもPythonは1回だけ起動する。
+#
 # Formatter     Shift+Alt+F
 # Ctrl + Shift + P (Windows)
 # Formatter install方法　go install mvdan.cc/sh/v3/cmd/shfmt@latest
@@ -33,78 +35,34 @@ done
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# 一つ一つのExcelファイルに対してgrepする
+# 処理対象のExcelファイルを集める
 files=("$@")
 file_count=${#files[@]} # 2. 配列の要素数（ファイル数）を取得する
+targets=()
 #for ((i = 0; i < file_count; i++)); do # 昇順ループ
 for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
-	# *.xlsm以外の引数の場合次のループへ
-	if [ $(echo "${files[i]}" | grep -vE '\.xlsm$|\.xls$') ]; then
-		continue
-	fi
-
-	#メモ：　grep 指定した文字列を含まない行を抽出するためにはgrepの-vオプションを用います。
-	#メモ：　ハット（^）は「～で始まる」、ドル記号（$）は「～で終わる」を意味します
-
-	#  「~$2024_06_SP8.xlsm」のような一時ファイルは除く
-	if [ $(echo "${files[i]}" | grep '~') ]; then
-		continue
-	fi
-
-	echo "📘 File: "${files[i]}"__________________________________________________________________________"
-
-	# ZIP展開後のXMLファイルが既に存在するか確認するバージョン　作りかけたが時間かかってるのはunzipでない
-	#if [ -f "${files[i]%%/*}/sharedStrings_${files[i]#*/}.xml" ] && [ -f ${files[i]%%/*}/sheet1_${files[i]#*/}.xml ]; then
-	#	echo "両方存在します"
-	#else
-	#	echo "どちらか、または両方存在しません"
-	#fi
-
-	# zip展開用一時ディレクトリ作成
-	tmpdir=$(mktemp -d)
-	# 一時ファイル作成
-	#  tmp_out=$(mktemp)
-
-	#echo tmpdir = ${tmpdir}
-
-	#read -p "Hit enter: "
-
-	# 必要なXML(sharedStrings.xml, sheet1.xml)だけを一時ディレクトリに解凍する(xl/mediaなど巨大な画像は展開しない)
-	# 標準出力は捨て、エラー出力はerror.logに残す
-	unzip -o -q "${files[i]}" xl/sharedStrings.xml xl/worksheets/sheet1.xml -d "${tmpdir}" >/dev/null 2>error.log
-	if [ $? -ne 0 ] || [ ! -f "${tmpdir}/xl/sharedStrings.xml" ] || [ ! -f "${tmpdir}/xl/worksheets/sheet1.xml" ]; then # $? は、直前に実行したコマンドの終了ステータス
-		echo "❌ ZIPファイルが異常か、sharedStrings.xml / sheet1.xml が見つかりません。"
-		if grep -q "End-of-central-directory signature not found" error.log; then # 特定のエラーメッセージに基づく処理
-			echo "❌ 指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
-		fi
-		rm -r "${tmpdir}"
-		continue
-	fi
-
-	#   /tmp/tmp.KBjrD6k7Uq/xl/worksheets/sheet1.xml
-	#   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml
-	if [ "$FLG_K" = true ]; then # ログノート検索モード
-		echo "💡 ログノート検索モード（ターミナルに出力）を実行します"
-		#		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
-		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE "${targetstr}"
-	else
-		echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
-		python excelgrep_by_XMLparse.py --mode summary ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
-	fi
-
-	#grep -a もしくは grep --text を使って「ちょっとバイナリファイルっぽくても諦めんなよ」という思い
-
-	#/tmp/tmp.XaXt8aTUVu/xl/media
-	#C:\Users\kenichi\AppData\Local\Temp\tmp.XaXt8aTUVu\xl\media
-
-	#画像フォルダを開くとき
-	#start $ret\\xl\\media
-	#画像内の文字も検索する時
-	#python ocr.py $ret\\xl\\media | grep -a --color -n -A 0 -iE ${targetstr}
-
-	#read -p "Hit enter: "
-
-	# 一時ディレクトリとファイルを削除
-	rm -r ${tmpdir}
-
+	# *.xlsm, *.xls以外の引数の場合次のループへ
+	case "${files[i]}" in
+	*'~'*) continue ;; # 「~$2024_06_SP8.xlsm」のような一時ファイルは除く
+	*.xlsm | *.xls) targets+=("${files[i]}") ;;
+	*) continue ;;
+	esac
 done
+
+if [ ${#targets[@]} -eq 0 ]; then
+	echo "❌ 対象のExcelファイル(*.xlsm, *.xls)がありません。"
+	exit 1
+fi
+
+# Pythonは1回だけ起動し、全ファイルを処理する(ファイルごとの見出し「📘 File:」もPythonが出力する)
+if [ "$FLG_K" = true ]; then # ログノート検索モード
+	echo "💡 ログノート検索モード（ターミナルに出力）を実行します"
+	# MSYS2_ARG_CONV_EXCL: 検索ワードがパスと誤認されて変換されないようにする
+	MSYS2_ARG_CONV_EXCL='--keyword=' python excelgrep_by_XMLparse.py --mode search --keyword="${targetstr}" "${targets[@]}"
+else
+	echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
+	python excelgrep_by_XMLparse.py --mode summary "${targets[@]}"
+fi
+
+#画像内の文字も検索する時 (xlsmをzip展開して xl/media を ocr.py に渡す)
+#python ocr.py $ret\\xl\\media | grep -a --color -n -A 0 -iE ${targetstr}
