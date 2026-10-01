@@ -5,31 +5,32 @@
 #
 #  -k オプションを付けると、ログノート検索モードになりターミナルに出力される
 # 　ターミナルはGit Bashで！！！！！！！！！！
-./excelgrep_by_XMLparse.sh -k='LBC | NODE' D:/LOGNOTE/SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='CB|SB' D:/LOGNOTE/SACLA/2026_09*.xlsm
+./excelgrep_by_XMLparse.sh -k='LBC|NODE' D:/LOGNOTE/SACLA/*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='シケイン' D:/LOGNOTE/SACLA/*.xlsm | grep --ignore-case 結晶 | tee test.log
+./excelgrep_by_XMLparse.sh -k='シケイン' D:/LOGNOTE/SACLA/*.xlsm|grep --ignore-case 結晶|tee test.log
 
-./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='spec|Spec|インライン' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
 
-./excelgrep_by_XMLparse.sh -k='L-B|LB|Lバンド' D:/LOGNOTE/SACLA/*.xlsm | grep コイル | tee test.log
+./excelgrep_by_XMLparse.sh -k='L-B|LB|Lバンド' D:/LOGNOTE/SACLA/*.xlsm|grep コイル|tee test.log
 
 「シード」を検索
-./excelgrep_by_XMLparse.sh -k='シード|seed' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
-./excelgrep_by_XMLparse.sh -k='シード|seed' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='シード|seed' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
+./excelgrep_by_XMLparse.sh -k='シード|seed' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
 
 「CB08-1」を検索
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}12.3' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}8.1' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}17.1' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}12.3' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
 
 「CB05」セクションを検索
-./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='CB0{0,1}5.[1-4]' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
 
-./excelgrep_by_XMLparse.sh -k='rf.def' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='rf.def' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
 
-./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' D:/LOGNOTE/SACLA/*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='スイーパ|sweep' D:/LOGNOTE/SACLA/*.xlsm|tee test.log
 
-./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' D:/LOGNOTE/SACLA/*.xlsm | grep 波高 | tee test.log
+./excelgrep_by_XMLparse.sh -k='チョッパ|Chopper' D:/LOGNOTE/SACLA/*.xlsm|grep 波高|tee test.log
 
 
 LB Ikに変動が見られる（LB　サイラトロン監視用オシロ：IP addr : 172.16.5.218）
@@ -58,9 +59,9 @@ SP8 ============================================================================
 ./excelgrep_by_XMLparse.sh -k='シャン' D:/LOGNOTE/SP8/2025_*.xlsm
 ./excelgrep_by_XMLparse.sh -k='漏洩' D:/LOGNOTE/SP8/2025_*.xlsm
 
-./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' D:/LOGNOTE/SP8/2026_02*.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='アボート|abort|ABORT|Abort' D:/LOGNOTE/SP8/2026_02*.xlsm|tee test.log
 
-./excelgrep_by_XMLparse.sh -k='over|OT' D:/LOGNOTE/SP8/.xlsm | tee test.log
+./excelgrep_by_XMLparse.sh -k='over|OT' D:/LOGNOTE/SP8/.xlsm|tee test.log
 
 ./excelgrep_by_XMLparse.sh -k='水漏|量' D:/LOGNOTE/SP8/2025_10*.xlsm
 
@@ -79,7 +80,7 @@ SP8 ============================================================================
 
 「Bから始まってstで終わる3桁の文字列」
 ./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' D:/LOGNOTE/SP8/*.xlsm
-./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' D:/LOGNOTE/SP8/*.xlsm | grep --color -e アボート -e -i abort
+./excelgrep_by_XMLparse.sh -k='Bst|B.st|B.*ステ' D:/LOGNOTE/SP8/*.xlsm|grep --color -e アボート -e -i abort
 
 
 

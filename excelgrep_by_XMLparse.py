@@ -282,45 +282,63 @@ def get_ical(url):
         return res.text
 
 
-def get_schedule_from_ical(df_lognote: pd.DataFrame, df_sig: pd.DataFrame) -> None:
-    """ログノートの各行の時刻に対応するicalの予定を、BL2ical/BL3ical列に入れる"""
+def load_ical_events(icaldata: str) -> list:
+    """icalからイベント(開始, 終了, 整形済みの予定名)のリストを返す。開始・終了はtimezone付きdatetimeのみ(終日予定は除外)"""
     import re
     from icalendar import Calendar
+
+    events = []
+    for ev in Calendar.from_ical(icaldata).walk():
+        if ev.name != 'VEVENT':
+            continue
+        try:
+            start_dt = ev.decoded("dtstart")
+            end_dt = ev.decoded("dtend")
+            summary = ev['summary']
+        except Exception:
+            print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
+            continue
+        if not (isinstance(start_dt, datetime) and isinstance(end_dt, datetime)
+                and start_dt.tzinfo is not None and end_dt.tzinfo is not None):
+            continue
+        tmp_summary = str(summary).replace(' ', '')
+        tmp_summary = re.sub("（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
+        tmp_summary = tmp_summary.rstrip('<br>')
+        tmp_summary = tmp_summary.replace("/30Hz", "")
+        tmp_summary = tmp_summary.replace("/60Hz", "")
+        events.append((start_dt.timestamp(), end_dt.timestamp(), tmp_summary))
+    return events
+
+
+def get_schedule_from_ical(df_lognote: pd.DataFrame, df_sig: pd.DataFrame) -> None:
+    """ログノートの各行の時刻に対応するicalの予定を、BL2ical/BL3ical列に入れる
+    (イベントを先に1回だけ展開し、全ログ行をnumpyでまとめて判定する。複数の予定に重なる場合は後のイベントが優先)"""
+    import numpy as np
     JST = timezone(timedelta(hours=+9), 'JST')
 
+    # 各ログ行のDTをJSTのtimestamp(秒)にする。DTが日時でない行はNaN(どのイベントにも一致しない)
+    dt_ts = np.full(len(df_lognote), np.nan)
+    for i, dt in enumerate(df_lognote['DT']):
+        if isinstance(dt, datetime):
+            try:
+                dt_ts[i] = dt.astimezone(JST).timestamp()
+            except (OSError, OverflowError, ValueError):  # 1970年より前などの異常な日時は対象外
+                pass
+
     for n in range(len(df_sig)):
-        print("label: ", str(df_sig.loc[n]['label']))
-        icaldata = get_ical(str(df_sig.loc[n]['url']))
-        cal = Calendar.from_ical(icaldata)
-
-        for index, item in df_lognote.iterrows():
-            for ev in cal.walk():
-                if ev.name == 'VEVENT':
-                    start_dt = ev.decoded("dtstart")
-                    end_dt = ev.decoded("dtend")
-                    try:
-                        summary = ev['summary']
-                    except Exception:
-                        print('Exception!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	')
-                    else:
-                        try:
-                            if (item['DT'].astimezone(JST) - start_dt).total_seconds() > 0 and (item['DT'].astimezone(JST) - end_dt).total_seconds() < 0:
-                                tmp_summary = str(summary).replace(' ', '')
-                                tmp_summary = re.sub(
-                                    "（.+?）", "", tmp_summary)  # カッコで囲まれた部分を消す
-                                tmp_summary = tmp_summary.rstrip('<br>')
-                                tmp_summary = tmp_summary.replace("/30Hz", "")
-                                tmp_summary = tmp_summary.replace("/60Hz", "")
-
-                                if (df_sig.loc[n]['label'] == "BL2"):
-                                    df_lognote.loc[index,
-                                                   'BL2ical'] = tmp_summary
-                                elif (df_sig.loc[n]['label'] == "BL3"):
-                                    df_lognote.loc[index,
-                                                   'BL3ical'] = tmp_summary
-                                continue
-                        except Exception:
-                            pass
+        label = df_sig.loc[n]['label']
+        print("label: ", str(label))
+        if label not in ("BL2", "BL3"):
+            continue
+        col = label + 'ical'
+        result = np.full(len(df_lognote), None, dtype=object)
+        for start_ts, end_ts, summary in load_ical_events(get_ical(str(df_sig.loc[n]['url']))):
+            result[(dt_ts > start_ts) & (dt_ts < end_ts)] = summary
+        matched = result != None  # noqa: E711  (object配列の要素ごとの比較)
+        if matched.any():
+            values = df_lognote[col].to_numpy(dtype=object).copy()
+            values[matched] = result[matched]
+            df_lognote[col] = values
 
 
 def run_summary(df: pd.DataFrame) -> None:

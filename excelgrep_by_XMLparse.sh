@@ -69,26 +69,18 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 
 	#read -p "Hit enter: "
 
-	# エクセルファイルを一時ディレクトリに解凍する 標準出力とエラー出力は鬱陶しいので捨てる
-	unzip -t ""${files[i]}"" >error.log #  2> error.log標準エラー出力のみ　　「-t」オプション：正常に展開できるかテストする
-	if [ $? -ne 0 ]; then               # $? は、直前に実行したコマンドの終了ステータス
-		echo "❌ ZIPファイルは異常です。"
+	# 必要なXML(sharedStrings.xml, sheet1.xml)だけを一時ディレクトリに解凍する(xl/mediaなど巨大な画像は展開しない)
+	# 標準出力は捨て、エラー出力はerror.logに残す
+	unzip -o -q "${files[i]}" xl/sharedStrings.xml xl/worksheets/sheet1.xml -d "${tmpdir}" >/dev/null 2>error.log
+	if [ $? -ne 0 ] || [ ! -f "${tmpdir}/xl/sharedStrings.xml" ] || [ ! -f "${tmpdir}/xl/worksheets/sheet1.xml" ]; then # $? は、直前に実行したコマンドの終了ステータス
+		echo "❌ ZIPファイルが異常か、sharedStrings.xml / sheet1.xml が見つかりません。"
 		if grep -q "End-of-central-directory signature not found" error.log; then # 特定のエラーメッセージに基づく処理
 			echo "❌ 指定されたファイルはZIP形式ではないか、壊れている可能性があります。"
 		fi
+		rm -r "${tmpdir}"
 		continue
 	fi
-	unzip "${files[i]}" -d ${tmpdir} 1>/dev/null 2>&1 # -d ディレクトリ	指定したディレクトリに展開する
 
-	ret=${tmpdir/\/tmp\//C:\\Users\\kenic\\AppData\\Local\\Temp\\}
-	#echo start \"$ret\\xl\\media\"
-	#cp ${tmpdir}/xl/sharedStrings.xml ${files[i]%%/*}/sharedStrings_${files[i]#*/}.xml 	# ZIP展開後のXMLファイルが既に存在するか確認するバージョン　作りかけたが時間かかってるのはunzipでない
-	#cp ${tmpdir}/xl/worksheets/sheet1.xml ${files[i]%%/*}/sheet1_${files[i]#*/}.xml 	# ZIP展開後のXMLファイルが既に存在するか確認するバージョン　作りかけたが時間かかってるのはunzipでない
-
-	if [ ! -e $ret\\xl\\media ]; then
-		echo "❌ Directory doesn't exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! May be unzip fail..."
-		exit
-	fi
 	#   /tmp/tmp.KBjrD6k7Uq/xl/worksheets/sheet1.xml
 	#   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml
 	if [ "$FLG_K" = true ]; then # ログノート検索モード
