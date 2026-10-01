@@ -20,3 +20,4 @@ output.html
 error.log
 lognote_copy.bat
 *.xlsx
+*.ipynb
