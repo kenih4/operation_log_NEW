@@ -93,11 +93,11 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 	#   /tmp/tmp.KBjrD6k7Uq/xl/sharedStrings.xml
 	if [ "$FLG_K" = true ]; then # ログノート検索モード
 		echo "💡 ログノート検索モード（ターミナルに出力）を実行します"
-		#		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
-		python excelgrep_by_XMLparse.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
+		#		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
+		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
 	else
 		echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
-		python excelgrep_by_XMLparse_for_Untenshyukei.py ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
+		python excelgrep_by_XMLparse.py --mode summary ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml
 	fi
 
 	#grep -a もしくは grep --text を使って「ちょっとバイナリファイルっぽくても諦めんなよ」という思い

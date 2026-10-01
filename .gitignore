@@ -4,6 +4,7 @@ SCSS/
 SP8/
 .BU/
 .ipynb_checkpoints/
+__pycache__/
 .vs/
 .venv/
 .vscode/
@@ -21,3 +22,4 @@ error.log
 lognote_copy.bat
 *.xlsx
 *.ipynb
+README_old.txt
