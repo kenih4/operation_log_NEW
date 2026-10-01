@@ -16,7 +16,7 @@
 echo Argument: ${@}
 
 # 引数からgrepの操作内容を取り出す^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-for arg in ${@}; do
+for arg in "$@"; do
 	echo arg: $arg
 	case "$arg" in
 	-k=*)
@@ -94,7 +94,7 @@ for ((i = file_count - 1; i >= 0; i--)); do # 降順ループ
 	if [ "$FLG_K" = true ]; then # ログノート検索モード
 		echo "💡 ログノート検索モード（ターミナルに出力）を実行します"
 		#		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
-		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE ${targetstr}
+		python excelgrep_by_XMLparse.py --mode search ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml | GREP_COLOR='0;33' grep -a --color -n -A 0 -iE "${targetstr}"
 	else
 		echo "💡 通常処理（運転集計用にログノートとicalカレンダーをHTML出力）を実行します... 色を付けるワードはVBAの「Sub ログノートをHTML出力と調整時間がログノートに記載されてるか確認_ユニット月」の中に書いてある"
 		python excelgrep_by_XMLparse.py --mode summary ${tmpdir}/xl/sharedStrings.xml ${tmpdir}/xl/worksheets/sheet1.xml

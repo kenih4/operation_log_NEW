@@ -148,9 +148,6 @@ def drop_unneeded_rows(df: pd.DataFrame, words: list) -> None:
 # ============================================================================================
 
 def run_search(df: pd.DataFrame) -> None:
-    print("print Before drop ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print(df)
-
     drop_unneeded_rows(df, DROP_WORDS_SEARCH)
 
     print(
@@ -331,7 +328,10 @@ def run_summary(df: pd.DataFrame) -> None:
     import webbrowser
 
     # ical用 Japanese
-    locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
+    try:
+        locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
+    except locale.Error as e:
+        print(f"警告: ロケールを設定できませんでした: {e}")
     df_sig = pd.read_excel("ical_SACLA.xlsx", sheet_name="sig")
 
     pd.options.display.max_colwidth = 2000
@@ -367,7 +367,7 @@ def run_summary(df: pd.DataFrame) -> None:
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     styler = df.loc[:, ['formatted_DT', 'BL2ical', 'BL3ical', 'C']].style.map(
-        lambda x: 'background-color: skyblue' if ('引渡' or '引き渡') in str(x) else '')
+        lambda x: 'background-color: skyblue' if any(w in str(x) for w in ('引渡', '引き渡')) else '')
     styler = styler.map(lambda x: 'color: yellow' if ('切替') in str(x) else '')
     styler = styler.map(lambda x: 'color: pink' if ("加速器調整" in str(
         # 　なぜか or　が効かない
@@ -434,6 +434,9 @@ def check_adjustment_time(df: pd.DataFrame) -> None:
     column_index = 2  # 'end'列目  調整時間のstartにはチョッパーOFF時間になってる事があるので、ログノートの記載時間と合わないことがあるのでendで確認する。
     ans_line = -1
     for index, value in df_kiroku.iloc[start_row_index:, column_index].items():
+        if not isinstance(value, datetime):  # 空欄(NaT)や日時以外はスキップ
+            print(f"index: {index}, value: {value} は日時ではないのでスキップします。")
+            continue
         if value.month == first_dt.month and value >= dt_beg and value <= dt_end:  # 指定された月のログノートで、かつ、運転集計する期間内だけ確認
             result = check_datetime_existence_with_tolerance(
                 df, 'DT', value, tolerance_minutes=1.0)  # ±1分の許容時間で確認
