@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import sys
+import tomllib
 import traceback
 import zipfile
 import numpy as np
@@ -23,7 +24,10 @@ from typing import Union, List
 #   --mode summary        運転集計モード。icalカレンダーを付与してHTML出力し、
 #                         SACLA運転集計記録.xlsmの調整時間がログノートに記載されているか確認する
 #   --mode log            ログ出力モード。運転集計モードと同じ前処理(不要行削除・日付跨ぎ補正)をして
-#                         日時とログ内容を「D:\LOGNOTE\output\エクセルファイル名.txt」にテキスト出力する(ical付与・突合チェックはしない)
+#                         日時とログ内容を「(設定ファイルのoutput_dir)\エクセルファイル名.txt」にテキスト出力する(ical付与・突合チェックはしない)
+#                         その後、Enterで設定ファイルのclipboard_header付きのログをクリップボードにコピーする
+#
+# 設定ファイル: excelgrep_by_XMLparse_config.toml (このスクリプトと同じフォルダ)
 #
 # xlsmはzipとして直接読む(展開しない)。複数ファイルを渡しても、Pythonの起動とpandasのimportは1回だけ。
 #
@@ -31,25 +35,39 @@ from typing import Union, List
 #
 # Formatter     Shift+Alt+F
 
-NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
+# 設定(名前空間、ログ出力先、クリップボードの先頭文言、不要行の削除ワード)は設定ファイルに書く
+CONFIG_PATH = Path(__file__).with_name('excelgrep_by_XMLparse_config.toml')
 
-LOG_OUTPUT_DIR = r'D:\LOGNOTE\output'  # ログ出力モードの出力先フォルダ
+
+def load_config(path: Path) -> dict:
+    try:
+        with open(path, 'rb') as f:
+            return tomllib.load(f)
+    except FileNotFoundError:
+        sys.exit(f"エラー: 設定ファイルが見つかりません: {path}")
+    except tomllib.TOMLDecodeError as e:
+        sys.exit(f"エラー: 設定ファイルの書式が正しくありません: {path}\n{e}")
+
+
+CONFIG = load_config(CONFIG_PATH)
+try:
+    NS = CONFIG['xml']['namespace']
+    LOG_OUTPUT_DIR = CONFIG['log']['output_dir']
+    CLIPBOARD_HEADER = CONFIG['log']['clipboard_header']
+    DROP_WORDS_SEARCH = CONFIG['drop_words']['search']
+    DROP_WORDS_SUMMARY = CONFIG['drop_words']['summary']
+    ICAL_CONFIG_FILE = CONFIG['summary']['ical_config_file']
+    ICAL_CONFIG_SHEET = CONFIG['summary']['ical_config_sheet']
+    OUTPUT_HTML = CONFIG['summary']['output_html']
+    PERIOD_BEGIN_FILE = CONFIG['summary']['period_begin_file']
+    PERIOD_END_FILE = CONFIG['summary']['period_end_file']
+    ADJUSTMENT_FILE = CONFIG['summary']['adjustment_file']
+    ADJUSTMENT_SHEET = CONFIG['summary']['adjustment_sheet']
+except KeyError as e:
+    sys.exit(f"エラー: 設定ファイルに項目 {e} がありません: {CONFIG_PATH}")
 
 COLUMNS = ['A', 'B', 'C', 'DT', 'formatted_DT', 'BL1ical',
            'BL2ical', 'BL3ical']  # DTはA(日付)とB(時間)を日時にしたものを入れる
-
-# 不要行(C列にこの文字列を含む行)。モードごとに異なる。
-DROP_WORDS_SEARCH = [
-    '>本シフトの運転状況<', 'シフト交替', 'シフトリーダー:', 'オペレーター:', 'プロファイル定時確認',
-    # SR LOG特有
-    'シフト交代', '運転員:', 'パラメータセーブ', 'バンチ純度測定結果', 'クレーン',
-]
-DROP_WORDS_SUMMARY = [
-    '>本シフトの運転状況<', 'シフト交替', 'シフトリーダー', 'オペレーター', 'プロファイル定時確認',
-    'プロファイル確認', 'BL2: ', 'BL3: ',
-    # SR LOG特有
-    'シフト交代', '運転員', 'パラメータセーブ', 'バンチ純度測定結果', 'クレーン',
-]
 
 
 # ============================================================================================
@@ -387,7 +405,7 @@ def setup_summary() -> pd.DataFrame:
         locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     except locale.Error as e:
         print(f"警告: ロケールを設定できませんでした: {e}")
-    return pd.read_excel("ical_SACLA.xlsx", sheet_name="sig")
+    return pd.read_excel(ICAL_CONFIG_FILE, sheet_name=ICAL_CONFIG_SHEET)
 
 
 def prepare_lognote(df: pd.DataFrame) -> None:
@@ -416,6 +434,31 @@ def prepare_lognote(df: pd.DataFrame) -> None:
                                                    'DT'].strftime('%Y/%#m/%#d %#H:%#M')
         except Exception as e:
             print(f"message:{e}")
+
+
+def copy_to_clipboard(text: str) -> None:
+    """Windowsのクリップボードにコピーする(clip.exeはUTF-16LEなら日本語も正しく受け取る。BOMを付けるとBOMごとコピーされる)"""
+    subprocess.run(['clip'], input=text.encode('utf-16-le'), check=True)
+
+
+def offer_clipboard_copy(log_texts: list) -> None:
+    """Enterでクリップボードにコピーする(n+Enterならコピーしない)。先頭に要約依頼の文言を付ける"""
+    print("📋 クリップボードにコピーしますか？(Enterでコピー / nでコピーしない): ", end='', flush=True)
+    try:
+        answer = input()
+    except EOFError:  # 標準入力が無い場合はコピーしない
+        print()
+        return
+    if answer.strip().lower() in ('n', 'no'):
+        print("コピーしませんでした。")
+        return
+
+    if len(log_texts) == 1:
+        body = log_texts[0][1]
+    else:  # 複数ファイルはファイル名で区切って1つにまとめる
+        body = '\n\n'.join(f"===== {name} =====\n{text}" for name, text in log_texts)
+    copy_to_clipboard(CLIPBOARD_HEADER + '\n' + body)
+    print(f"✅ クリップボードにコピーしました({len(log_texts)}ファイル分)")
 
 
 def run_log(df: pd.DataFrame) -> str:
@@ -473,9 +516,9 @@ def run_summary(df: pd.DataFrame) -> None:
     </style>
     '''
     html_output = css + styler.to_html(index=False)
-    with open('output.html', 'w', encoding='utf-8') as f:
+    with open(OUTPUT_HTML, 'w', encoding='utf-8') as f:
         f.write(html_output)
-    webbrowser.open_new_tab('output.html')
+    webbrowser.open_new_tab(OUTPUT_HTML)
 
     check_adjustment_time(df)
 
@@ -494,14 +537,13 @@ def check_adjustment_time(df: pd.DataFrame) -> None:
         print("ログノートに有効な日時がありません。")
         return
 
-    with open(r"C:\me\unten\OperationSummary\dt_beg.txt", mode='r', encoding="UTF-8") as f:
+    with open(PERIOD_BEGIN_FILE, mode='r', encoding="UTF-8") as f:
         buff_dt_beg = f.read()
-    with open(r"C:\me\unten\OperationSummary\dt_end.txt", mode='r', encoding="UTF-8") as f:
+    with open(PERIOD_END_FILE, mode='r', encoding="UTF-8") as f:
         buff_dt_end = f.read()
     dt_beg = datetime.strptime(buff_dt_beg, "%Y/%m/%d %H:%M")
     dt_end = datetime.strptime(buff_dt_end, "%Y/%m/%d %H:%M")
-    df_kiroku = load_excel_to_dataframe(
-        r"\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm", "調整時間")
+    df_kiroku = load_excel_to_dataframe(ADJUSTMENT_FILE, ADJUSTMENT_SHEET)
     if df_kiroku is None:
         return
     print("/    dt_beg=", dt_beg)
@@ -561,6 +603,7 @@ def main() -> None:
     pd.set_option('display.max_rows', None)
     pd.options.display.colheader_justify = 'left'  # 列名表示の右寄せ
 
+    log_texts = []  # ログ出力モード: (ファイル名, ログ)
     for path in args.files:
         print(f"📘 File: {path}__________________________________________________________________________")
         try:
@@ -574,9 +617,11 @@ def main() -> None:
                 out_dir = Path(LOG_OUTPUT_DIR)
                 out_dir.mkdir(parents=True, exist_ok=True)
                 out_path = out_dir / (Path(path).stem + '.txt')  # エクセルファイル名.txt
+                log_text = run_log(df)
                 with open(out_path, 'w', encoding='utf-8') as f:
-                    f.write(run_log(df) + '\n')
+                    f.write(log_text + '\n')
                 print(f"📝 ログを {out_path} に出力しました")
+                log_texts.append((Path(path).name, log_text))
             else:
                 run_search(df, args.keyword)
         except zipfile.BadZipFile:
@@ -585,6 +630,9 @@ def main() -> None:
             print(f"❌ xlsm内に必要なXMLが見つかりません: {e}")
         except Exception:
             traceback.print_exc()
+
+    if log_texts:
+        offer_clipboard_copy(log_texts)
 
 
 if __name__ == '__main__':

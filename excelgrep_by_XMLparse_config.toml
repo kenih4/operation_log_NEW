@@ -1,0 +1,59 @@
+# excelgrep_by_XMLparse.py の設定ファイル(TOML形式)
+# 文字列は ' ' で囲むと、バックスラッシュ(\)をそのまま書ける。
+
+[xml]
+# xlsx内のXMLの名前空間。Excelの仕様で決まっている値なので、通常は変更しない
+namespace = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
+
+[log]
+# ログ出力モード(--mode log)の出力先フォルダ。ここに「エクセルファイル名.txt」を出力する(無ければ作成)
+output_dir = 'D:\LOGNOTE\output'
+# ログ出力モードで、クリップボードにコピーする文章の先頭に付ける文言
+clipboard_header = '装置の運転のログです。要約して下さい'
+
+[summary]
+# 運転集計モード(--mode summary)の設定。相対パスは、スクリプトを実行したフォルダからのパスになる
+# icalのURL一覧(「label」列と「url」列があるシート)を書いたExcelファイルとシート名
+ical_config_file = 'ical_SACLA.xlsx'
+ical_config_sheet = 'sig'
+# 色付きログの出力先HTML(出力後にブラウザで開く)
+output_html = 'output.html'
+# 運転集計する期間の開始・終了日時(「2026/05/01 09:00」の形式)を書いたテキストファイル
+period_begin_file = 'C:\me\unten\OperationSummary\dt_beg.txt'
+period_end_file = 'C:\me\unten\OperationSummary\dt_end.txt'
+# 調整時間の突合チェックに使う運転集計記録のExcelファイルとシート名
+adjustment_file = '\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm'
+adjustment_sheet = '調整時間'
+
+[drop_words]
+# 不要行(C列にこの文字列を含む行)。検索モード(search)用
+search = [
+    '>本シフトの運転状況<',
+    'シフト交替',
+    'シフトリーダー:',
+    'オペレーター:',
+    'プロファイル定時確認',
+    # SR LOG特有
+    'シフト交代',
+    '運転員:',
+    'パラメータセーブ',
+    'バンチ純度測定結果',
+    'クレーン',
+]
+# 運転集計モード(summary)とログ出力モード(log)用
+summary = [
+    '>本シフトの運転状況<',
+    'シフト交替',
+    'シフトリーダー',
+    'オペレーター',
+    'プロファイル定時確認',
+    'プロファイル確認',
+    'BL2: ',
+    'BL3: ',
+    # SR LOG特有
+    'シフト交代',
+    '運転員',
+    'パラメータセーブ',
+    'バンチ純度測定結果',
+    'クレーン',
+]

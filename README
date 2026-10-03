@@ -19,6 +19,7 @@
 ### ログ出力モード (`-l` を付ける)
 運転集計モードと同じ前処理(不要行の削除、日付跨ぎの補正)をして、日時とログ内容を `D:\LOGNOTE\output\エクセルファイル名.txt` にテキスト出力する(例: `2026_05_SACLA.xlsm` → `D:\LOGNOTE\output\2026_05_SACLA.txt`。フォルダが無ければ作成。タブ区切り。複数ファイルを指定すると、ファイルごとに出力)。
 色付け/HTML 出力、ical の付与、運転集計記録との突合チェックはしない。
+出力後に「クリップボードにコピーしますか？」と表示されるので、Enter を押すと、先頭に「装置の運転のログです。要約して下さい」を付けたログをクリップボードにコピーする(`n` + Enter ならコピーしない。複数ファイルを指定した場合は、`===== ファイル名 =====` で区切って1つにまとめる)。
 
 ```bash
 ./excelgrep_by_XMLparse.sh -l D:/LOGNOTE/SACLA/2026_05_SACLA.xlsm
@@ -36,11 +37,27 @@
 3. 色を付けて `output.html` に出力し、ブラウザで開く
 4. `SACLA運転集計記録.xlsm` の「調整時間」シートの調整終了時刻が、ログノートに「引渡」付きで記載されているか確認する
 
-必要なもの:
-- カレントディレクトリの `ical_SACLA.xlsx`
+必要なもの(ファイルの場所は設定ファイルで変更できる):
+- `ical_SACLA.xlsx`(ical の URL 一覧)
 - `C:\me\unten\OperationSummary\dt_beg.txt`, `dt_end.txt` (集計期間)
 - `\\saclaopr18.spring8.or.jp\common\運転状況集計\最新\SACLA\SACLA運転集計記録.xlsm`
 - Python パッケージ: pandas, openpyxl, Jinja2, icalendar, requests
+
+## 設定ファイル excelgrep_by_XMLparse_config.toml
+
+`excelgrep_by_XMLparse.py` と同じフォルダに置く(無いとエラーで終了する)。TOML 形式で、コメントも書ける。
+
+| 項目 | 内容 |
+|---|---|
+| `[xml] namespace` | xlsx内のXMLの名前空間(Excelの仕様の値なので通常は変更しない) |
+| `[log] output_dir` | ログ出力モードの出力先フォルダ |
+| `[log] clipboard_header` | ログ出力モードでクリップボードにコピーする文章の先頭の文言 |
+| `[summary] ical_config_file`, `ical_config_sheet` | icalのURL一覧(`label`列と`url`列)を書いたExcelファイルとシート名 |
+| `[summary] output_html` | 運転集計モードの出力先HTML |
+| `[summary] period_begin_file`, `period_end_file` | 運転集計する期間の開始・終了日時を書いたテキストファイル |
+| `[summary] adjustment_file`, `adjustment_sheet` | 調整時間の突合チェックに使う運転集計記録のExcelファイルとシート名 |
+| `[drop_words] search` | 検索モードで削除する行(C列にこの文字列を含む行) |
+| `[drop_words] summary` | 運転集計モードとログ出力モードで削除する行 |
 
 ## Python スクリプト excelgrep_by_XMLparse.py を直接実行する場合
 
