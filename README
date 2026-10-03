@@ -2,6 +2,24 @@
 
 ターミナルは Git Bash で実行すること。
 
+## 使い方(まとめ)
+
+```bash
+./excelgrep_by_XMLparse.sh [-k=検索ワード | -l] ログノート.xlsm [ログノート2.xlsm ...]
+```
+
+| 付けるオプション | モード | 結果 |
+|---|---|---|
+| `-k=検索ワード` | ログノート検索 | 検索ワードに一致する行を、ターミナルに色付きで出力する |
+| `-l` | ログ出力 | 日時とログ内容を txt に出力し、Enter でクリップボードにコピーする(要約依頼用) |
+| なし | 運転集計 | icalの運転予定を付けた色付きHTMLを出力し、調整時間の記載漏れを確認する |
+
+- 引数には、xlsm(または xls)を何個でも指定できる。`*.xlsm` のようなワイルドカードも使える。xlsm 以外の引数と、`~$` で始まる一時ファイルは無視される。
+- 複数指定した場合は、引数の後ろのファイルから順に処理する。
+- `-k=` と `-l` を両方付けた場合は、`-k=` (検索モード)が優先される。
+- 必要な Python パッケージ: pandas, numpy, openpyxl, Jinja2, icalendar, requests(Python 3.11 以上)。
+- パスや削除ワードなどの設定は、「設定ファイル」の節の `excelgrep_by_XMLparse_config.toml` を編集する。
+
 ## シェルスクリプト excelgrep_by_XMLparse.sh
 
 引数の xlsm(複数可)を `excelgrep_by_XMLparse.py` に渡して実行する(xlsm は解凍せず zip のまま読み、Python は1回だけ起動する)。
@@ -10,8 +28,11 @@
 ### ログノート検索モード (`-k=検索ワード` を付ける)
 ログノートの日時(DT)と内容(C)をターミナルに出力し、検索ワード(正規表現可、大文字小文字無視)に一致した行に色を付ける。
 
+検索ワードは `grep -iE` の正規表現。`|` で OR、`.` は任意の1文字になる。`'LBC | NODE'` のようにスペースを入れると、スペースも検索対象になる。
+出力の各行は「行番号:インデックス 日時 ログ内容」の形式で、ログ内容は全文が出る。
+
 ```bash
-./excelgrep_by_XMLparse.sh -k='LBC | NODE' D:/LOGNOTE/SACLA/*.xlsm
+./excelgrep_by_XMLparse.sh -k='LBC|NODE' D:/LOGNOTE/SACLA/*.xlsm
 ./excelgrep_by_XMLparse.sh -k='シケイン' D:/LOGNOTE/SACLA/*.xlsm | grep --ignore-case 結晶 | tee test.log
 ./excelgrep_by_XMLparse.sh -k='bwd' D:/LOGNOTE/SP8/2026_*.xlsm
 ```
@@ -27,6 +48,7 @@
 
 ### 運転集計モード (`-k=` も `-l` も付けない)
 運転集計用の処理を行う。SACLA のログノート専用で、環境依存のパスを使う。
+複数のファイルを指定した場合、ファイルごとに `output.html` を上書きしてブラウザを開く。
 
 ```bash
 ./excelgrep_by_XMLparse.sh SACLA/2026_05_SACLA.xlsm
